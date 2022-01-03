@@ -3,10 +3,9 @@ import 'package:flutter_life_devo_app_v2/data/providers/global_api.dart';
 import 'package:flutter_life_devo_app_v2/models/user_token_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const baseUrlDev = "https://sandbox.petobe.ca";
-const apiUrlVerifyUserToken = "/auth/token/verifyUserToken";
-const apiUrlLogin = '/auth/login';
-
+const baseUrlDev = "https://api.bclifedevo.com";
+const apiUrlVerifyUserToken = "user/auth/verifyUserToken";
+const apiUrlLogin = "user/auth/login";
 const keyUserToken = "USER_TOKEN";
 
 class AuthAPIClient {
