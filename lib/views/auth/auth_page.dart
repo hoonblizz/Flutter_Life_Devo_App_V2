@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_life_devo_app_v2/views/auth/components/auth_form.dart';
+import 'package:flutter_life_devo_app_v2/views/helper/keyboard.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/auth/auth_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
@@ -10,60 +12,61 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle submitButtonStyle =
-        ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
-
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Loading
-          Obx(() {
-            return _authController.isLoading.value
-                ? const LoadingWidget()
-                : Container();
-          }),
-          Container(
-            alignment: Alignment.center,
-            child: const Text(
-              "Login Page",
-              style: TextStyle(color: Colors.black, fontSize: 32),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () => KeyboardUtil.hideKeyboard(context),
+          child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: Get.height * 0.05),
+                    const Text(
+                      "Welcome Back",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text(
+                      "Sign in with your email and password  \nor continue with social media",
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: Get.height * 0.08),
+                    const AuthForm(),
+                    SizedBox(height: Get.height * 0.08),
+                    // Later, if we support other login types, add them
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     SocalCard(
+                    //       icon: "assets/icons/google-icon.svg",
+                    //       press: () {},
+                    //     ),
+                    //     SocalCard(
+                    //       icon: "assets/icons/facebook-2.svg",
+                    //       press: () {},
+                    //     ),
+                    //     SocalCard(
+                    //       icon: "assets/icons/twitter.svg",
+                    //       press: () {},
+                    //     ),
+                    //   ],
+                    // ),
+                    const SizedBox(height: 20),
+                    //NoAccountText(),
+                  ],
+                ),
+              ),
             ),
-            color: Colors.white24,
           ),
-          TextField(
-            controller: _authController.inputCtrUsername,
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Enter your username',
-            ),
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          TextField(
-            controller: _authController.inputCtrPassword,
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Enter your password',
-            ),
-          ),
-          ElevatedButton(
-            style: submitButtonStyle,
-            onPressed: _authController.login,
-            child: const Text('Login'),
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          InkWell(
-            child: const Text(
-              'Signup',
-              style: TextStyle(fontSize: 28),
-            ),
-            onTap: _authController.gotoSignupPage,
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -53,8 +53,6 @@ class _HomePageState extends State<HomePage> {
             selectedItemColor: navSelected,
             unselectedItemColor: navUnselected,
             type: BottomNavigationBarType.shifting,
-            //TODO @princededamned Hyeji will change the icon later
-            //TODO @princededamned RESPONSIVE Sizing
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(

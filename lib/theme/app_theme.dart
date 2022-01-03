@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 final ThemeData lightTheme = ThemeData(
-  fontFamily: 'Archivo',
+  fontFamily: 'Muli', // Archivo
   textTheme: TextTheme(
     bodyText1: TextStyle(
         color: const Color(0xFF404040),
@@ -29,7 +29,7 @@ final ThemeData lightTheme = ThemeData(
 );
 
 final ThemeData darkTheme = ThemeData(
-  fontFamily: 'Archivo',
+  fontFamily: 'Muli', // Archivo
   textTheme: TextTheme(
     bodyText1: TextStyle(
         color: const Color(0xFFE0E0E0),
