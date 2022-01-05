@@ -35,7 +35,7 @@ class LandingController extends GetxController {
         gc.userToken.idToken.isNotEmpty) {
       var result = await _checkTokenValid(gc.userToken);
       gc.userLoggedIn.value = result['isValid'] ?? false;
-      gc.username = result['username'] ?? "";
+      gc.email = result['email'] ?? "";
     } else {
       gc.userLoggedIn.value = false;
     }

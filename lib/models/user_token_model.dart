@@ -3,21 +3,21 @@ class UserTokenModel {
   String accessToken = "";
   String refreshToken = "";
   String idToken = "";
-  String username =
+  String email =
       ""; // May know from the response of Login && VerifyUserToken API
 
   UserTokenModel({
     accessToken,
     refreshToken,
     idToken,
-    username,
+    email,
   });
 
   UserTokenModel.fromJson(Map<String, dynamic> json) {
     accessToken = json['AccessToken'] ?? "";
     refreshToken = json['RefreshToken'] ?? "";
     idToken = json['IdToken'] ?? "";
-    username = json['username'] ?? "";
+    email = json['email'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -26,7 +26,7 @@ class UserTokenModel {
     data['AccessToken'] = accessToken;
     data['RefreshToken'] = refreshToken;
     data['IdToken'] = idToken;
-    data['username'] = username;
+    data['email'] = email;
     return data;
   }
 }

@@ -22,7 +22,7 @@ class GlobalController extends GetxController {
   ///     Auth
   /// ========================================================
   ///
-  String username = "";
+  String email = "";
   var userLoggedIn = false.obs;
   UserTokenModel userToken = UserTokenModel(); // Empty model
 

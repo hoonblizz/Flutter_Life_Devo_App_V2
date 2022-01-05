@@ -3,7 +3,7 @@ import 'package:flutter_life_devo_app_v2/data/providers/global_api.dart';
 import 'package:flutter_life_devo_app_v2/models/user_token_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const baseUrlDev = "https://api.bclifedevo.com";
+const baseUrlDev = "https://api.bclifedevo.com/";
 const apiUrlVerifyUserToken = "user/auth/verifyUserToken";
 const apiUrlLogin = "user/auth/login";
 const keyUserToken = "USER_TOKEN";
@@ -64,6 +64,9 @@ class AuthAPIClient {
   }
 
   static login(String username, String password) async {
+    // Wait for better looking UI
+    await Future.delayed(const Duration(seconds: 1));
+
     return await GlobalAPIClient.postRequest(
       baseUrlDev + apiUrlLogin,
       {'username': username, 'password': password},

@@ -16,41 +16,27 @@ class AuthController extends GetxController {
   AuthController({required this.authRepo}); // : assert(repository != null);
   GlobalController gc = Get.put(GlobalController());
 
-  TextEditingController inputCtrUsername = TextEditingController(text: "");
-  TextEditingController inputCtrPassword = TextEditingController(text: "");
-
   var isLoading = false.obs;
 
-  login() async {
-    if (inputCtrUsername.text.isNotEmpty && inputCtrPassword.text.isNotEmpty) {
-      // Start loading
-      isLoading.value = true;
+  login(email, password) async {
+    // Start loading
+    isLoading.value = true;
 
-      // Request
-      var result =
-          await authRepo.login(inputCtrUsername.text, inputCtrPassword.text);
-
-      // clear
-      inputCtrPassword.clear();
+    // Request
+    try {
+      var result = await authRepo.login(email, password);
 
       if (result["statusCode"] == 200) {
-        // Access to AuthenticationResult
-        var resultBodyString = result["body"].toString();
-        var parsedBody = jsonDecode(resultBodyString) as Map<String, dynamic>;
-        var parsedAuthenticationResult =
-            parsedBody["result"]["AuthenticationResult"];
-
         gc.consoleLog(
-          'Auth data: $parsedAuthenticationResult',
-          curFileName: currentFileName,
-        );
+            'Access Token: ${result["body"]["AuthenticationResult"]}');
 
-        // Add username (Not included in AuthenticationResult)
-        // Then wrap it as a complete token
-        var username = parsedBody['input']['username'] ?? "";
-        parsedAuthenticationResult['username'] = username;
-        gc.userToken = UserTokenModel.fromJson(parsedAuthenticationResult);
-        gc.username = username;
+        // Add username and create model
+        Map<String, dynamic> authResult =
+            result["body"]["AuthenticationResult"];
+        authResult['username'] = email;
+
+        gc.userToken = UserTokenModel.fromJson(authResult);
+        gc.email = email;
 
         // Save the token in local
         var saveDone = await authRepo.setUserTokenToLocal(gc.userToken);
@@ -64,7 +50,7 @@ class AuthController extends GetxController {
 
         // Now time to go home
         // gotoHomePage();
-        gotoPetTypePage();
+        //gotoPetTypePage();
       } else {
         // Stop loading
         isLoading.value = false;
@@ -75,9 +61,10 @@ class AuthController extends GetxController {
           curFileName: currentFileName,
         );
       }
-    } else {
+    } catch (e) {
+      isLoading.value = false;
       gc.consoleLog(
-        'Input empty. Must warn',
+        e.toString(),
         curFileName: currentFileName,
       );
     }

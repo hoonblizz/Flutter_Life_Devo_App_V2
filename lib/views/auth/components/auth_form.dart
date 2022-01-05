@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_life_devo_app_v2/controllers/auth/auth_controller.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_messagers.dart';
 import 'package:flutter_life_devo_app_v2/views/auth/components/default_button.dart';
 import 'package:flutter_life_devo_app_v2/views/auth/components/form_error.dart';
 import 'package:flutter_life_devo_app_v2/views/components/custom_surfix_icon.dart';
 import 'package:flutter_life_devo_app_v2/views/helper/keyboard.dart';
+import 'package:get/get.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
+  final AuthController _authController = Get.find<AuthController>();
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
@@ -20,17 +23,19 @@ class _AuthFormState extends State<AuthForm> {
   final List<String?> errors = [];
 
   void addError({String? error}) {
-    if (!errors.contains(error))
+    if (!errors.contains(error)) {
       setState(() {
         errors.add(error);
       });
+    }
   }
 
   void removeError({String? error}) {
-    if (errors.contains(error))
+    if (errors.contains(error)) {
       setState(() {
         errors.remove(error);
       });
+    }
   }
 
   @override
@@ -51,8 +56,11 @@ class _AuthFormState extends State<AuthForm> {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
+                print('Current state: ${email} and ${password}');
                 KeyboardUtil.hideKeyboard(context);
-                //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+
+                // Start loading and other process will be handled by controller.
+                _authController.login(email, password);
               }
             },
           ),
