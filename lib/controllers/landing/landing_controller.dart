@@ -21,10 +21,10 @@ class LandingController extends GetxController {
   _checkUserLoggedIn() async {
     // Get the token
     UserTokenModel userToken = await authRepo.getUserTokenFromLocal();
-    // gc.consoleLog(
-    //   "Token from local: ${userToken.toJson().toString()}",
-    //   curFileName: currentFileName,
-    // );
+    gc.consoleLog(
+      "Token from local: ${userToken.toJson().toString()}",
+      curFileName: currentFileName,
+    );
 
     // Save the token data into global controller
     gc.userToken = userToken;
@@ -41,8 +41,7 @@ class LandingController extends GetxController {
     }
 
     if (gc.userLoggedIn.value) {
-      // gotoHomePage();
-      gotoPetTypePage();
+      gotoMainPage();
     } else {
       gotoAuthPage();
     }
@@ -52,12 +51,8 @@ class LandingController extends GetxController {
     Get.toNamed(Routes.AUTH);
   }
 
-  gotoHomePage() {
-    Get.toNamed(Routes.HOME);
-  }
-
-  gotoPetTypePage() {
-    Get.toNamed(Routes.PETTYPE);
+  gotoMainPage() {
+    Get.toNamed(Routes.MAIN);
   }
 
   _checkTokenValid(UserTokenModel userToken) async {

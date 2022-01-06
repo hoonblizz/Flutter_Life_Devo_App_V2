@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 
-const double navIcon = 25;
+double navIcon = Get.width * 0.07;
+
+// Navbar 포함해서 전체적으로 hozontal 패딩
+double screenPaddingHorizontal = Get.width * 0.05;
 
 double toolBarHeight = Get.height * 0.1;
 

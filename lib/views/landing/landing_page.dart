@@ -6,7 +6,7 @@ import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
 
 class LandingPage extends StatelessWidget {
   LandingPage({Key? key}) : super(key: key);
-  final LandingController _homeController = Get.find<LandingController>();
+  final LandingController _landingController = Get.find<LandingController>();
   final GlobalController _globalController = Get.find<GlobalController>();
 
   @override
@@ -14,13 +14,8 @@ class LandingPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: const [
-            Text('Landing Page', style: TextStyle(fontSize: 40)),
-            SizedBox(
-              height: 30,
-            ),
             LoadingWidget(),
             // Obx(() {
             //   print(

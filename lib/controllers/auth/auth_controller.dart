@@ -1,5 +1,5 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
+// import 'dart:convert';
+// import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
@@ -49,8 +49,7 @@ class AuthController extends GetxController {
         isLoading.value = false;
 
         // Now time to go home
-        // gotoHomePage();
-        //gotoPetTypePage();
+        gotoMainPage();
       } else {
         // Stop loading
         isLoading.value = false;
@@ -76,11 +75,7 @@ class AuthController extends GetxController {
         : throw 'Could not launch $urlSignup';
   }
 
-  gotoHomePage() {
-    Get.toNamed(Routes.HOME);
-  }
-
-  gotoPetTypePage() {
-    Get.toNamed(Routes.PETTYPE);
+  gotoMainPage() {
+    Get.toNamed(Routes.MAIN);
   }
 }
