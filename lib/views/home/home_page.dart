@@ -8,7 +8,7 @@ import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 
 // ignore: use_key_in_widget_constructors
 class HomePage extends StatelessWidget {
-  final HomeController _homeController = Get.find<HomeController>();
+  //final HomeController _homeController = Get.find<HomeController>();
   final GlobalController _globalController = Get.find<GlobalController>();
 
   @override

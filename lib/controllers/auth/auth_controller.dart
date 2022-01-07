@@ -14,7 +14,9 @@ const urlSignup = "https://login.petobe.ca/signup";
 class AuthController extends GetxController {
   final AuthRepository authRepo;
   AuthController({required this.authRepo}); // : assert(repository != null);
-  GlobalController gc = Get.put(GlobalController());
+
+  //GlobalController gc = Get.put(GlobalController());
+  GlobalController gc = Get.find();
 
   var isLoading = false.obs;
 

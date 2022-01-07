@@ -9,10 +9,21 @@ const currentFileName = "landing_controller";
 class LandingController extends GetxController {
   final AuthRepository authRepo;
   LandingController({required this.authRepo}); // : assert(repository != null);
-  GlobalController gc = Get.put(GlobalController());
+
+  // 이미 main 에서 put 해줬으니 찾기만 하면 된다.
+  //GlobalController gc = Get.put(GlobalController());
+  GlobalController gc = Get.find();
 
   @override
   void onInit() {
+    /*
+      어디에서든 Get.find 든 뭐든 이 컨트롤러에 엑세스만 하면 init이 발동. 
+      현재는 해당 page (여기서는 landing page) 에서 Get.find 해줄시에 발생한다.
+    */
+    gc.consoleLog(
+      "Init Landing page controller",
+      curFileName: currentFileName,
+    );
     _checkUserLoggedIn();
 
     super.onInit();

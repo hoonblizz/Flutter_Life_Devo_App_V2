@@ -6,6 +6,7 @@ import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
 
 class LandingPage extends StatelessWidget {
   LandingPage({Key? key}) : super(key: key);
+  // 여기서 찾아주면 onInit 이 발생
   final LandingController _landingController = Get.find<LandingController>();
   final GlobalController _globalController = Get.find<GlobalController>();
 

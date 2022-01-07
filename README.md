@@ -11,4 +11,9 @@ https://github.com/hossin529/flutter-article-ui-Tutorial-1
 
 ## TODO:  
 - Auth  
-- Home page  
+- Home page
+
+## Load controller and repo  
+상황에 따라 어떤 controller 와 repo 는 main 에서 declare  
+해주도록 한다.  (global 이랄지...)
+

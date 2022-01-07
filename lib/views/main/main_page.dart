@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
 import 'package:flutter_life_devo_app_v2/views/chat/chat_page.dart';
 import 'package:flutter_life_devo_app_v2/views/contents/contents_page.dart';
 import 'package:flutter_life_devo_app_v2/views/home/home_page.dart';
@@ -17,7 +18,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final GlobalController _globalController = Get.find<GlobalController>();
+  final MainController _mainController = Get.find();
+  //final GlobalController _globalController = Get.find<GlobalController>();
+  final GlobalController _globalController = Get.find();
 
   int _currentBottomTabIndex = 0;
 
