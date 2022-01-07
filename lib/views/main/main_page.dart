@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_life_devo_app_v2/views/chat/chat_page.dart';
+import 'package:flutter_life_devo_app_v2/views/contents/contents_page.dart';
 import 'package:flutter_life_devo_app_v2/views/home/home_page.dart';
+import 'package:flutter_life_devo_app_v2/views/life_devo/life_devo_page.dart';
+import 'package:flutter_life_devo_app_v2/views/profile/profile_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
@@ -19,6 +23,10 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = <Widget>[
     HomePage(),
+    ContentsPage(),
+    LifeDevoPage(),
+    ChatPage(),
+    ProfilePage()
   ];
 
   void _onSelectBottomTab(int index) {
@@ -30,17 +38,17 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages.elementAt(_currentBottomTabIndex),
+      backgroundColor: navBG,
+      body: Container(
+        color: navBG,
+        padding: EdgeInsets.symmetric(
+          horizontal: screenPaddingHorizontal,
+        ),
+        child: SafeArea(
+          child: _pages.elementAt(_currentBottomTabIndex),
+        ),
+      ),
       bottomNavigationBar: Container(
-        // decoration: BoxDecoration(
-        //   borderRadius: BorderRadius.circular(30),
-        //   // ignore: prefer_const_literals_to_create_immutables
-        //   boxShadow: [
-        //     const BoxShadow(
-        //         color: Colors.black26, spreadRadius: -5, blurRadius: 10),
-        //   ],
-        // ),
-
         margin: EdgeInsets.symmetric(horizontal: screenPaddingHorizontal),
         decoration: const BoxDecoration(
           border: Border(
@@ -49,53 +57,51 @@ class _MainPageState extends State<MainPage> {
             width: 1,
           )),
         ),
-        child: ClipRRect(
-          //borderRadius: BorderRadius.circular(30),
-          child: BottomNavigationBar(
-            backgroundColor: navBG,
-            selectedItemColor: navSelected,
-            unselectedItemColor: navUnselected,
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  size: navIcon,
-                ),
-                label: "Home",
+        child: BottomNavigationBar(
+          elevation: 0,
+          backgroundColor: navBG,
+          selectedItemColor: navSelected,
+          unselectedItemColor: navUnselected,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                size: navIcon,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.video_library,
-                  size: navIcon,
-                ),
-                label: "Sermon",
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.video_library,
+                size: navIcon,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.auto_stories,
-                  size: navIcon,
-                ),
-                label: "Life Devo",
+              label: "Contents",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.auto_stories,
+                size: navIcon,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.account_circle,
-                  size: navIcon,
-                ),
-                label: "Profile",
+              label: "Life Devo",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.people,
+                size: navIcon,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.menu,
-                  size: navIcon,
-                ),
-                label: "Menu",
+              label: "People",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_circle,
+                size: navIcon,
               ),
-            ],
-            currentIndex: _currentBottomTabIndex,
-            onTap: _onSelectBottomTab,
-          ),
+              label: "Profile",
+            ),
+          ],
+          currentIndex: _currentBottomTabIndex,
+          onTap: _onSelectBottomTab,
         ),
       ),
     );

@@ -25,5 +25,7 @@ class AppPages {
       page: () => const MainPage(),
       binding: MainBinding(),
     ),
+
+    // Main components of Main page tabs are handled in main page
   ];
 }
