@@ -17,3 +17,5 @@ https://github.com/hossin529/flutter-article-ui-Tutorial-1
 상황에 따라 어떤 controller 와 repo 는 main 에서 declare  
 해주도록 한다.  (global 이랄지...)
 
+## Youtube Thumbnail address  
+https://img.youtube.com/vi/tOud_J9ScBM/hqdefault.jpg  
