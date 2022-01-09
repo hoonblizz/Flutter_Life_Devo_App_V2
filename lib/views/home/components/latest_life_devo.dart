@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
+import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class LatestLifeDevo extends StatelessWidget {
-  const LatestLifeDevo({Key? key}) : super(key: key);
+  Session latestLifeDevoSession;
+
+  LatestLifeDevo(this.latestLifeDevoSession, {Key? key}) : super(key: key);
+
+  final MainController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: mainPageContentsSpace),
+      padding: EdgeInsets.symmetric(
+          vertical: mainPageContentsSpace, horizontal: mainPageContentsSpace),
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
@@ -44,7 +53,10 @@ class LatestLifeDevo extends StatelessWidget {
           // ),
 
           Text(
-            'sdfsdfsdfsdfsdfsf sdfsfsdfsdfsdfsdfsdf sfdsfdsfsdfdsfss  sfdsfdsfsdfsfdsdfsdfsdfsdfsdfsf sdfsfsdfsdfsdfsdfsdf sfdsfdsfsdfdsfss  sfdsfdsfsdfsfd',
+            latestLifeDevoSession.question,
+            maxLines: 6,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
             style: TextStyle(fontSize: mainPageContentsDesc),
           ),
 
@@ -56,7 +68,8 @@ class LatestLifeDevo extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                 ),
-                onPressed: () => {},
+                onPressed: () =>
+                    _mainController.gotoLifeDevoDetail(latestLifeDevoSession),
                 child: Text(
                   'Continue Reading',
                   style: TextStyle(

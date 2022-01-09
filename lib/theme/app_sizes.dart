@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 double navIcon = Get.width * 0.07;
+double customAppBarHeight = Get.height * 0.1;
 
 // Navbar 포함해서 전체적으로 hozontal 패딩
 double screenPaddingHorizontal = Get.width * 0.05;

@@ -1,4 +1,5 @@
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
@@ -18,25 +19,77 @@ class MainController extends GetxController {
   //GlobalController gc = Get.put(GlobalController());
   GlobalController gc = Get.find();
 
+  /******************************************************************
+   * Variable collections
+  ******************************************************************/
+  RxBool isHomeTabLoading = false.obs;
+  Rx<Session> latestLifeDevoSession = Session().obs;
+  /******************************************************************
+   * Functions
+  ******************************************************************/
+
   @override
   void onInit() {
     gc.consoleLog('Init Main page controller', curFileName: currentFileName);
-    getLatestFeatures();
+    loadHomeTabFeatures();
 
     super.onInit();
   }
 
-  // TODO: Call latest contents (life devo, sermon, spiritual discipline, live life devo, etc...)
-  // Then store into global controller
-  getLatestFeatures() async {
-    // Get latest life devo
-
-    // Get latest sermon
-
-    // Get latest Spiritual discipline
-
-    // Get latest live life devo
+  startHomeTabLoading() {
+    isHomeTabLoading.value = true;
   }
+
+  stopHomeTabLoading() {
+    isHomeTabLoading.value = false;
+  }
+
+  /******************************************************************
+   * Home Tab (1st)
+  ******************************************************************/
+  loadHomeTabFeatures() async {
+    startHomeTabLoading();
+
+    try {
+      // Get latest life devo
+      Map result = await adminContentRepo.getLatestLifeDevoSession();
+      gc.consoleLog('Result: ${result.toString()}');
+      if (result['statusCode'] == 200) {
+        latestLifeDevoSession.value = Session.fromJSON(result['body']);
+      }
+
+      // Get latest sermon
+
+      // Get latest Spiritual discipline
+
+      // Get latest live life devo
+    } catch (e) {
+      gc.consoleLog('Error falls here: ${e.toString()}');
+      // TODO: Do something about errors
+    }
+
+    stopHomeTabLoading();
+  }
+
+  gotoLifeDevoDetail(Session lifeDevoSession) {
+    Get.toNamed(Routes.LIFE_DEVO_DETAIL, arguments: [lifeDevoSession]);
+  }
+
+  /******************************************************************
+   * Contents Tab (2nd)
+  ******************************************************************/
+
+  /******************************************************************
+   * Life devo Tab (3rd)
+  ******************************************************************/
+
+  /******************************************************************
+   * People tab (4th)
+  ******************************************************************/
+
+  /******************************************************************
+   * Profile tab (5th)
+  ******************************************************************/
 
   gotoAuthPage() {
     Get.toNamed(Routes.AUTH);

@@ -10,4 +10,6 @@ abstract class Routes {
   // static const LIFEDEVO = '/lifedevo';
   // static const CHAT = '/chat';
   // static const PROFILE = '/profile';
+
+  static const LIFE_DEVO_DETAIL = '/life_devo_detail';
 }

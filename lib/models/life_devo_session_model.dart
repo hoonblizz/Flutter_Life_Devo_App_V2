@@ -5,33 +5,33 @@ class Session {
   final String title;
   final String scripture;
   final String question;
-  final DateTime created;
-  final DateTime startDate;
+  final int created;
+  final String startDate;
   final int startDateEpoch;
-  final DateTime endDate;
+  final String endDate;
   final int endDateEpoch;
   final bool active;
   final String question2;
   final String question3;
 
   Session(
-      {required this.pkCollection,
-      required this.skCollection,
+      {this.pkCollection = "",
+      this.skCollection = "",
       this.sessionNum = 0,
       this.title = "",
       this.scripture = "",
       this.question = "",
-      DateTime? created,
-      DateTime? startDate,
+      //DateTime? created,
+      this.created = 0,
+      String? startDate,
       this.startDateEpoch = 0,
-      DateTime? endDate,
+      String? endDate,
       this.endDateEpoch = 0,
       this.active = false,
       this.question2 = "",
       this.question3 = ""})
-      : created = created ?? DateTime.now(),
-        startDate = startDate ?? DateTime.now(),
-        endDate = endDate ?? DateTime.now();
+      : startDate = startDate ?? "",
+        endDate = endDate ?? "";
 
   factory Session.fromJSON(Map map) {
     //print('[SESSION] Received: ${map}');
@@ -39,16 +39,15 @@ class Session {
     return Session(
       pkCollection: map['pkCollection'] ?? '',
       skCollection: map['skCollection'] ?? '',
-      sessionNum: map['sessionNum'] ?? '',
+      sessionNum: map['sessionNum'] ?? -1,
       title: map['title'] ?? '',
       scripture: map['scripture'] ?? '',
       question: map['question'] ?? '',
-      created: map['created'].toDate() ??
-          DateTime.now(), // June 13, 2020 at 12:41:05 AM UTC-4 이런 포멧이다.
-      startDate: map['startDate'].toDate() ?? DateTime.now(),
+      created: map['created'] ?? -1, // 원래는 epoch 형태임
+      startDate: map['startDate'] ?? "",
       startDateEpoch:
           map['startDateEpoch'] ?? DateTime.now().millisecondsSinceEpoch,
-      endDate: map['endDate'].toDate() ?? DateTime.now(),
+      endDate: map['endDate'] ?? "",
       endDateEpoch:
           map['endDateEpoch'] ?? DateTime.now().millisecondsSinceEpoch,
       active: map['active'] ?? false,

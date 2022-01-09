@@ -1,4 +1,5 @@
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
+import 'package:flutter_life_devo_app_v2/views/life_devo_detail/life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/main/main_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/bindings/auth_binding.dart';
@@ -27,5 +28,10 @@ class AppPages {
     ),
 
     // Main components of Main page tabs are handled in main page
+
+    GetPage(
+      name: Routes.LIFE_DEVO_DETAIL,
+      page: () => LifeDevoDetailPage(),
+    ),
   ];
 }

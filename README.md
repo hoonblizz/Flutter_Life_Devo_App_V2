@@ -6,7 +6,8 @@ https://www.figma.com/file/XgCeo7uB3zDXN0Cx2EmLlH/Bridgeway-Life-Devo?node-id=35
 https://github.com/abuanwar072/E-commerce-Complete-Flutter-UI  
 https://github.com/hossin529/flutter-article-ui-Tutorial-1  
 
-
+## UI: App bar 에 탭이 붙는 디자인:  
+https://stackoverflow.com/questions/49446100/flutter-navigation-bar  
 
 
 ## TODO:  

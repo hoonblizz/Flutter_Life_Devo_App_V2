@@ -44,9 +44,10 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: navBG,
       body: Container(
         color: navBG,
-        padding: EdgeInsets.symmetric(
-          horizontal: screenPaddingHorizontal,
-        ),
+        // 각 탭에서 로딩을 핸들링 하기로 바꿔서, 이것도 각 탭으로 옮겨준다.
+        // padding: EdgeInsets.symmetric(
+        //   horizontal: screenPaddingHorizontal,
+        // ),
         child: SafeArea(
           child: _pages.elementAt(_currentBottomTabIndex),
         ),
