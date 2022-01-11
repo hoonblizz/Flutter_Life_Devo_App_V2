@@ -1,4 +1,6 @@
+import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
@@ -18,12 +20,16 @@ class MainController extends GetxController {
   // 이미 main 에서 put 해줬으니 찾기만 하면 된다.
   //GlobalController gc = Get.put(GlobalController());
   GlobalController gc = Get.find();
+  final LifeDevoDetailController _lifeDevoDetailController = Get.find();
 
+  // ignore: slash_for_doc_comments
   /******************************************************************
    * Variable collections
   ******************************************************************/
   RxBool isHomeTabLoading = false.obs;
   Rx<Session> latestLifeDevoSession = Session().obs;
+
+  // ignore: slash_for_doc_comments
   /******************************************************************
    * Functions
   ******************************************************************/
@@ -72,7 +78,10 @@ class MainController extends GetxController {
   }
 
   gotoLifeDevoDetail(Session lifeDevoSession) {
-    Get.toNamed(Routes.LIFE_DEVO_DETAIL, arguments: [lifeDevoSession]);
+    _lifeDevoDetailController.resetVariables();
+    _lifeDevoDetailController.setCurrentLifeDevo(lifeDevoSession, LifeDevo());
+    // Get.toNamed(Routes.LIFE_DEVO_DETAIL, arguments: [lifeDevoSession]);
+    Get.toNamed(Routes.LIFE_DEVO_DETAIL);
   }
 
   /******************************************************************

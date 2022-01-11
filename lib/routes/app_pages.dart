@@ -1,3 +1,4 @@
+import 'package:flutter_life_devo_app_v2/bindings/life_devo_detail_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo_detail/life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/main/main_page.dart';
@@ -32,6 +33,9 @@ class AppPages {
     GetPage(
       name: Routes.LIFE_DEVO_DETAIL,
       page: () => LifeDevoDetailPage(),
+      binding: LifeDevoDetailBinding(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 150),
     ),
   ];
 }

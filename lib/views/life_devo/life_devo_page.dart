@@ -1,3 +1,6 @@
+/*
+  Life devo 리스트 페이지를 말한다.
+*/
 import 'package:flutter/material.dart';
 
 // ignore: use_key_in_widget_constructors

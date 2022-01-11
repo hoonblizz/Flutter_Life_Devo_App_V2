@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Session {
   final String pkCollection;
   final String skCollection;
@@ -34,15 +36,30 @@ class Session {
         endDate = endDate ?? "";
 
   factory Session.fromJSON(Map map) {
-    //print('[SESSION] Received: ${map}');
+    //Map map = jsonDecode(jsonEncode(tempMap));
+
+    // 특수문자가 안나올수 있기 때문에, conversion 필요
+    String newScripture = map['scripture'] != null
+        ? const Utf8Decoder().convert(map['scripture'].toString().codeUnits)
+        : '';
+
+    String newQuestion1 = map['question'] != null
+        ? const Utf8Decoder().convert(map['question'].toString().codeUnits)
+        : '';
+    String newQuestion2 = map['question2'] != null
+        ? const Utf8Decoder().convert(map['question2'].toString().codeUnits)
+        : '';
+    String newQuestion3 = map['question2'] != null
+        ? const Utf8Decoder().convert(map['question3'].toString().codeUnits)
+        : '';
 
     return Session(
       pkCollection: map['pkCollection'] ?? '',
       skCollection: map['skCollection'] ?? '',
       sessionNum: map['sessionNum'] ?? -1,
       title: map['title'] ?? '',
-      scripture: map['scripture'] ?? '',
-      question: map['question'] ?? '',
+      scripture: newScripture,
+      question: newQuestion1,
       created: map['created'] ?? -1, // 원래는 epoch 형태임
       startDate: map['startDate'] ?? "",
       startDateEpoch:
@@ -51,8 +68,8 @@ class Session {
       endDateEpoch:
           map['endDateEpoch'] ?? DateTime.now().millisecondsSinceEpoch,
       active: map['active'] ?? false,
-      question2: map['question2'] ?? '',
-      question3: map['question3'] ?? '',
+      question2: newQuestion2,
+      question3: newQuestion3,
     );
   }
 }

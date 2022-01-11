@@ -17,3 +17,6 @@ Color navUnselected = const Color(0xFFE6E6E6);
 
 // Main page
 Color mainPageContentsDivider = kPrimaryColor.withOpacity(0.4);
+
+// TextField
+Color textFieldBackground = const Color.fromRGBO(196, 196, 196, 0.25);

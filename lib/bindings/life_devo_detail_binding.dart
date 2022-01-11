@@ -5,7 +5,7 @@ import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_reposito
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
 
-class MainBinding implements Bindings {
+class LifeDevoDetailBinding implements Bindings {
   @override
   void dependencies() {
     // All necessary repos
@@ -13,11 +13,6 @@ class MainBinding implements Bindings {
     Get.lazyPut<AdminContentsRepository>(() => AdminContentsRepository());
 
     // All necessary controllers
-    Get.lazyPut<MainController>(
-      () => MainController(
-          authRepo: Get.find<AuthRepository>(),
-          adminContentRepo: Get.find<AdminContentsRepository>()),
-    );
     Get.lazyPut<LifeDevoDetailController>(
       () => LifeDevoDetailController(authRepo: Get.find<AuthRepository>()),
     );

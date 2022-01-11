@@ -12,3 +12,8 @@ double screenPaddingTop = Get.height * 0;
 double mainPageContentsTitle = Get.width * 0.045;
 double mainPageContentsDesc = Get.width * 0.035;
 double mainPageContentsSpace = Get.width * 0.025;
+
+// Contents detail page
+double adminContentDetailTitle = mainPageContentsTitle;
+double adminContentDetailDesc = mainPageContentsDesc;
+double adminContentDetailSpace = mainPageContentsSpace;
