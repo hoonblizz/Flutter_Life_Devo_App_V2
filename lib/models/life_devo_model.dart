@@ -42,4 +42,21 @@ class LifeDevo {
       answer3: map['answer3'] ?? '',
     );
   }
+
+  Map toJSON() {
+    return {
+      pkCollection: pkCollection,
+      skCollection: skCollection,
+      answer: answer,
+      meditation: meditation,
+      note: note,
+      sessionId: sessionId,
+      createdBy: createdBy,
+      lastModified: lastModified,
+      lastModifiedEpoch: lastModifiedEpoch,
+      shared: shared,
+      answer2: answer2,
+      answer3: answer3,
+    };
+  }
 }

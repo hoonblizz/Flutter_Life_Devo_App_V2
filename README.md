@@ -11,8 +11,7 @@ https://stackoverflow.com/questions/49446100/flutter-navigation-bar
 
 
 ## TODO:  
-- Auth  
-- Home page
+- Login 성공 웹페이지 만들고 여기에 적용.  
 
 ## Load controller and repo  
 상황에 따라 어떤 controller 와 repo 는 main 에서 declare  

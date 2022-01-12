@@ -1,19 +1,17 @@
 import 'package:flutter_life_devo_app_v2/data/providers/user_contents_api.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 
 class UserContentsRepository {
   Future getLifeDevo(String skCollection) async {
     return await UserContentsAPIClient.getLifeDevo(skCollection);
   }
 
-  Future updateLifeDevo(String skCollection,
-      [String? answer,
-      String? answer2,
-      String? answer3,
-      String? meditation,
-      String? note,
-      List? shared]) async {
-    return await UserContentsAPIClient.updateLifeDevo(
-        skCollection, answer, answer2, answer3, meditation, note, shared);
+  Future createLifeDevo(LifeDevo lifedevo) async {
+    return await UserContentsAPIClient.createLifeDevo(lifedevo);
+  }
+
+  Future updateLifeDevo(LifeDevo lifedevo) async {
+    return await UserContentsAPIClient.updateLifeDevo(lifedevo);
   }
   // Future getLatestLifeDevoSession() async {
   //   return await AdminContentsAPIClient.getLatestLifeDevoSession();

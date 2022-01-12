@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,12 @@ import 'package:flutter_life_devo_app_v2/theme/app_theme.dart';
 import 'package:flutter_life_devo_app_v2/translations/app_translations.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // For inappwebview
+
+  // if (Platform.isAndroid) {
+  //   await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  // }
+
   Get.put(GlobalController());
 
   runApp(GetMaterialApp(
