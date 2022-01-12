@@ -78,10 +78,7 @@ class MainController extends GetxController {
   }
 
   gotoLifeDevoDetail(Session lifeDevoSession) {
-    _lifeDevoDetailController.resetVariables();
-    _lifeDevoDetailController.setCurrentLifeDevo(lifeDevoSession, LifeDevo());
-    // Get.toNamed(Routes.LIFE_DEVO_DETAIL, arguments: [lifeDevoSession]);
-    Get.toNamed(Routes.LIFE_DEVO_DETAIL);
+    Get.toNamed(Routes.LIFE_DEVO_DETAIL, arguments: [lifeDevoSession]);
   }
 
   /******************************************************************

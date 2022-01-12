@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
+import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:get/get.dart';
@@ -7,29 +8,25 @@ import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
 import 'package:flutter_life_devo_app_v2/routes/app_pages.dart';
 
-const currentFileName = "main_controller";
+const currentFileName = "life_devo_detail_controller";
 
 class LifeDevoDetailController extends GetxController {
   final AuthRepository authRepo;
   //final AdminContentsRepository adminContentRepo;
-  LifeDevoDetailController({
-    required this.authRepo,
-    //required this.adminContentRepo,
-  }); // : assert(repository != null);
+  final UserContentsRepository userContentRepo;
+  LifeDevoDetailController(
+      {required this.authRepo,
+      //required this.adminContentRepo,
+      required this.userContentRepo}); // : assert(repository != null);
 
   GlobalController gc = Get.find();
 
   /******************************************************************
    * Variable collections
   ******************************************************************/
-  RxBool isLoading = false.obs;
-  Rx<Session> currentLifeDevoSession = Session().obs;
-  Rx<LifeDevo> currentLifeDevoAnswer = LifeDevo().obs;
+  RxBool isLifeDevoLoading = false.obs;
+  RxBool isCommentsLoading = false.obs;
 
-  final TextEditingController controllerAnswer = TextEditingController();
-  final TextEditingController controllerAnswer2 = TextEditingController();
-  final TextEditingController controllerAnswer3 = TextEditingController();
-  final TextEditingController controllerMeditation = TextEditingController();
   /******************************************************************
    * Functions
   ******************************************************************/
@@ -39,18 +36,19 @@ class LifeDevoDetailController extends GetxController {
     super.onInit();
   }
 
-  resetVariables() {
-    currentLifeDevoSession.value = Session();
-    currentLifeDevoAnswer.value = LifeDevo();
-    controllerAnswer.text = "";
-    controllerAnswer2.text = "";
-    controllerAnswer3.text = "";
-    controllerMeditation.text = "";
-  }
-
-  setCurrentLifeDevo(Session lifeDevoSession, LifeDevo? lifeDevoAnswer) {
-    currentLifeDevoSession.value = lifeDevoSession;
-    if (lifeDevoAnswer != null) currentLifeDevoAnswer.value = lifeDevoAnswer;
+  Future<LifeDevo?> getLifeDevo(String skCollection) async {
+    try {
+      Map result = await userContentRepo.getLifeDevo(skCollection);
+      gc.consoleLog('Result: ${result.toString()}',
+          curFileName: currentFileName);
+      if (result['statusCode'] == 200 &&
+          result['body'] != null &&
+          result['body']['pkCollection'] != null) {
+        return LifeDevo.fromJSON(result['body']);
+      }
+    } catch (e) {
+      gc.consoleLog('Error get life devo', curFileName: currentFileName);
+    }
   }
 
   gotoAuthPage() {

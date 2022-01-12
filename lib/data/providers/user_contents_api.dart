@@ -1,0 +1,33 @@
+import 'package:flutter_life_devo_app_v2/data/providers/global_api.dart';
+
+const baseUrlDev = "https://api.bclifedevo.com/";
+const apiUrlGetLifeDevo = "user/lifeDevo/getLifeDevo";
+const apiUrlUpdateLifeDevo = "user/lifeDevo/updateLifeDevo";
+
+class UserContentsAPIClient {
+  static getLifeDevo(String skCollection) async {
+    return await GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlGetLifeDevo, {"skCollection": skCollection});
+  }
+
+  static updateLifeDevo(String skCollection,
+      [String? answer,
+      String? answer2,
+      String? answer3,
+      String? meditation,
+      String? note,
+      List? shared]) async {
+    Map param = {"skCollection": skCollection};
+
+    // 하나씩 붙여주기
+    if (answer != null) param["answer"] = answer;
+    if (answer2 != null) param["answer2"] = answer2;
+    if (answer3 != null) param["answer3"] = answer3;
+    if (meditation != null) param["meditation"] = meditation;
+    if (note != null) param["note"] = note;
+    if (shared != null) param["shared"] = shared;
+
+    return await GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlUpdateLifeDevo, param);
+  }
+}

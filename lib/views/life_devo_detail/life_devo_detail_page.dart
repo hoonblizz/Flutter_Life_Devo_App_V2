@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
@@ -10,11 +11,74 @@ import 'package:flutter_life_devo_app_v2/views/widgets/custom_app_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class LifeDevoDetailPage extends StatelessWidget {
-  LifeDevoDetailPage({Key? key}) : super(key: key);
-  // 이제 parameter 로 가져오지 말고, 해당 컨트롤러에서 찾자.
-  //final Session _lifeDevoSession = Get.arguments[0];
+class LifeDevoDetailPage extends StatefulWidget {
+  const LifeDevoDetailPage({Key? key}) : super(key: key);
+
+  @override
+  State<LifeDevoDetailPage> createState() => _LifeDevoDetailPageState();
+}
+
+class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   final LifeDevoDetailController _lifeDevoDetailController = Get.find();
+  final Session _curLifeDevoSession = Get.arguments[0];
+  LifeDevo _curLifeDevo = LifeDevo();
+
+  final TextEditingController _controllerAnswer = TextEditingController();
+  final TextEditingController _controllerAnswer2 = TextEditingController();
+  final TextEditingController _controllerAnswer3 = TextEditingController();
+  final TextEditingController _controllerMeditation = TextEditingController();
+
+  @override
+  void initState() {
+    // 유저 answer 가 있는지, 있으면 가져오기
+    getLifeDevo(_curLifeDevoSession.skCollection);
+    // _controllerAnswer.text =
+    //     widget.lifeDevo != null ? widget.lifeDevo.answer : '';
+    // _controllerAnswer2.text =
+    //     widget.lifeDevo != null ? widget.lifeDevo.answer2 : '';
+    // _controllerAnswer3.text =
+    //     widget.lifeDevo != null ? widget.lifeDevo.answer3 : '';
+    // _controllerMeditation.text =
+    //     widget.lifeDevo != null ? widget.lifeDevo.meditation : '';
+
+    // if (widget.lifeDevo != null && widget.lifeDevo.shared.length > 0) {
+    //   UserService().getPartnersData(widget.lifeDevo.shared).then((partnerList) {
+    //     setState(() {
+    //       sharingPartnerList = partnerList;
+    //     });
+    //   });
+    // }
+
+    // 해당 life devo 의 코멘트 가져오기
+
+    super.initState();
+  }
+
+  getLifeDevo(String skCollection) async {
+    LifeDevo? _lifeDevo =
+        await _lifeDevoDetailController.getLifeDevo(skCollection);
+    if (_lifeDevo != null) {
+      setState(() {
+        _curLifeDevo = _lifeDevo;
+        _controllerAnswer.text = _curLifeDevo.answer;
+        _controllerAnswer2.text = _curLifeDevo.answer2;
+        _controllerAnswer3.text = _curLifeDevo.answer3;
+        _controllerMeditation.text = _curLifeDevo.meditation;
+      });
+    }
+  }
+
+  // 기존에 _curLifeDevo 의 존재유무에 따라 create 인지, update 인지 나뉜다.
+  saveLifeDevo() async {}
+
+  @override
+  void dispose() {
+    _controllerAnswer.dispose();
+    _controllerAnswer2.dispose();
+    _controllerAnswer3.dispose();
+    _controllerMeditation.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +90,11 @@ class LifeDevoDetailPage extends StatelessWidget {
         child: SafeArea(
           child: Stack(
             children: [
-              if (_lifeDevoDetailController
-                  .currentLifeDevoSession.value.skCollection.isEmpty)
+              if (_curLifeDevoSession.skCollection.isEmpty)
                 const Center(
                   child: Text('Session data not found.'),
                 ),
-              if (_lifeDevoDetailController
-                  .currentLifeDevoSession.value.skCollection.isNotEmpty)
+              if (_curLifeDevoSession.skCollection.isNotEmpty)
                 GestureDetector(
                   onTap: () => KeyboardUtil.hideKeyboard(context),
                   child: Container(
@@ -51,10 +113,7 @@ class LifeDevoDetailPage extends StatelessWidget {
                           Text(
                             DateFormat.yMMMMEEEEd().format(
                                 DateTime.fromMillisecondsSinceEpoch(
-                                    _lifeDevoDetailController
-                                        .currentLifeDevoSession
-                                        .value
-                                        .startDateEpoch)),
+                                    _curLifeDevoSession.startDateEpoch)),
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: adminContentDetailDesc),
@@ -62,8 +121,7 @@ class LifeDevoDetailPage extends StatelessWidget {
 
                           // Title
                           Text(
-                            _lifeDevoDetailController
-                                .currentLifeDevoSession.value.title,
+                            _curLifeDevoSession.title,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: adminContentDetailTitle),
@@ -76,8 +134,7 @@ class LifeDevoDetailPage extends StatelessWidget {
 
                           // Contents
                           Text(
-                            _lifeDevoDetailController
-                                .currentLifeDevoSession.value.scripture,
+                            _curLifeDevoSession.scripture,
                             style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 fontSize: adminContentDetailDesc),
@@ -105,26 +162,17 @@ class LifeDevoDetailPage extends StatelessWidget {
                           ),
 
                           // Questions & answers
-                          if (_lifeDevoDetailController
-                              .currentLifeDevoSession.value.question.isNotEmpty)
-                            _questionComponent(
-                                _lifeDevoDetailController
-                                    .currentLifeDevoSession.value.question,
-                                _lifeDevoDetailController.controllerAnswer),
+                          if (_curLifeDevoSession.question.isNotEmpty)
+                            _questionComponent(_curLifeDevoSession.question,
+                                _controllerAnswer),
 
-                          if (_lifeDevoDetailController.currentLifeDevoSession
-                              .value.question2.isNotEmpty)
-                            _questionComponent(
-                                _lifeDevoDetailController
-                                    .currentLifeDevoSession.value.question2,
-                                _lifeDevoDetailController.controllerAnswer2),
+                          if (_curLifeDevoSession.question2.isNotEmpty)
+                            _questionComponent(_curLifeDevoSession.question2,
+                                _controllerAnswer2),
 
-                          if (_lifeDevoDetailController.currentLifeDevoSession
-                              .value.question2.isNotEmpty)
-                            _questionComponent(
-                                _lifeDevoDetailController
-                                    .currentLifeDevoSession.value.question3,
-                                _lifeDevoDetailController.controllerAnswer3),
+                          if (_curLifeDevoSession.question2.isNotEmpty)
+                            _questionComponent(_curLifeDevoSession.question3,
+                                _controllerAnswer3),
 
                           // Meditate (only textfield): 유저 메모 같은거
 

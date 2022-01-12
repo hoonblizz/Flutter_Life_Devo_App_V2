@@ -5,7 +5,7 @@ class GlobalAPIClient {
   final http.Client httpClient;
   GlobalAPIClient({required this.httpClient});
 
-  static Future<Map<String, dynamic>> getRequest(String url) async {
+  static Future<Map> getRequest(String url) async {
     http.Response result = await http.get(
       Uri.parse(url),
       //headers: {"Content-Type": "application/json"},
@@ -14,8 +14,7 @@ class GlobalAPIClient {
     return _processResponse(result);
   }
 
-  static Future<Map<String, dynamic>> postRequest(
-      String url, Map<String, dynamic> bodyJSON) async {
+  static Future<Map> postRequest(String url, Map bodyJSON) async {
     http.Response result = await http.post(
       Uri.parse(url),
       headers: {"Content-Type": "application/json"},
@@ -28,8 +27,7 @@ class GlobalAPIClient {
   /// **********************************************************************
   /// Private functions
   /// **********************************************************************
-  static Future<Map<String, dynamic>> _processResponse(
-      http.Response response) async {
+  static Future<Map> _processResponse(http.Response response) async {
     final body = response.body;
     if (body.isNotEmpty) {
       final jsonBody = json.decode(body);
