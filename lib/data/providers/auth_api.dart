@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter_life_devo_app_v2/data/providers/global_api.dart';
+import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:flutter_life_devo_app_v2/models/user_token_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const baseUrlDev = "https://api.bclifedevo.com/";
 const apiUrlVerifyUserToken = "user/auth/verifyUserToken";
+const apiUrlGetUserBySystemId = "user/auth/getUserBySystemId";
 const apiUrlLogin = "user/auth/login";
 const keyUserToken = "USER_TOKEN";
 
@@ -70,6 +72,13 @@ class AuthAPIClient {
     return await GlobalAPIClient.postRequest(
       baseUrlDev + apiUrlLogin,
       {'username': username, 'password': password},
+    );
+  }
+
+  static getUserDataBySystemId(String systemId) async {
+    return await GlobalAPIClient.postRequest(
+      baseUrlDev + apiUrlGetUserBySystemId,
+      {'systemId': systemId},
     );
   }
 

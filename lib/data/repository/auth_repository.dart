@@ -16,6 +16,10 @@ class AuthRepository {
     return await AuthAPIClient.login(username, password);
   }
 
+  Future getUserDataBySystemId(String systemId) async {
+    return await AuthAPIClient.getUserDataBySystemId(systemId);
+  }
+
   Future<Map<String, dynamic>> checkUserTokenIsValid(
       UserTokenModel userTokenModel) async {
     return await AuthAPIClient.checkUserTokenIsValid(userTokenModel);

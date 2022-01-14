@@ -14,6 +14,7 @@ class UserContentsAPIClient {
 
   // 새로 만드는거라 여기에는 pk, sk collection 등 몇가지 데이터는 없다.
   static createLifeDevo(LifeDevo lifedevo) async {
+    print('Life devo check before create: ${lifedevo.toJSON()}');
     return await GlobalAPIClient.postRequest(
         baseUrlDev + apiUrlCreateLifeDevo, lifedevo.toJSON());
   }

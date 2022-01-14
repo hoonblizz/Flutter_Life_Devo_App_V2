@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class LifeDevo {
   String pkCollection;
   String skCollection;
@@ -5,7 +7,7 @@ class LifeDevo {
   String meditation;
   String note;
   String sessionId; // life devo session ID
-  String createdBy;
+  String createdBy; // User id. NOT system id!
   String lastModified;
   int lastModifiedEpoch;
   List shared;
@@ -27,36 +29,57 @@ class LifeDevo {
       this.answer3 = ""});
 
   factory LifeDevo.fromJSON(Map map) {
+    // 특수문자가 안나올수 있기 때문에, conversion 필요
+    String newAnswer = map['answer'] != null
+        ? const Utf8Decoder().convert(map['answer'].toString().codeUnits)
+        : '';
+
+    String newAnswer2 = map['answer2'] != null
+        ? const Utf8Decoder().convert(map['answer2'].toString().codeUnits)
+        : '';
+
+    String newAnswer3 = map['answer3'] != null
+        ? const Utf8Decoder().convert(map['answer3'].toString().codeUnits)
+        : '';
+
+    String newMeditation = map['meditation'] != null
+        ? const Utf8Decoder().convert(map['meditation'].toString().codeUnits)
+        : '';
+
+    String newNote = map['note'] != null
+        ? const Utf8Decoder().convert(map['note'].toString().codeUnits)
+        : '';
+
     return LifeDevo(
       pkCollection: map['pkCollection'] ?? '',
       skCollection: map['skCollection'] ?? '',
-      answer: map['answer'] ?? '',
-      meditation: map['meditation'] ?? '',
-      note: map['note'] ?? '',
+      answer: newAnswer,
+      meditation: newMeditation,
+      note: newNote,
       sessionId: map['sessionId'] ?? '',
       createdBy: map['createdBy'] ?? '',
       lastModified: map['lastModified'] ?? '',
       lastModifiedEpoch: map['lastModifiedEpoch'] ?? '',
       shared: map['shared'] ?? [],
-      answer2: map['answer2'] ?? '',
-      answer3: map['answer3'] ?? '',
+      answer2: newAnswer2,
+      answer3: newAnswer3,
     );
   }
 
   Map toJSON() {
     return {
-      pkCollection: pkCollection,
-      skCollection: skCollection,
-      answer: answer,
-      meditation: meditation,
-      note: note,
-      sessionId: sessionId,
-      createdBy: createdBy,
-      lastModified: lastModified,
-      lastModifiedEpoch: lastModifiedEpoch,
-      shared: shared,
-      answer2: answer2,
-      answer3: answer3,
+      "pkCollection": pkCollection,
+      "skCollection": skCollection,
+      "answer": answer,
+      "meditation": meditation,
+      "note": note,
+      "sessionId": sessionId,
+      "createdBy": createdBy,
+      "lastModified": lastModified,
+      "lastModifiedEpoch": lastModifiedEpoch,
+      "shared": shared,
+      "answer2": answer2,
+      "answer3": answer3,
     };
   }
 }

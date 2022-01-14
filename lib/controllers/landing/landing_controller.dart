@@ -1,3 +1,4 @@
+import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
@@ -46,7 +47,25 @@ class LandingController extends GetxController {
         gc.userToken.idToken.isNotEmpty) {
       var result = await _checkTokenValid(gc.userToken);
       gc.userLoggedIn.value = result['isValid'] ?? false;
-      gc.email = result['email'] ?? "";
+      gc.userSystemId = result['systemId'] ?? "";
+
+      // valid 하면, System id 를 토대로 유저 정보 가져오기
+      if (gc.userLoggedIn.value) {
+        try {
+          Map resultUserData =
+              await authRepo.getUserDataBySystemId(gc.userSystemId);
+          gc.consoleLog('Result user data: ${resultUserData.toString()}',
+              curFileName: currentFileName);
+
+          if (resultUserData['statusCode'] == 200) {
+            gc.currentUser = User.fromJSON(resultUserData['body']);
+          }
+        } catch (e) {
+          gc.consoleLog('Error getting user data by system id: ${e.toString()}',
+              curFileName: currentFileName);
+          gc.userLoggedIn.value = false;
+        }
+      }
     } else {
       gc.userLoggedIn.value = false;
     }

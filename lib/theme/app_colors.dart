@@ -20,3 +20,6 @@ Color mainPageContentsDivider = kPrimaryColor.withOpacity(0.4);
 
 // TextField
 Color textFieldBackground = const Color.fromRGBO(196, 196, 196, 0.25);
+
+// Content divider color
+// Color contentDivider = const 

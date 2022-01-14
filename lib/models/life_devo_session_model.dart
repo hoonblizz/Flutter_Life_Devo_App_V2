@@ -15,24 +15,26 @@ class Session {
   final bool active;
   final String question2;
   final String question3;
+  final String id; // 해당 admin life devo 의 세션 id
 
-  Session(
-      {this.pkCollection = "",
-      this.skCollection = "",
-      this.sessionNum = 0,
-      this.title = "",
-      this.scripture = "",
-      this.question = "",
-      //DateTime? created,
-      this.created = 0,
-      String? startDate,
-      this.startDateEpoch = 0,
-      String? endDate,
-      this.endDateEpoch = 0,
-      this.active = false,
-      this.question2 = "",
-      this.question3 = ""})
-      : startDate = startDate ?? "",
+  Session({
+    this.pkCollection = "",
+    this.skCollection = "",
+    this.sessionNum = 0,
+    this.title = "",
+    this.scripture = "",
+    this.question = "",
+    //DateTime? created,
+    this.created = 0,
+    String? startDate,
+    this.startDateEpoch = 0,
+    String? endDate,
+    this.endDateEpoch = 0,
+    this.active = false,
+    this.question2 = "",
+    this.question3 = "",
+    this.id = "",
+  })  : startDate = startDate ?? "",
         endDate = endDate ?? "";
 
   factory Session.fromJSON(Map map) {
@@ -70,6 +72,7 @@ class Session {
       active: map['active'] ?? false,
       question2: newQuestion2,
       question3: newQuestion3,
+      id: map['id'] ?? '',
     );
   }
 }
