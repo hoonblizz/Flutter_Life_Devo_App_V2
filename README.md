@@ -7,11 +7,12 @@ https://github.com/abuanwar072/E-commerce-Complete-Flutter-UI
 https://github.com/hossin529/flutter-article-ui-Tutorial-1  
 
 ## UI: App bar 에 탭이 붙는 디자인:  
-https://stackoverflow.com/questions/49446100/flutter-navigation-bar  
+https://blog.logrocket.com/flutter-tabbar-a-complete-tutorial-with-examples/
 
 
 ## TODO:  
-- Login 성공 웹페이지 만들고 여기에 적용.  
+- Login 성공 웹페이지 만들고 여기에 적용. 
+- 라이프 디보 시작한김에 세번째 탭 (라이프디보) 마저 하기  
 
 ## Load controller and repo  
 상황에 따라 어떤 controller 와 repo 는 main 에서 declare  
