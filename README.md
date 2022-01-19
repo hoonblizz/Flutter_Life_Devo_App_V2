@@ -19,6 +19,12 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 - Login 성공 웹페이지 만들고 여기에 적용. 
 - 라이프 디보 시작한김에 세번째 탭 (라이프디보) 마저 하기  
 
+
+# 2022.01.19  
+- Life devo 탭에서 Month calendar 에 selectedDate 를 controller 로 옮기기. (다른 페이지 갔다가 돌아와도 유지 되게끔)  
+- Life devo 의 My, shared 상단탭에도 캘린더 적용  
+- 그 후에 API 작업 (Pagination 적용할 필요 없이 다 불러오기. 물론 month 별로)   
+
 ## Load controller and repo  
 상황에 따라 어떤 controller 와 repo 는 main 에서 declare  
 해주도록 한다.  (global 이랄지...)

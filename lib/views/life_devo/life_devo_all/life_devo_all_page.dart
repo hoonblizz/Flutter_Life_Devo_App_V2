@@ -51,20 +51,21 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
           alignment: Alignment.centerRight,
           padding: EdgeInsets.symmetric(horizontal: screenPaddingHorizontal),
           child: TextButton(
-              style: TextButton.styleFrom(
-                //minimumSize: Size(_width, _height),
-                backgroundColor: kPrimaryColor,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+            style: TextButton.styleFrom(
+              //minimumSize: Size(_width, _height),
+              backgroundColor: kPrimaryColor,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+            ),
+            onPressed: switchPicker,
+            child: Text(
+              DateFormat.yMMM().format(_selectedMonth),
+              style: TextStyle(
+                fontSize: mainPageContentsDesc,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
               ),
-              onPressed: switchPicker,
-              child: Text(
-                DateFormat.yMMM().format(_selectedMonth),
-                style: TextStyle(
-                    fontSize: mainPageContentsDesc,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600),
-              )),
+            ),
+          ),
         ),
       ],
     );
