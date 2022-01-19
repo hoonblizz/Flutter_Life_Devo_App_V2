@@ -3,13 +3,14 @@
 */
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
+import 'package:flutter_life_devo_app_v2/views/life_devo/life_devo_all/life_devo_all_page.dart';
 
 // ignore: use_key_in_widget_constructors
 class LifeDevoPage extends StatelessWidget {
   //const LifeDevoPage({Key? key}) : super(key: key);
   //final TabController _tabController = TabController();
 
-  final upperTab = TabBar(
+  final _upperTab = TabBar(
     //isScrollable: true,
     indicatorColor: navBG,
     indicatorWeight: 3,
@@ -24,6 +25,14 @@ class LifeDevoPage extends StatelessWidget {
     ],
   );
 
+  final _tabbarView = TabBarView(
+    children: [
+      LifeDevoAllPage(),
+      Icon(Icons.directions_transit, size: 350),
+      Icon(Icons.directions_car, size: 350),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -33,17 +42,11 @@ class LifeDevoPage extends StatelessWidget {
           backgroundColor: kPrimaryColor,
           //foregroundColor: kSecondaryColor,
           automaticallyImplyLeading: false,
-          title: upperTab,
+          title: _upperTab,
           elevation: 5,
           //bottom: upperTab,
         ),
-        body: TabBarView(
-          children: [
-            Icon(Icons.flight, size: 350),
-            Icon(Icons.directions_transit, size: 350),
-            Icon(Icons.directions_car, size: 350),
-          ],
-        ),
+        body: _tabbarView,
       ),
     );
   }
