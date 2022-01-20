@@ -1,4 +1,5 @@
 import 'package:flutter_life_devo_app_v2/controllers/home/home_controller.dart';
+import 'package:flutter_life_devo_app_v2/controllers/life_devo/life_devo_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
@@ -23,6 +24,10 @@ class MainBinding implements Bindings {
     Get.lazyPut<LifeDevoDetailController>(
       () => LifeDevoDetailController(
           authRepo: Get.find<AuthRepository>(),
+          userContentRepo: Get.find<UserContentsRepository>()),
+    );
+    Get.lazyPut<LifeDevoController>(
+      () => LifeDevoController(
           userContentRepo: Get.find<UserContentsRepository>()),
     );
   }

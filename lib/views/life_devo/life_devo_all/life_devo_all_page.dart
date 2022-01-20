@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_life_devo_app_v2/controllers/life_devo/life_devo_controller.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/year_month_calendar.dart';
@@ -14,6 +15,8 @@ class LifeDevoAllPage extends StatefulWidget {
 }
 
 class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
+  final LifeDevoController _lifeDevoController = Get.find();
+
   DateTime _selectedMonth = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -21,6 +24,14 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
   );
 
   dynamic _pickerOpen = false;
+
+  @override
+  void initState() {
+    // 탭이 바뀔때마다 init 이 불러지는걸 확인했다.
+    // controller 를 확인하고, 데이터가 없으면 불러주는 식으로 가자.
+    print('Life Devo ALL Page init........!');
+    super.initState();
+  }
 
   void switchPicker() {
     setState(() {
@@ -67,6 +78,12 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
             ),
           ),
         ),
+        Container(
+          child: Text('All LD'),
+        ),
+        SizedBox(
+          height: 80,
+        )
       ],
     );
   }
