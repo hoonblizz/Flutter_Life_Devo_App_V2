@@ -55,11 +55,15 @@ class Session {
         ? const Utf8Decoder().convert(map['question3'].toString().codeUnits)
         : '';
 
+    String newTitle = map['title'] != null
+        ? const Utf8Decoder().convert(map['title'].toString().codeUnits)
+        : '';
+
     return Session(
       pkCollection: map['pkCollection'] ?? '',
       skCollection: map['skCollection'] ?? '',
       sessionNum: map['sessionNum'] ?? -1,
-      title: map['title'] ?? '',
+      title: newTitle,
       scripture: newScripture,
       question: newQuestion1,
       created: map['created'] ?? -1, // 원래는 epoch 형태임

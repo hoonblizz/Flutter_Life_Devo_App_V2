@@ -17,3 +17,8 @@ double mainPageContentsSpace = Get.width * 0.025;
 double adminContentDetailTitle = mainPageContentsTitle;
 double adminContentDetailDesc = mainPageContentsDesc;
 double adminContentDetailSpace = mainPageContentsSpace;
+
+// Content List
+double contentListCardTitle = Get.width * 0.045;
+double contentListCardDate = mainPageContentsDesc;
+double contentListCardHeight = 120;

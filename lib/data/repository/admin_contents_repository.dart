@@ -5,6 +5,11 @@ class AdminContentsRepository {
     return await AdminContentsAPIClient.getLatestLifeDevoSession();
   }
 
+  Future getAllLifeDevoSession(int startDateFrom, int startDateTo) async {
+    return await AdminContentsAPIClient.getAllLifeDevoSession(
+        startDateFrom, startDateTo);
+  }
+
   Future getLatestLiveLifeDevo() async {
     return await AdminContentsAPIClient.getLatestLiveLifeDevo();
   }

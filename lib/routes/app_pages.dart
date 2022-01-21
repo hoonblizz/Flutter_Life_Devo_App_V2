@@ -1,4 +1,3 @@
-import 'package:flutter_life_devo_app_v2/bindings/life_devo_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/life_devo_detail_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo/life_devo_page.dart';

@@ -28,6 +28,7 @@ class MainBinding implements Bindings {
     );
     Get.lazyPut<LifeDevoController>(
       () => LifeDevoController(
+          adminContentRepo: Get.find<AdminContentsRepository>(),
           userContentRepo: Get.find<UserContentsRepository>()),
     );
   }
