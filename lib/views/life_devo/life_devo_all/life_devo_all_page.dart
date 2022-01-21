@@ -26,7 +26,10 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
   void initState() {
     // 탭이 바뀔때마다 init 이 불러지는걸 확인했다.
     // controller 를 확인하고, 데이터가 없으면 불러주는 식으로 가자.
-    _lifeDevoController.getAllLifeDevoSession();
+    if (_lifeDevoController.allLifeDevoSessionList.isEmpty) {
+      _lifeDevoController.getAllLifeDevoSession();
+    }
+
     super.initState();
   }
 

@@ -11,11 +11,11 @@ class LoadingWidget extends StatelessWidget {
     return Container(
       width: Get.width,
       height: Get.height,
-      color: Colors.black.withOpacity(0.15),
+      color: Colors.black.withOpacity(0),
       child: const Center(
         child: SpinKitFadingCube(
           color: kPrimaryColor,
-          size: 40.0,
+          size: 35.0,
         ),
       ),
     );
