@@ -44,13 +44,13 @@ class LifeDevoDetailController extends GetxController {
     isLifeDevoLoading.value = false;
   }
 
-  Future<LifeDevo?> onTapSaveLifeDevo(LifeDevo _lifeDevo) async {
+  Future<LifeDevoModel?> onTapSaveLifeDevo(LifeDevoModel _lifeDevo) async {
     _startLifeDevoLoading();
 
     if (_lifeDevo.skCollection.isNotEmpty) {
       await updateLifeDevo(_lifeDevo);
     } else {
-      LifeDevo? createdLifeDevo = await createLifeDevo(_lifeDevo);
+      LifeDevoModel? createdLifeDevo = await createLifeDevo(_lifeDevo);
       if (createdLifeDevo != null) {
         // 저장이 잘 안되면 null 이 리턴된다. 그럴땐 기존의 텍스트를 없애지 않도록...
         _lifeDevo = createdLifeDevo;
@@ -58,7 +58,7 @@ class LifeDevoDetailController extends GetxController {
     }
 
     // 끝나면 그냥 한번 더 불러주자.
-    LifeDevo? returnedLifeDevo = await getUserLifeDevo(
+    LifeDevoModel? returnedLifeDevo = await getUserLifeDevo(
         userId: _lifeDevo.createdBy, lifeDevoSessionId: _lifeDevo.sessionId);
 
     _stopLifeDevoLoading();
@@ -66,7 +66,7 @@ class LifeDevoDetailController extends GetxController {
     return returnedLifeDevo;
   }
 
-  Future<LifeDevo?> getUserLifeDevo(
+  Future<LifeDevoModel?> getUserLifeDevo(
       {required String userId, required String lifeDevoSessionId}) async {
     String _skCollection = userId + '#' + lifeDevoSessionId;
     gc.consoleLog('skCollection for getting User life devo: ${_skCollection}',
@@ -78,7 +78,7 @@ class LifeDevoDetailController extends GetxController {
       if (result['statusCode'] == 200 &&
           result['body'] != null &&
           result['body']['pkCollection'] != null) {
-        return LifeDevo.fromJSON(result['body']);
+        return LifeDevoModel.fromJSON(result['body']);
       }
     } catch (e) {
       gc.consoleLog('Error get life devo: ${e.toString()}',
@@ -86,20 +86,20 @@ class LifeDevoDetailController extends GetxController {
     }
   }
 
-  Future<LifeDevo?> createLifeDevo(LifeDevo _lifeDevo) async {
+  Future<LifeDevoModel?> createLifeDevo(LifeDevoModel _lifeDevo) async {
     try {
       Map result = await userContentRepo.createLifeDevo(_lifeDevo);
       gc.consoleLog('Result: ${result.toString()}',
           curFileName: currentFileName);
       if (result['statusCode'] == 200 && result['body'] != null) {
-        return LifeDevo.fromJSON(result['body']);
+        return LifeDevoModel.fromJSON(result['body']);
       }
     } catch (e) {
       gc.consoleLog('Error creating life devo', curFileName: currentFileName);
     }
   }
 
-  Future updateLifeDevo(LifeDevo _lifeDevo) async {
+  Future updateLifeDevo(LifeDevoModel _lifeDevo) async {
     try {
       Map result = await userContentRepo.updateLifeDevo(_lifeDevo);
       gc.consoleLog('Result: ${result.toString()}',

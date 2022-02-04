@@ -6,11 +6,11 @@ class UserContentsRepository {
     return await UserContentsAPIClient.getLifeDevo(skCollection);
   }
 
-  Future createLifeDevo(LifeDevo lifedevo) async {
+  Future createLifeDevo(LifeDevoModel lifedevo) async {
     return await UserContentsAPIClient.createLifeDevo(lifedevo);
   }
 
-  Future updateLifeDevo(LifeDevo lifedevo) async {
+  Future updateLifeDevo(LifeDevoModel lifedevo) async {
     return await UserContentsAPIClient.updateLifeDevo(lifedevo);
   }
   // Future getLatestLifeDevoSession() async {
@@ -22,6 +22,10 @@ class UserContentsRepository {
   // }
 
   Future getMyLifeDevo(String userId, List sessionIdList) async {
+    return await UserContentsAPIClient.getMyLifeDevo(userId, sessionIdList);
+  }
+
+  Future getSharedLifeDevo(String userId, List sessionIdList) async {
     return await UserContentsAPIClient.getMyLifeDevo(userId, sessionIdList);
   }
 }

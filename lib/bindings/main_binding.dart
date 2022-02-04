@@ -18,18 +18,22 @@ class MainBinding implements Bindings {
     // All necessary controllers
     Get.lazyPut<MainController>(
       () => MainController(
-          authRepo: Get.find<AuthRepository>(),
-          adminContentRepo: Get.find<AdminContentsRepository>()),
+        authRepo: Get.find<AuthRepository>(),
+        adminContentRepo: Get.find<AdminContentsRepository>(),
+        userContentRepo: Get.find<UserContentsRepository>(),
+      ),
     );
     Get.lazyPut<LifeDevoDetailController>(
       () => LifeDevoDetailController(
-          authRepo: Get.find<AuthRepository>(),
-          userContentRepo: Get.find<UserContentsRepository>()),
+        authRepo: Get.find<AuthRepository>(),
+        userContentRepo: Get.find<UserContentsRepository>(),
+      ),
     );
     Get.lazyPut<LifeDevoController>(
       () => LifeDevoController(
-          adminContentRepo: Get.find<AdminContentsRepository>(),
-          userContentRepo: Get.find<UserContentsRepository>()),
+        adminContentRepo: Get.find<AdminContentsRepository>(),
+        userContentRepo: Get.find<UserContentsRepository>(),
+      ),
     );
   }
 }

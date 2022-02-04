@@ -10,14 +10,14 @@
 
 // import 'package:intl/intl.dart';
 
-// class LifeDevoMyPage extends StatefulWidget {
-//   const LifeDevoMyPage({Key? key}) : super(key: key);
+// class LifeDevoSharedPage extends StatefulWidget {
+//   const LifeDevoSharedPage({Key? key}) : super(key: key);
 
 //   @override
-//   _LifeDevoMyPageState createState() => _LifeDevoMyPageState();
+//   _LifeDevoSharedPageState createState() => _LifeDevoSharedPageState();
 // }
 
-// class _LifeDevoMyPageState extends State<LifeDevoMyPage> {
+// class _LifeDevoSharedPageState extends State<LifeDevoSharedPage> {
 //   final LifeDevoController _lifeDevoController = Get.find();
 
 //   dynamic _pickerOpen = false;
@@ -26,8 +26,8 @@
 //   void initState() {
 //     // 탭이 바뀔때마다 init 이 불러지는걸 확인했다.
 //     // controller 를 확인하고, 데이터가 없으면 불러주는 식으로 가자.
-//     if (_lifeDevoController.myLifeDevoList.isEmpty) {
-//       _lifeDevoController.getMyLifeDevo();
+//     if (_lifeDevoController.sharedLifeDevoList.isEmpty) {
+//       _lifeDevoController.getSharedLifeDevo();
 //     }
 
 //     super.initState();
@@ -38,13 +38,13 @@
 //       _pickerOpen ^= true;
 //       //print('Picker opened? ${_pickerOpen}');
 //       if (!_pickerOpen) {
-//         _lifeDevoController.getMyLifeDevo();
+//         _lifeDevoController.getSharedLifeDevo();
 //       }
 //     });
 //   }
 
 //   void onSelectMonth(DateTime selectedTime) {
-//     _lifeDevoController.onChangeMonthForTabMy(selectedTime);
+//     _lifeDevoController.onChangeMonthForTabShared(selectedTime);
 //   }
 
 //   @override
@@ -56,12 +56,12 @@
 //         Obx(() {
 //           // 현재는 session 안에 진입하면 유저의 lifedevo 를 찾아서 붙여주는식.
 //           List<LifeDevoModel> _lifeDevoList =
-//               _lifeDevoController.myLifeDevoList;
+//               _lifeDevoController.sharedLifeDevoList;
 
 //           List<LifeDevoSessionModel> _sessionList =
-//               _lifeDevoController.myLifeDevoSessionList;
+//               _lifeDevoController.sharedLifeDevoSessionList;
 
-//           if (_lifeDevoController.isTabMyLoading.value) {
+//           if (_lifeDevoController.isTabSharedLoading.value) {
 //             return const LoadingWidget();
 //           }
 
@@ -126,7 +126,8 @@
 //             Obx(() {
 //               return YearMonthCalendar(
 //                 pickerOpen: _pickerOpen,
-//                 selectedMonth: _lifeDevoController.selectedMonthForTabMy.value,
+//                 selectedMonth:
+//                     _lifeDevoController.selectedMonthForTabShared.value,
 //                 onSelectMonth: onSelectMonth,
 //               );
 //             }),
@@ -147,8 +148,8 @@
 //                     return Text(
 //                       _pickerOpen
 //                           ? 'Close'
-//                           : DateFormat.yMMM().format(
-//                               _lifeDevoController.selectedMonthForTabMy.value),
+//                           : DateFormat.yMMM().format(_lifeDevoController
+//                               .selectedMonthForTabShared.value),
 //                       style: TextStyle(
 //                         fontSize: mainPageContentsDesc,
 //                         color: Colors.white,

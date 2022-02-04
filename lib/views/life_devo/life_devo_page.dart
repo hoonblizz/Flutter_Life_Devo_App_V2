@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo/life_devo_all/life_devo_all_page.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo/life_devo_my/life_devo_my_page.dart';
+import 'package:flutter_life_devo_app_v2/views/life_devo/life_devo_shared/life_devo_shared.dart';
 
 // ignore: use_key_in_widget_constructors
 class LifeDevoPage extends StatelessWidget {
@@ -29,8 +30,14 @@ class LifeDevoPage extends StatelessWidget {
   final _tabbarView = TabBarView(
     children: [
       LifeDevoAllPage(),
-      LifeDevoMyPage(),
-      Icon(Icons.directions_car, size: 350),
+      Container(
+        child: Text('1'),
+      ),
+      Container(
+        child: Text('2'),
+      ),
+      //LifeDevoMyPage(),
+      //LifeDevoSharedPage(),
     ],
   );
 

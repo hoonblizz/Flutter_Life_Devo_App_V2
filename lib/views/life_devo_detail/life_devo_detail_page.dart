@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
@@ -24,8 +25,7 @@ class LifeDevoDetailPage extends StatefulWidget {
 class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   final LifeDevoDetailController _lifeDevoDetailController = Get.find();
   final GlobalController _globalController = Get.find();
-  final Session _curLifeDevoSession = Get.arguments[0];
-  LifeDevo _curLifeDevo = LifeDevo();
+  final LifeDevoCompModel _curLifeDevoSession = Get.arguments[0];
 
   final TextEditingController _controllerAnswer = TextEditingController();
   final TextEditingController _controllerAnswer2 = TextEditingController();
@@ -37,51 +37,31 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   @override
   void initState() {
     // 유저 answer 가 있는지, 있으면 가져오기
-    getUserLifeDevo(
-        userId: _globalController.currentUser.userId,
-        lifeDevoSessionId: _curLifeDevoSession.id);
-
+    // 2022.02.04 - Composite model 로 따로 가져올 필요 없게끔.
+    // getUserLifeDevo(
+    //     userId: _globalController.currentUser.userId,
+    //     lifeDevoSessionId: _curLifeDevoSession.id);
+    setData();
     // 해당 life devo 의 코멘트 가져오기
 
     super.initState();
   }
 
-  mergeData() {
-    // Life devo 의 id 넣기
-    _curLifeDevo.sessionId = _curLifeDevoSession.id;
-
-    // Life devo 에 현재 유저 정보 넣기
-    _curLifeDevo.createdBy = _globalController.currentUser.userId;
+  setData() {
+    setState(() {
+      _controllerAnswer.text = _curLifeDevoSession.answer;
+      _controllerAnswer2.text = _curLifeDevoSession.answer2;
+      _controllerAnswer3.text = _curLifeDevoSession.answer3;
+      _controllerMeditation.text = _curLifeDevoSession.meditation;
+    });
   }
 
-  getUserLifeDevo(
-      {required String userId, required String lifeDevoSessionId}) async {
-    setState(() {
-      isLoading = true;
-    });
+  mergeData() {
+    // Life devo 의 id 넣기
+    _curLifeDevoSession.sessionId = _curLifeDevoSession.id;
 
-    //await Future.delayed(const Duration(seconds: 3));  // only for testing loading
-    LifeDevo? _lifeDevo = await _lifeDevoDetailController.getUserLifeDevo(
-      userId: userId,
-      lifeDevoSessionId: lifeDevoSessionId,
-    );
-
-    if (_lifeDevo != null) {
-      setState(() {
-        _curLifeDevo = _lifeDevo;
-        _controllerAnswer.text = _curLifeDevo.answer;
-        _controllerAnswer2.text = _curLifeDevo.answer2;
-        _controllerAnswer3.text = _curLifeDevo.answer3;
-        _controllerMeditation.text = _curLifeDevo.meditation;
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
-
-    mergeData();
+    // Life devo 에 현재 유저 정보 넣기
+    _curLifeDevoSession.createdBy = _globalController.currentUser.userId;
   }
 
   // 기존에 _curLifeDevo 의 존재유무에 따라 create 인지, update 인지 나뉜다.
@@ -91,19 +71,17 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
     // 텍스트 컨트롤러에 있던 정보 옮기기
     _pasteDataToModel();
 
-    LifeDevo? _returnedLifeDevo =
-        await _lifeDevoDetailController.onTapSaveLifeDevo(_curLifeDevo);
-    if (_returnedLifeDevo != null) {
-      _curLifeDevo = _returnedLifeDevo;
-    }
+    LifeDevoModel? _returnedLifeDevo =
+        await _lifeDevoDetailController.onTapSaveLifeDevo(
+            LifeDevoCompModel().toLifeDevoModel(_curLifeDevoSession));
   }
 
   _pasteDataToModel() {
     mergeData();
-    _curLifeDevo.answer = _controllerAnswer.text;
-    _curLifeDevo.answer2 = _controllerAnswer2.text;
-    _curLifeDevo.answer3 = _controllerAnswer3.text;
-    _curLifeDevo.meditation = _controllerMeditation.text;
+    _curLifeDevoSession.answer = _controllerAnswer.text;
+    _curLifeDevoSession.answer2 = _controllerAnswer2.text;
+    _curLifeDevoSession.answer3 = _controllerAnswer3.text;
+    _curLifeDevoSession.meditation = _controllerMeditation.text;
   }
 
   @override
@@ -125,11 +103,11 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
         child: SafeArea(
           child: Stack(
             children: [
-              if (_curLifeDevoSession.skCollection.isEmpty)
+              if (_curLifeDevoSession.skCollectionSession.isEmpty)
                 const Center(
                   child: Text('Session data not found.'),
                 ),
-              if (_curLifeDevoSession.skCollection.isNotEmpty)
+              if (_curLifeDevoSession.skCollectionSession.isNotEmpty)
                 GestureDetector(
                   onTap: () => KeyboardUtil.hideKeyboard(context),
                   child: Container(

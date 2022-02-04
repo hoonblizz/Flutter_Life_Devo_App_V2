@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class LifeDevo {
+class LifeDevoModel {
   String pkCollection;
   String skCollection;
   String answer;
@@ -14,7 +14,7 @@ class LifeDevo {
   String answer2;
   String answer3;
 
-  LifeDevo(
+  LifeDevoModel(
       {this.pkCollection = "",
       this.skCollection = "",
       this.answer = "",
@@ -28,7 +28,7 @@ class LifeDevo {
       this.answer2 = "",
       this.answer3 = ""});
 
-  factory LifeDevo.fromJSON(Map map) {
+  factory LifeDevoModel.fromJSON(Map map) {
     // 특수문자가 안나올수 있기 때문에, conversion 필요
     String newAnswer = map['answer'] != null
         ? const Utf8Decoder().convert(map['answer'].toString().codeUnits)
@@ -50,7 +50,7 @@ class LifeDevo {
         ? const Utf8Decoder().convert(map['note'].toString().codeUnits)
         : '';
 
-    return LifeDevo(
+    return LifeDevoModel(
       pkCollection: map['pkCollection'] ?? '',
       skCollection: map['skCollection'] ?? '',
       answer: newAnswer,

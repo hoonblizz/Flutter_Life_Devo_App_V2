@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class Session {
+class LifeDevoSessionModel {
   final String pkCollection;
   final String skCollection;
   final int sessionNum;
@@ -17,7 +17,7 @@ class Session {
   final String question3;
   final String id; // 해당 admin life devo 의 세션 id
 
-  Session({
+  LifeDevoSessionModel({
     this.pkCollection = "",
     this.skCollection = "",
     this.sessionNum = 0,
@@ -37,7 +37,7 @@ class Session {
   })  : startDate = startDate ?? "",
         endDate = endDate ?? "";
 
-  factory Session.fromJSON(Map map) {
+  factory LifeDevoSessionModel.fromJSON(Map map) {
     //Map map = jsonDecode(jsonEncode(tempMap));
 
     // 특수문자가 안나올수 있기 때문에, conversion 필요
@@ -59,7 +59,7 @@ class Session {
         ? const Utf8Decoder().convert(map['title'].toString().codeUnits)
         : '';
 
-    return Session(
+    return LifeDevoSessionModel(
       pkCollection: map['pkCollection'] ?? '',
       skCollection: map['skCollection'] ?? '',
       sessionNum: map['sessionNum'] ?? -1,

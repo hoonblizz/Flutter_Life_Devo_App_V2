@@ -47,8 +47,8 @@ class HomePage extends StatelessWidget {
 
                 // Life devo content
                 Obx(() {
-                  if (_mainController
-                      .latestLifeDevoSession.value.pkCollection.isNotEmpty) {
+                  if (_mainController.latestLifeDevoSession.value
+                      .pkCollectionSession.isNotEmpty) {
                     return LatestLifeDevo(
                       _mainController.latestLifeDevoSession.value,
                     );

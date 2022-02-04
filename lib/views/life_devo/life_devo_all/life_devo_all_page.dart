@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo/life_devo_controller.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
@@ -26,7 +27,7 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
   void initState() {
     // 탭이 바뀔때마다 init 이 불러지는걸 확인했다.
     // controller 를 확인하고, 데이터가 없으면 불러주는 식으로 가자.
-    if (_lifeDevoController.allLifeDevoSessionList.isEmpty) {
+    if (_lifeDevoController.allLifeDevoList.isEmpty) {
       _lifeDevoController.getAllLifeDevoSession();
     }
 
@@ -54,8 +55,8 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
       children: [
         // Life devo 리스트
         Obx(() {
-          List<Session> _sessionList =
-              _lifeDevoController.allLifeDevoSessionList;
+          List<LifeDevoCompModel> _sessionList =
+              _lifeDevoController.allLifeDevoList;
 
           if (_lifeDevoController.isTabAllLoading.value) {
             return const LoadingWidget();
@@ -69,7 +70,7 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
               ), // 밑에 캘린더 버튼 보이도록
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: _sessionList.map((Session el) {
+                children: _sessionList.map((LifeDevoCompModel el) {
                   return GestureDetector(
                     onTap: () => _lifeDevoController.gotoLifeDevoDetail(el),
                     child: Card(
