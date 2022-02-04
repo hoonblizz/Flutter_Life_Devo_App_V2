@@ -32,6 +32,8 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   final TextEditingController _controllerAnswer3 = TextEditingController();
   final TextEditingController _controllerMeditation = TextEditingController();
 
+  bool isLoading = false;
+
   @override
   void initState() {
     // 유저 answer 가 있는지, 있으면 가져오기
@@ -54,6 +56,11 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
 
   getUserLifeDevo(
       {required String userId, required String lifeDevoSessionId}) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    //await Future.delayed(const Duration(seconds: 3));  // only for testing loading
     LifeDevo? _lifeDevo = await _lifeDevoDetailController.getUserLifeDevo(
       userId: userId,
       lifeDevoSessionId: lifeDevoSessionId,
@@ -66,6 +73,11 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
         _controllerAnswer2.text = _curLifeDevo.answer2;
         _controllerAnswer3.text = _curLifeDevo.answer3;
         _controllerMeditation.text = _curLifeDevo.meditation;
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
       });
     }
 
@@ -185,15 +197,18 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                           ),
 
                           // Questions & answers
-                          if (_curLifeDevoSession.question.isNotEmpty)
+                          if (!isLoading &&
+                              _curLifeDevoSession.question.isNotEmpty)
                             _questionComponent(_curLifeDevoSession.question,
                                 _controllerAnswer),
 
-                          if (_curLifeDevoSession.question2.isNotEmpty)
+                          if (!isLoading &&
+                              _curLifeDevoSession.question2.isNotEmpty)
                             _questionComponent(_curLifeDevoSession.question2,
                                 _controllerAnswer2),
 
-                          if (_curLifeDevoSession.question2.isNotEmpty)
+                          if (!isLoading &&
+                              _curLifeDevoSession.question2.isNotEmpty)
                             _questionComponent(_curLifeDevoSession.question3,
                                 _controllerAnswer3),
 
@@ -205,8 +220,8 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                           // const Divider(
                           //   color: kPrimaryColor,
                           // ),
-
-                          _meditationComponent(_controllerMeditation),
+                          if (!isLoading)
+                            _meditationComponent(_controllerMeditation),
 
                           // Save button
                           Row(

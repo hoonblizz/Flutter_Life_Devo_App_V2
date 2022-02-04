@@ -42,6 +42,10 @@ class LifeDevoController extends GetxController {
   ).obs;
 
   List<Session> allLifeDevoSessionList = <Session>[].obs;
+  List<LifeDevo> myLifeDevoList = <LifeDevo>[].obs;
+  List<Session> myLifeDevoSessionList =
+      <Session>[].obs; // filtered sessions from my life devo
+  List<LifeDevo> sharedLifeDevoList = <LifeDevo>[].obs;
 
   void tabAllLoadingStart() {
     isTabAllLoading.value = true;
@@ -97,6 +101,7 @@ class LifeDevoController extends GetxController {
   /******************************************************
    * Tab: My 
   ******************************************************/
+  RxBool isTabMyLoading = false.obs;
   Rx<DateTime> selectedMonthForTabMy = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -104,6 +109,86 @@ class LifeDevoController extends GetxController {
   ).obs;
   void onChangeMonthForTabMy(DateTime selectedTime) {
     selectedMonthForTabMy.value = selectedTime;
+  }
+
+  void tabMyLoadingStart() {
+    isTabMyLoading.value = true;
+  }
+
+  void tabMyLoadingEnd() {
+    isTabMyLoading.value = false;
+  }
+
+  void getMyLifeDevo() async {
+    tabMyLoadingStart();
+
+    List<Session> foundLifeDevoSessions = [];
+    // 시작, 끝 지점 구하기
+    DateTime curSelectedTime = selectedMonthForTabMy.value;
+    int startDateFrom = curSelectedTime.millisecondsSinceEpoch;
+    int startDateTo =
+        DateTime(curSelectedTime.year, curSelectedTime.month + 1, 1)
+            .subtract(const Duration(seconds: 10))
+            .millisecondsSinceEpoch;
+
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      Map result = await adminContentRepo.getAllLifeDevoSession(
+          startDateFrom, startDateTo);
+
+      //print('Result: ${result.toString()}');
+      // 결과가 없으면 빈 array 가 리턴된다.
+      if (result['statusCode'] == 200 && result['body'] != null) {
+        List<Session> _tempList = [];
+        for (int x = 0; x < result['body'].length; x++) {
+          _tempList.add(Session.fromJSON(result['body'][x]));
+        }
+
+        foundLifeDevoSessions = List<Session>.from(_tempList); // Deep copy
+      }
+    } catch (e) {
+      gc.consoleLog('Error get life devo: ${e.toString()}',
+          curFileName: currentFileName);
+    }
+
+    // 해당 월에 따른 life devo 를 불러왔으면, sessionIdList 를 뽑아보기
+    // (searchLifeDevo 에 필요)
+    List sessionIdList = foundLifeDevoSessions.map((el) {
+      return el.id;
+    }).toList();
+
+    print('Session id list: $sessionIdList');
+
+    // 세션 리스트 뽑았으면, 이제 searchLifeDevo
+    if (sessionIdList.isNotEmpty) {
+      print('Searching user id: ${gc.currentUser.userId}');
+      try {
+        Map result = await userContentRepo.getMyLifeDevo(
+            gc.currentUser.userId, sessionIdList);
+
+        if (result['statusCode'] == 200 && result['body'] != null) {
+          List<LifeDevo> _tempList = [];
+          for (int x = 0; x < result['body'].length; x++) {
+            _tempList.add(LifeDevo.fromJSON(result['body'][x]));
+          }
+          myLifeDevoList = List<LifeDevo>.from(_tempList); // deep copy
+        }
+      } catch (e) {
+        print('Error searching life devo: ${e.toString()}');
+      }
+
+      // My life devo 를 찾았으면 필터로 솎아내준다.
+      List<String> lifeDevoFoundList =
+          myLifeDevoList.map((e) => e.sessionId).toList();
+
+      print('Found life devo session ids: ${lifeDevoFoundList}');
+
+      myLifeDevoSessionList = List<Session>.from(foundLifeDevoSessions
+          .where((Session session) => lifeDevoFoundList.contains(session.id))
+          .toList());
+    }
+
+    tabMyLoadingEnd();
   }
 
   // ignore: slash_for_doc_comments

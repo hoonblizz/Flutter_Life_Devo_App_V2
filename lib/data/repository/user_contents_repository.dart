@@ -20,4 +20,8 @@ class UserContentsRepository {
   // Future getLatestLiveLifeDevo() async {
   //   return await AdminContentsAPIClient.getLatestLiveLifeDevo();
   // }
+
+  Future getMyLifeDevo(String userId, List sessionIdList) async {
+    return await UserContentsAPIClient.getMyLifeDevo(userId, sessionIdList);
+  }
 }

@@ -5,6 +5,7 @@ const baseUrlDev = "https://api.bclifedevo.com/";
 const apiUrlGetLifeDevo = "user/lifeDevo/getLifeDevo";
 const apiUrlCreateLifeDevo = "user/lifeDevo/createLifeDevo";
 const apiUrlUpdateLifeDevo = "user/lifeDevo/updateLifeDevo";
+const apiUrlSearchLifeDevo = "user/lifeDevo/searchLifeDevo";
 
 class UserContentsAPIClient {
   static getLifeDevo(String skCollection) async {
@@ -42,5 +43,10 @@ class UserContentsAPIClient {
   static updateLifeDevo(LifeDevo lifedevo) async {
     return await GlobalAPIClient.postRequest(
         baseUrlDev + apiUrlUpdateLifeDevo, lifedevo.toJSON());
+  }
+
+  static getMyLifeDevo(String userId, List sessionIdList) async {
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlSearchLifeDevo,
+        {"userId": userId, "sessionIdList": sessionIdList});
   }
 }
