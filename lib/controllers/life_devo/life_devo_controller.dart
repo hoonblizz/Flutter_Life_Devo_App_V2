@@ -72,7 +72,7 @@ class LifeDevoController extends GetxController {
 
   void getAllLifeDevoSession() async {
     tabAllLoadingStart();
-
+    allLifeDevoList.clear(); // 비워주기
     List<LifeDevoSessionModel> foundLifeDevoSessions = [];
     // 시작, 끝 지점 구하기
     DateTime curSelectedTime = selectedMonthForTabAll.value;
@@ -175,6 +175,7 @@ class LifeDevoController extends GetxController {
   void getMyLifeDevo() async {
     tabMyLoadingStart();
 
+    myLifeDevoList.clear();
     List<LifeDevoSessionModel> foundLifeDevoSessions = [];
     // 시작, 끝 지점 구하기
     DateTime curSelectedTime = selectedMonthForTabMy.value;
@@ -230,18 +231,6 @@ class LifeDevoController extends GetxController {
         debugPrint('Error searching life devo: ${e.toString()}');
       }
 
-      // My life devo 를 찾았으면 필터로 솎아내준다.
-      // List<String> lifeDevoFoundList =
-      //     myLifeDevoList.map((e) => e.sessionId).toList();
-
-      // print('Found life devo session ids: ${lifeDevoFoundList}');
-
-      // myLifeDevoSessionList = List<LifeDevoSessionModel>.from(
-      //     foundLifeDevoSessions
-      //         .where((LifeDevoSessionModel session) =>
-      //             lifeDevoFoundList.contains(session.id))
-      //         .toList());
-
       // My life devo 를 기준으로 all session 을 붙여서 composite model 만든다.
       List<LifeDevoCompModel> _tempCompModel = [];
       for (LifeDevoModel lifeDevo in searchedMyLifeDevoList) {
@@ -285,6 +274,7 @@ class LifeDevoController extends GetxController {
   void getSharedLifeDevo() async {
     tabSharedLoadingStart();
 
+    sharedLifeDevoList.clear();
     List<LifeDevoSessionModel> foundLifeDevoSessions = [];
     // 시작, 끝 지점 구하기
     DateTime curSelectedTime = selectedMonthForTabShared.value;

@@ -49,9 +49,12 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
       _controllerAnswer3.text = _curLifeDevoSession.answer3;
       _controllerMeditation.text = _curLifeDevoSession.meditation;
 
-      if (_curLifeDevoSession.skCollectionLifeDevo.isNotEmpty &&
-          _curLifeDevoSession.createdBy ==
-              _globalController.currentUser.userId) {
+      // 새 라잎 디보일때 ||
+      // 전에 있던 라잎 디보를 불러왔을때
+      if (_curLifeDevoSession.skCollectionLifeDevo.isEmpty ||
+          (_curLifeDevoSession.skCollectionLifeDevo.isNotEmpty &&
+              _curLifeDevoSession.createdBy ==
+                  _globalController.currentUser.userId)) {
         debugPrint(
             'Created by ${_curLifeDevoSession.createdBy} and accessed by ${_globalController.currentUser.userId}');
 
