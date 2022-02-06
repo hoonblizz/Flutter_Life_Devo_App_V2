@@ -1,13 +1,11 @@
 import 'package:flutter_life_devo_app_v2/bindings/life_devo_detail_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
-import 'package:flutter_life_devo_app_v2/views/life_devo/life_devo_page.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo_detail/life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/main/main_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/bindings/auth_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/landing_binding.dart';
 import 'package:flutter_life_devo_app_v2/views/auth/auth_page.dart';
-import 'package:flutter_life_devo_app_v2/views/home/home_page.dart';
 import 'package:flutter_life_devo_app_v2/views/landing/landing_page.dart';
 part './app_routes.dart';
 

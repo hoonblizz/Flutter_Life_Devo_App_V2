@@ -27,17 +27,11 @@ class LifeDevoPage extends StatelessWidget {
     ],
   );
 
-  final _tabbarView = TabBarView(
+  final _tabbarView = const TabBarView(
     children: [
       LifeDevoAllPage(),
-      Container(
-        child: Text('1'),
-      ),
-      Container(
-        child: Text('2'),
-      ),
-      //LifeDevoMyPage(),
-      //LifeDevoSharedPage(),
+      LifeDevoMyPage(),
+      LifeDevoSharedPage(),
     ],
   );
 

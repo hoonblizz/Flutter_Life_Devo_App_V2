@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
-import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:get/get.dart';

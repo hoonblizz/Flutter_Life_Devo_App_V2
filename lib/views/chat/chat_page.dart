@@ -6,6 +6,6 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text('Chat page'));
+    return const Text('Chat page');
   }
 }

@@ -56,7 +56,7 @@ class _AuthFormState extends State<AuthForm> {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
-                print('Current state: ${email} and ${password}');
+                //print('Current state: ${email} and ${password}');
                 KeyboardUtil.hideKeyboard(context);
 
                 // Start loading and other process will be handled by controller.
@@ -79,7 +79,7 @@ class _AuthFormState extends State<AuthForm> {
         } else if (value.length >= 8) {
           removeError(error: kShortPassError);
         }
-        return null;
+        //return null;
       },
       validator: (value) {
         if (value!.isEmpty) {
@@ -112,7 +112,7 @@ class _AuthFormState extends State<AuthForm> {
         } else if (emailValidatorRegExp.hasMatch(value)) {
           removeError(error: kInvalidEmailError);
         }
-        return null;
+        //return null;
       },
       validator: (value) {
         if (value!.isEmpty) {

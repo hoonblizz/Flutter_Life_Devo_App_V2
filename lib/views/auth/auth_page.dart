@@ -7,10 +7,9 @@ import 'package:flutter_life_devo_app_v2/views/auth/components/auth_in_app_brows
 import 'package:flutter_life_devo_app_v2/views/helper/keyboard.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/auth/auth_controller.dart';
-import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class AuthPage extends StatelessWidget {
   AuthPage({Key? key}) : super(key: key);
   final AuthInAppBrowser browser = AuthInAppBrowser();

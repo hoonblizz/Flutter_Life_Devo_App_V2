@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
-import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
@@ -21,12 +18,14 @@ class LifeDevoDetailController extends GetxController {
 
   GlobalController gc = Get.find();
 
+  // ignore: slash_for_doc_comments
   /******************************************************************
    * Variable collections
   ******************************************************************/
   RxBool isLifeDevoLoading = false.obs;
   RxBool isCommentsLoading = false.obs;
 
+  // ignore: slash_for_doc_comments
   /******************************************************************
    * Functions
   ******************************************************************/
@@ -69,8 +68,7 @@ class LifeDevoDetailController extends GetxController {
   Future<LifeDevoModel?> getUserLifeDevo(
       {required String userId, required String lifeDevoSessionId}) async {
     String _skCollection = userId + '#' + lifeDevoSessionId;
-    gc.consoleLog('skCollection for getting User life devo: ${_skCollection}',
-        curFileName: currentFileName);
+
     try {
       Map result = await userContentRepo.getLifeDevo(_skCollection);
       gc.consoleLog('Result getting User life devo: ${result.toString()}',

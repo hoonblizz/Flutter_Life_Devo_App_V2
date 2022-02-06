@@ -4,8 +4,6 @@
   각각의 모델에서 기본값들 왠만한건 다 해결했으니 그냥 합쳐주기만 하자
 */
 
-import 'dart:convert';
-
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 

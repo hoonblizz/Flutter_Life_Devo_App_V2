@@ -25,7 +25,7 @@ class FormError extends StatelessWidget {
           height: 14,
           width: 14,
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Text(error),

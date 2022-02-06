@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_life_devo_app_v2/data/providers/global_api.dart';
-import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:flutter_life_devo_app_v2/models/user_token_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,4 +1,3 @@
-import 'package:flutter_life_devo_app_v2/controllers/home/home_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo/life_devo_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';

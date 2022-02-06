@@ -6,6 +6,6 @@ class ContentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text('Contents page'));
+    return const Text('Contents page');
   }
 }

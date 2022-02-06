@@ -1,16 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
-import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
-import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
-import 'package:flutter_life_devo_app_v2/views/auth/components/default_button.dart';
 import 'package:flutter_life_devo_app_v2/views/helper/keyboard.dart';
-import 'package:flutter_life_devo_app_v2/views/widgets/custom_app_bar.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +27,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   final TextEditingController _controllerMeditation = TextEditingController();
 
   bool isLoading = false;
+  bool isMyLifeDevo = false;
 
   @override
   void initState() {
@@ -53,6 +48,15 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
       _controllerAnswer2.text = _curLifeDevoSession.answer2;
       _controllerAnswer3.text = _curLifeDevoSession.answer3;
       _controllerMeditation.text = _curLifeDevoSession.meditation;
+
+      if (_curLifeDevoSession.skCollectionLifeDevo.isNotEmpty &&
+          _curLifeDevoSession.createdBy ==
+              _globalController.currentUser.userId) {
+        debugPrint(
+            'Created by ${_curLifeDevoSession.createdBy} and accessed by ${_globalController.currentUser.userId}');
+
+        isMyLifeDevo = true;
+      }
     });
   }
 
@@ -66,14 +70,13 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
 
   // 기존에 _curLifeDevo 의 존재유무에 따라 create 인지, update 인지 나뉜다.
   onTapSaveLifeDevo() async {
-    print('Save!');
+    debugPrint('Save!');
 
     // 텍스트 컨트롤러에 있던 정보 옮기기
     _pasteDataToModel();
 
-    LifeDevoModel? _returnedLifeDevo =
-        await _lifeDevoDetailController.onTapSaveLifeDevo(
-            LifeDevoCompModel().toLifeDevoModel(_curLifeDevoSession));
+    await _lifeDevoDetailController.onTapSaveLifeDevo(
+        LifeDevoCompModel().toLifeDevoModel(_curLifeDevoSession));
   }
 
   _pasteDataToModel() {
@@ -178,17 +181,17 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                           if (!isLoading &&
                               _curLifeDevoSession.question.isNotEmpty)
                             _questionComponent(_curLifeDevoSession.question,
-                                _controllerAnswer),
+                                _controllerAnswer, isMyLifeDevo),
 
                           if (!isLoading &&
                               _curLifeDevoSession.question2.isNotEmpty)
                             _questionComponent(_curLifeDevoSession.question2,
-                                _controllerAnswer2),
+                                _controllerAnswer2, isMyLifeDevo),
 
                           if (!isLoading &&
                               _curLifeDevoSession.question2.isNotEmpty)
                             _questionComponent(_curLifeDevoSession.question3,
-                                _controllerAnswer3),
+                                _controllerAnswer3, isMyLifeDevo),
 
                           SizedBox(
                             height: adminContentDetailSpace,
@@ -199,64 +202,66 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                           //   color: kPrimaryColor,
                           // ),
                           if (!isLoading)
-                            _meditationComponent(_controllerMeditation),
+                            _meditationComponent(
+                                _controllerMeditation, isMyLifeDevo),
 
                           // Save button
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: SizedBox(
-                                  //width: double.infinity,
-                                  //height: 33,
-                                  child: TextButton(
-                                    style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      primary: Colors.white,
-                                      backgroundColor: kPrimaryColor,
-                                    ),
-                                    onPressed: () => onTapSaveLifeDevo(),
-                                    child: Text(
-                                      'Save',
-                                      style: TextStyle(
-                                        fontSize: adminContentDetailDesc,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
+                          if (isMyLifeDevo)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    //width: double.infinity,
+                                    //height: 33,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        primary: Colors.white,
+                                        backgroundColor: kPrimaryColor,
+                                      ),
+                                      onPressed: () => onTapSaveLifeDevo(),
+                                      child: Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          fontSize: adminContentDetailDesc,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: SizedBox(
-                                  //width: double.infinity,
-                                  //height: 33,
-                                  child: TextButton(
-                                    style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      primary: Colors.white,
-                                      backgroundColor: kPrimaryColor,
-                                    ),
-                                    onPressed: () => {},
-                                    child: Text(
-                                      'Share',
-                                      style: TextStyle(
-                                        fontSize: adminContentDetailDesc,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: SizedBox(
+                                    //width: double.infinity,
+                                    //height: 33,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        primary: Colors.white,
+                                        backgroundColor: kPrimaryColor,
+                                      ),
+                                      onPressed: () => {},
+                                      child: Text(
+                                        'Share',
+                                        style: TextStyle(
+                                          fontSize: adminContentDetailDesc,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
+                                )
+                              ],
+                            ),
 
                           // 코멘트
                           const Divider(
@@ -304,7 +309,8 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
     );
   }
 
-  _questionComponent(String question, TextEditingController controllerInput) {
+  _questionComponent(String question, TextEditingController controllerInput,
+      bool isMyLifeDevo) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -335,28 +341,17 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
           controller: controllerInput,
           minLines: 5,
           maxLines: 5,
+          readOnly: !isMyLifeDevo,
           expands: false,
           keyboardType: TextInputType.multiline,
           autofocus: false,
           decoration: InputDecoration(
-              //labelText: 'Type something...',
-              //labelStyle: ,
               hintText: 'Type something...',
               filled: true,
               fillColor: textFieldBackground,
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              // focusedBorder: const OutlineInputBorder(
-              //   borderSide: BorderSide(color: Colors.white),
-              //   //borderRadius: BorderRadius.circular(25.7),
-              // ),
-              // enabledBorder: const UnderlineInputBorder(
-              //   borderSide: BorderSide(color: Colors.white),
-              //   //borderRadius: BorderRadius.circular(25.7),
-              // ),
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none),
-
-          //onSaved: (value) => _searchText = value.trim(),
         ),
         SizedBox(
           height: adminContentDetailSpace,
@@ -365,7 +360,8 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
     );
   }
 
-  _meditationComponent(TextEditingController controllerInput) {
+  _meditationComponent(
+      TextEditingController controllerInput, bool isMyLifeDevo) {
     return Column(
       children: [
         SizedBox(
@@ -389,6 +385,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
           minLines: 5,
           maxLines: 5,
           expands: false,
+          readOnly: !isMyLifeDevo,
           keyboardType: TextInputType.multiline,
           autofocus: false,
           decoration: InputDecoration(
@@ -398,8 +395,6 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
               floatingLabelBehavior: FloatingLabelBehavior.never,
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none),
-
-          //onSaved: (value) => _searchText = value.trim(),
         ),
         SizedBox(
           height: adminContentDetailSpace,

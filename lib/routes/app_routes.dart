@@ -1,16 +1,15 @@
 part of './app_pages.dart';
 
 abstract class Routes {
+  // ignore: constant_identifier_names
   static const INITIAL = '/';
+  // ignore: constant_identifier_names
   static const AUTH = '/auth';
+  // ignore: constant_identifier_names
   static const MAIN = '/main';
 
-  // Main components of Main page tabs (Dont need)
-  // static const CONTENTS = '/contents';
-  // static const LIFEDEVO = '/lifedevo';
-  // static const CHAT = '/chat';
-  // static const PROFILE = '/profile';
-
+  // ignore: constant_identifier_names
   static const LIFE_DEVO_DETAIL = '/life_devo_detail';
+  // ignore: constant_identifier_names
   static const LIFE_DEVO = '/life_devo';
 }

@@ -4,6 +4,7 @@
   원래는 All, My, shared 로 나누어져 있지만, 귀찮으니까 여기 하나에서 컨트롤 하자.
 */
 
+import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
@@ -26,7 +27,7 @@ class LifeDevoController extends GetxController {
   @override
   void onInit() {
     // 굳이 여기서 ALL 탭 관련 API 부를건 없고, 그냥 All page init 에서 불러주는것으로 충분하다.
-    print('Life Devo controller init?');
+    debugPrint('Life Devo controller init?');
     super.onInit();
   }
 
@@ -65,8 +66,8 @@ class LifeDevoController extends GetxController {
 
   void onChangeMonthForTabAll(DateTime selectedTime) {
     selectedMonthForTabAll.value = selectedTime;
-    print(
-        'Selected Month: ${selectedTime.year}-${selectedTime.month} => Epoch: ${selectedTime.millisecondsSinceEpoch} to ${DateTime(selectedTime.year, selectedTime.month + 1, 1).subtract(Duration(seconds: 10)).millisecondsSinceEpoch}');
+    debugPrint(
+        'Selected Month: ${selectedTime.year}-${selectedTime.month} => Epoch: ${selectedTime.millisecondsSinceEpoch} to ${DateTime(selectedTime.year, selectedTime.month + 1, 1).subtract(const Duration(seconds: 10)).millisecondsSinceEpoch}');
   }
 
   void getAllLifeDevoSession() async {
@@ -108,13 +109,10 @@ class LifeDevoController extends GetxController {
       return el.id;
     }).toList();
 
-    print('Session id list: $sessionIdList');
-
     // 세션 리스트 뽑았으면, 이제 searchLifeDevo
-    List<LifeDevoModel> myLifeDevoList = [];
+    List<LifeDevoModel> searchedMyLifeDevoList = [];
 
     if (sessionIdList.isNotEmpty) {
-      print('Searching user id: ${gc.currentUser.userId}');
       try {
         Map result = await userContentRepo.getMyLifeDevo(
             gc.currentUser.userId, sessionIdList);
@@ -124,28 +122,23 @@ class LifeDevoController extends GetxController {
           for (int x = 0; x < result['body'].length; x++) {
             _tempList.add(LifeDevoModel.fromJSON(result['body'][x]));
           }
-          myLifeDevoList = List<LifeDevoModel>.from(_tempList); // deep copy
+          searchedMyLifeDevoList =
+              List<LifeDevoModel>.from(_tempList); // deep copy
         }
       } catch (e) {
-        print('Error searching life devo: ${e.toString()}');
+        debugPrint('Error searching life devo: ${e.toString()}');
       }
-
-      // My life devo 를 찾았으면 필터로 솎아내준다.
-      // List<String> lifeDevoFoundList =
-      //     myLifeDevoList.map((e) => e.sessionId).toList();
-
-      // print('Found life devo session ids: ${lifeDevoFoundList}');
 
       // All Session 을 기준으로 찾아낸 my life devo 를 붙여서 composite model 만든다.
       List<LifeDevoCompModel> _tempCompModel = [];
-      foundLifeDevoSessions.forEach((session) {
+      for (LifeDevoSessionModel session in foundLifeDevoSessions) {
         // id 가 매칭하는 Life devo 찾아내자
-        LifeDevoModel ldModel = myLifeDevoList.firstWhere(
+        LifeDevoModel ldModel = searchedMyLifeDevoList.firstWhere(
             (lifeDevo) => session.id == lifeDevo.sessionId,
             orElse: () => LifeDevoModel());
 
         _tempCompModel.add(LifeDevoCompModel.generate(session, ldModel));
-      });
+      }
 
       // 결과를 Deep copy
       allLifeDevoList = List<LifeDevoCompModel>.from(_tempCompModel);
@@ -218,37 +211,50 @@ class LifeDevoController extends GetxController {
       return el.id;
     }).toList();
 
-    print('Session id list: $sessionIdList');
-
     // 세션 리스트 뽑았으면, 이제 searchLifeDevo
+    List<LifeDevoModel> searchedMyLifeDevoList = [];
+
     if (sessionIdList.isNotEmpty) {
-      print('Searching user id: ${gc.currentUser.userId}');
       try {
         Map result = await userContentRepo.getMyLifeDevo(
             gc.currentUser.userId, sessionIdList);
 
         if (result['statusCode'] == 200 && result['body'] != null) {
-          List<LifeDevoModel> _tempList = [];
           for (int x = 0; x < result['body'].length; x++) {
-            _tempList.add(LifeDevoModel.fromJSON(result['body'][x]));
+            searchedMyLifeDevoList
+                .add(LifeDevoModel.fromJSON(result['body'][x]));
           }
           //myLifeDevoList = List<LifeDevoModel>.from(_tempList); // deep copy
         }
       } catch (e) {
-        print('Error searching life devo: ${e.toString()}');
+        debugPrint('Error searching life devo: ${e.toString()}');
       }
 
       // My life devo 를 찾았으면 필터로 솎아내준다.
-      List<String> lifeDevoFoundList =
-          myLifeDevoList.map((e) => e.sessionId).toList();
+      // List<String> lifeDevoFoundList =
+      //     myLifeDevoList.map((e) => e.sessionId).toList();
 
-      print('Found life devo session ids: ${lifeDevoFoundList}');
+      // print('Found life devo session ids: ${lifeDevoFoundList}');
 
       // myLifeDevoSessionList = List<LifeDevoSessionModel>.from(
       //     foundLifeDevoSessions
       //         .where((LifeDevoSessionModel session) =>
       //             lifeDevoFoundList.contains(session.id))
       //         .toList());
+
+      // My life devo 를 기준으로 all session 을 붙여서 composite model 만든다.
+      List<LifeDevoCompModel> _tempCompModel = [];
+      for (LifeDevoModel lifeDevo in searchedMyLifeDevoList) {
+        // id 가 매칭하는 Life devo 찾아내자
+        LifeDevoSessionModel foundSession = foundLifeDevoSessions.firstWhere(
+            (session) => session.id == lifeDevo.sessionId,
+            orElse: () => LifeDevoSessionModel());
+
+        _tempCompModel.add(LifeDevoCompModel.generate(foundSession, lifeDevo));
+      }
+
+      // 결과를 Deep copy
+      myLifeDevoList = List<LifeDevoCompModel>.from(_tempCompModel);
     }
 
     tabMyLoadingEnd();
@@ -315,37 +321,38 @@ class LifeDevoController extends GetxController {
       return el.id;
     }).toList();
 
-    print('Session id list: $sessionIdList');
-
     // 세션 리스트 뽑았으면, 이제 searchLifeDevo
+    List<LifeDevoModel> searchedSharedLifeDevoList = [];
+
     if (sessionIdList.isNotEmpty) {
-      print('Searching user id: ${gc.currentUser.userId}');
       try {
         Map result = await userContentRepo.getSharedLifeDevo(
             gc.currentUser.userId, sessionIdList);
 
         if (result['statusCode'] == 200 && result['body'] != null) {
-          List<LifeDevoModel> _tempList = [];
           for (int x = 0; x < result['body'].length; x++) {
-            _tempList.add(LifeDevoModel.fromJSON(result['body'][x]));
+            searchedSharedLifeDevoList
+                .add(LifeDevoModel.fromJSON(result['body'][x]));
           }
           //sharedLifeDevoList = List<LifeDevoModel>.from(_tempList); // deep copy
         }
       } catch (e) {
-        print('Error searching life devo: ${e.toString()}');
+        debugPrint('Error searching life devo: ${e.toString()}');
       }
 
-      // Shared life devo 를 찾았으면 필터로 솎아내준다.
-      List<String> lifeDevoFoundList =
-          sharedLifeDevoList.map((e) => e.sessionId).toList();
+      // Shared life devo 를 기준으로 all session 을 붙여서 composite model 만든다.
+      List<LifeDevoCompModel> _tempCompModel = [];
+      for (LifeDevoModel lifeDevo in searchedSharedLifeDevoList) {
+        // id 가 매칭하는 Life devo 찾아내자
+        LifeDevoSessionModel foundSession = foundLifeDevoSessions.firstWhere(
+            (session) => session.id == lifeDevo.sessionId,
+            orElse: () => LifeDevoSessionModel());
 
-      print('Found life devo session ids: ${lifeDevoFoundList}');
+        _tempCompModel.add(LifeDevoCompModel.generate(foundSession, lifeDevo));
+      }
 
-      // sharedLifeDevoSessionList = List<LifeDevoSessionModel>.from(
-      //     foundLifeDevoSessions
-      //         .where((LifeDevoSessionModel session) =>
-      //             lifeDevoFoundList.contains(session.id))
-      //         .toList());
+      // 결과를 Deep copy
+      sharedLifeDevoList = List<LifeDevoCompModel>.from(_tempCompModel);
     }
 
     tabSharedLoadingEnd();

@@ -26,6 +26,6 @@ class UserContentsRepository {
   }
 
   Future getSharedLifeDevo(String userId, List sessionIdList) async {
-    return await UserContentsAPIClient.getMyLifeDevo(userId, sessionIdList);
+    return await UserContentsAPIClient.getSharedLifeDevo(userId, sessionIdList);
   }
 }

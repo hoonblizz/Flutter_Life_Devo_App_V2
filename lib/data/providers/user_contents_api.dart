@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/data/providers/global_api.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 
@@ -15,7 +16,7 @@ class UserContentsAPIClient {
 
   // 새로 만드는거라 여기에는 pk, sk collection 등 몇가지 데이터는 없다.
   static createLifeDevo(LifeDevoModel lifedevo) async {
-    print('Life devo check before create: ${lifedevo.toJSON()}');
+    debugPrint('Life devo check before create: ${lifedevo.toJSON()}');
     return await GlobalAPIClient.postRequest(
         baseUrlDev + apiUrlCreateLifeDevo, lifedevo.toJSON());
   }

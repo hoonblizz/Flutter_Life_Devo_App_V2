@@ -32,8 +32,8 @@ class GlobalController extends GetxController {
   /// ========================================================
   User currentUser = User();
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  // }
 }

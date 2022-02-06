@@ -18,13 +18,19 @@ final ThemeData lightTheme = ThemeData(
       iconTheme: (const IconThemeData(
         color: Color(0xFF3D3F43),
       )),
-      backgroundColor: Color(0xFFF9F9F9),
-      textTheme: TextTheme(
+      backgroundColor: const Color(0xFFF9F9F9),
+      toolbarTextStyle: TextTheme(
         headline6: TextStyle(
             color: const Color(0xFF3D3F43),
             fontSize: Get.height * 0.020,
             fontWeight: FontWeight.w500),
-      )),
+      ).bodyText2,
+      titleTextStyle: TextTheme(
+        headline6: TextStyle(
+            color: const Color(0xFF3D3F43),
+            fontSize: Get.height * 0.020,
+            fontWeight: FontWeight.w500),
+      ).headline6),
   visualDensity: VisualDensity.adaptivePlatformDensity,
 );
 
@@ -46,11 +52,17 @@ final ThemeData darkTheme = ThemeData(
         color: Colors.white,
       )),
       backgroundColor: const Color(0xFF1F2022),
-      textTheme: TextTheme(
+      toolbarTextStyle: TextTheme(
         headline6: TextStyle(
             color: Colors.white,
             fontSize: Get.height * 0.020,
             fontWeight: FontWeight.w500),
-      )),
+      ).bodyText2,
+      titleTextStyle: TextTheme(
+        headline6: TextStyle(
+            color: Colors.white,
+            fontSize: Get.height * 0.020,
+            fontWeight: FontWeight.w500),
+      ).headline6),
   visualDensity: VisualDensity.adaptivePlatformDensity,
 );
