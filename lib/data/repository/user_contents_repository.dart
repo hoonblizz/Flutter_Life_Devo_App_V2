@@ -13,13 +13,6 @@ class UserContentsRepository {
   Future updateLifeDevo(LifeDevoModel lifedevo) async {
     return await UserContentsAPIClient.updateLifeDevo(lifedevo);
   }
-  // Future getLatestLifeDevoSession() async {
-  //   return await AdminContentsAPIClient.getLatestLifeDevoSession();
-  // }
-
-  // Future getLatestLiveLifeDevo() async {
-  //   return await AdminContentsAPIClient.getLatestLiveLifeDevo();
-  // }
 
   Future getMyLifeDevo(String userId, List sessionIdList) async {
     return await UserContentsAPIClient.getMyLifeDevo(userId, sessionIdList);
@@ -27,5 +20,37 @@ class UserContentsRepository {
 
   Future getSharedLifeDevo(String userId, List sessionIdList) async {
     return await UserContentsAPIClient.getSharedLifeDevo(userId, sessionIdList);
+  }
+
+  // ignore: slash_for_doc_comments
+  /*****************************************************************
+  * Comments
+  *****************************************************************/
+  Future createComment(String sessionId, String userId, String content) async {
+    return await UserContentsAPIClient.createComment(
+        sessionId, userId, content);
+  }
+
+  Future getComment(String sessionId, Map exclusiveStartKey) async {
+    return await UserContentsAPIClient.getComment(sessionId, exclusiveStartKey);
+  }
+
+  Future updateComment(
+      String sessionId, String commentSkCollection, String content) async {
+    return await UserContentsAPIClient.updateComment(
+        sessionId, commentSkCollection, content);
+  }
+
+  Future deleteComment(String sessionId, String commentSkCollection) async {
+    return await UserContentsAPIClient.deleteComment(
+        sessionId, commentSkCollection);
+  }
+
+  // ignore: slash_for_doc_comments
+  /*****************************************************************
+  * User
+  *****************************************************************/
+  Future searchUserByUserId(List userIdList) async {
+    return await UserContentsAPIClient.searchUserByUserId(userIdList);
   }
 }

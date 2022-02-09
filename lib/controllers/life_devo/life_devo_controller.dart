@@ -341,6 +341,30 @@ class LifeDevoController extends GetxController {
         _tempCompModel.add(LifeDevoCompModel.generate(foundSession, lifeDevo));
       }
 
+      // 유저 id들의 이름을 찾아준다.
+      if (_tempCompModel.isNotEmpty) {
+        List<String> _userIdList = _tempCompModel
+            .map((e) => e.createdBy)
+            .toSet()
+            .toList(); // toSet 으로 중복 없애줌.
+        try {
+          Map result = await userContentRepo.searchUserByUserId(_userIdList);
+          debugPrint('Result getting user data: ${result.toString()}');
+
+          if (result['statusCode'] == 200 && result['body'] != null) {
+            for (var x = 0; x < _tempCompModel.length; x++) {
+              List _foundUserData = result['body'];
+              Map _foundMatchUser = _foundUserData.firstWhere(
+                  (el) => _tempCompModel[x].createdBy == el["userId"]) as Map;
+              //debugPrint('Match found: ${_foundMatchUser.toString()}');
+              _tempCompModel[x].userName = _foundMatchUser["name"];
+            }
+          }
+        } catch (e) {
+          debugPrint('Error searching user data: ${e.toString()}');
+        }
+      }
+
       // 결과를 Deep copy
       sharedLifeDevoList = List<LifeDevoCompModel>.from(_tempCompModel);
     }

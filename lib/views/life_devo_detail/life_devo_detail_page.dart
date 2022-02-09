@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
+import 'package:flutter_life_devo_app_v2/models/comment_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
@@ -25,21 +26,98 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   final TextEditingController _controllerAnswer2 = TextEditingController();
   final TextEditingController _controllerAnswer3 = TextEditingController();
   final TextEditingController _controllerMeditation = TextEditingController();
+  final TextEditingController _controllerComment = TextEditingController();
 
   bool isLoading = false;
+  bool isGetCommentLoading = false;
+  bool isCommentLoading = false;
   bool isMyLifeDevo = false;
+  List<CommentModel> commentList = [];
+  Map lastEvaluatedKey = {};
 
   @override
   void initState() {
-    // 유저 answer 가 있는지, 있으면 가져오기
-    // 2022.02.04 - Composite model 로 따로 가져올 필요 없게끔.
-    // getUserLifeDevo(
-    //     userId: _globalController.currentUser.userId,
-    //     lifeDevoSessionId: _curLifeDevoSession.id);
+    // 기존 데이터 (존재하면)와 widget 들 합치기 (텍스트 컨트롤러 등등)
     setData();
     // 해당 life devo 의 코멘트 가져오기
+    getComments();
 
     super.initState();
+  }
+
+  getComments() async {
+    setState(() {
+      isGetCommentLoading = true;
+    });
+    List<CommentModel> _tempList = [];
+
+    Map result = await _lifeDevoDetailController.getComments(
+        _curLifeDevoSession.id, lastEvaluatedKey);
+
+    debugPrint('Result ${result.toString()}');
+
+    if (result["statusCode"] != null && result["statusCode"] == 200) {
+      if (result["body"] != null) {
+        for (var x = 0; x < result["body"].length; x++) {
+          _tempList.add(CommentModel.fromJSON(result["body"][x]));
+        }
+      }
+
+      if (result["resultExclusiveStartKey"] != null) {
+        lastEvaluatedKey = result["resultExclusiveStartKey"];
+        debugPrint('Pagination key: ${lastEvaluatedKey.toString()}');
+      }
+
+      // user id 로 user data 구하기. username 코멘트에 등록.
+      if (_tempList.isNotEmpty) {
+        List<String> _userIdList =
+            _tempList.map((e) => e.userId).toSet().toList(); // toSet 으로 중복 없애줌.
+        try {
+          Map result =
+              await _lifeDevoDetailController.searchUserByUserId(_userIdList);
+          debugPrint('Result getting user data: ${result.toString()}');
+
+          if (result['statusCode'] == 200 && result['body'] != null) {
+            for (var x = 0; x < _tempList.length; x++) {
+              List _foundUserData = result['body'];
+              Map _foundMatchUser = _foundUserData
+                  .firstWhere((el) => _tempList[x].userId == el["userId"]);
+              _tempList[x].userName = _foundMatchUser["name"];
+            }
+          }
+        } catch (e) {
+          debugPrint('Error searching user data: ${e.toString()}');
+        }
+      }
+
+      setState(() {
+        commentList = List<CommentModel>.from(_tempList); // Deep copy
+      });
+    }
+
+    setState(() {
+      isGetCommentLoading = false;
+    });
+  }
+
+  createComment() async {
+    if (_controllerComment.text.isNotEmpty) {
+      setState(() {
+        isCommentLoading = true;
+      });
+      await _lifeDevoDetailController.createComments(_curLifeDevoSession.id,
+          _globalController.currentUser.userId, _controllerComment.text);
+
+      // 최신이 가장 위에 있으므로, 리셋 시켜주고 다시 불러오자
+      setState(() {
+        _controllerComment.text = "";
+        // commentList = [];
+        lastEvaluatedKey = {};
+        isCommentLoading = false;
+      });
+
+      await getComments();
+    }
   }
 
   setData() {
@@ -274,6 +352,13 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                           SizedBox(
                             height: adminContentDetailSpace,
                           ),
+
+                          // 내 코멘트 인풋 박스
+                          _commentInputComponent(
+                              _controllerComment, createComment),
+
+                          // 코멘트들
+                          _commentsComponent(commentList),
                         ],
                       ),
                     ),
@@ -403,6 +488,85 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
           height: adminContentDetailSpace,
         ),
       ],
+    );
+  }
+
+  _commentInputComponent(TextEditingController controllerInput, onPressSend) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          minRadius: 18,
+          maxRadius: 18,
+          child: Text(
+            _globalController.currentUser.name.isNotEmpty
+                ? _globalController.currentUser.name[0]
+                : "?",
+            style: const TextStyle(fontSize: 24),
+          ),
+        ),
+        SizedBox(
+          width: adminContentDetailSpace,
+        ),
+        Expanded(
+          child: TextFormField(
+            controller: controllerInput,
+            minLines: 1,
+            maxLines: 3,
+            expands: false,
+            keyboardType: TextInputType.multiline,
+            autofocus: false,
+            decoration: InputDecoration(
+                hintText: 'Write a comment...',
+                filled: true,
+                fillColor: textFieldBackground,
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none),
+          ),
+        ),
+        SizedBox(
+          width: adminContentDetailSpace,
+        ),
+        if (isCommentLoading)
+          const CircularProgressIndicator(
+            strokeWidth: 2,
+            backgroundColor: kPrimaryColor,
+          ),
+        if (!isCommentLoading)
+          IconButton(
+            onPressed: onPressSend,
+            icon: Icon(
+              Icons.send,
+              size: navIcon,
+              color: kPrimaryColor,
+            ),
+          ),
+      ],
+    );
+  }
+
+  _commentsComponent(List<CommentModel> comments) {
+    return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: comments.map((CommentModel comment) {
+        return ListTile(
+          leading: CircleAvatar(
+            minRadius: 14,
+            maxRadius: 14,
+            child: Text(
+              comment.userName.isNotEmpty ? comment.userName[0] : "?",
+              style: const TextStyle(fontSize: 16),
+            ),
+          ),
+          horizontalTitleGap: 8,
+          dense: true,
+          title: Text(comment.userName),
+          subtitle: Text(comment.content),
+        );
+      }).toList(),
     );
   }
 }

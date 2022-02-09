@@ -39,37 +39,44 @@ class LifeDevoCompModel {
   String answer2;
   String answer3;
 
-  LifeDevoCompModel(
-      {this.pkCollectionSession = "",
-      this.skCollectionSession = "",
-      this.sessionNum = 0,
-      this.title = "",
-      this.scripture = "",
-      this.question = "",
-      //DateTime? created,
-      this.created = 0,
-      String? startDate,
-      this.startDateEpoch = 0,
-      String? endDate,
-      this.endDateEpoch = 0,
-      this.active = false,
-      this.question2 = "",
-      this.question3 = "",
-      this.id = "",
-      // From Life devo
-      this.pkCollectionLifeDevo = "",
-      this.skCollectionLifeDevo = "",
-      this.answer = "",
-      this.meditation = "",
-      this.note = "",
-      this.sessionId = "",
-      this.createdBy = "",
-      this.lastModified = "",
-      this.lastModifiedEpoch = 0,
-      this.shared = const [],
-      this.answer2 = "",
-      this.answer3 = ""})
-      : startDate = startDate ?? "",
+  // From User data
+  String userName; // 유저 찾기 후에 여기에 붙여넣는다.
+  String userProfileImageUrl;
+
+  LifeDevoCompModel({
+    this.pkCollectionSession = "",
+    this.skCollectionSession = "",
+    this.sessionNum = 0,
+    this.title = "",
+    this.scripture = "",
+    this.question = "",
+    //DateTime? created,
+    this.created = 0,
+    String? startDate,
+    this.startDateEpoch = 0,
+    String? endDate,
+    this.endDateEpoch = 0,
+    this.active = false,
+    this.question2 = "",
+    this.question3 = "",
+    this.id = "",
+    // From Life devo
+    this.pkCollectionLifeDevo = "",
+    this.skCollectionLifeDevo = "",
+    this.answer = "",
+    this.meditation = "",
+    this.note = "",
+    this.sessionId = "",
+    this.createdBy = "",
+    this.lastModified = "",
+    this.lastModifiedEpoch = 0,
+    this.shared = const [],
+    this.answer2 = "",
+    this.answer3 = "",
+    // From User data
+    this.userName = "",
+    this.userProfileImageUrl = "",
+  })  : startDate = startDate ?? "",
         endDate = endDate ?? "";
 
   factory LifeDevoCompModel.generate(

@@ -7,6 +7,13 @@ const apiUrlGetLifeDevo = "user/lifeDevo/getLifeDevo";
 const apiUrlCreateLifeDevo = "user/lifeDevo/createLifeDevo";
 const apiUrlUpdateLifeDevo = "user/lifeDevo/updateLifeDevo";
 const apiUrlSearchLifeDevo = "user/lifeDevo/searchLifeDevo";
+// Comments
+const apiUrlCreateComment = "user/comment/createComment";
+const apiUrlGetComment = "user/comment/getComment";
+const apiUrlUpdateComment = "user/comment/updateComment";
+const apiUrlDeleteComment = "user/comment/deleteComment";
+// User
+const apiUrlSearchUserByUserId = "user/user/searchUserByUserId";
 
 class UserContentsAPIClient {
   static getLifeDevo(String skCollection) async {
@@ -21,26 +28,6 @@ class UserContentsAPIClient {
         baseUrlDev + apiUrlCreateLifeDevo, lifedevo.toJSON());
   }
 
-  // static updateLifeDevo(String skCollection,
-  //     [String? answer,
-  //     String? answer2,
-  //     String? answer3,
-  //     String? meditation,
-  //     String? note,
-  //     List? shared]) async {
-  //   Map param = {"skCollection": skCollection};
-
-  //   // 하나씩 붙여주기
-  //   if (answer != null) param["answer"] = answer;
-  //   if (answer2 != null) param["answer2"] = answer2;
-  //   if (answer3 != null) param["answer3"] = answer3;
-  //   if (meditation != null) param["meditation"] = meditation;
-  //   if (note != null) param["note"] = note;
-  //   if (shared != null) param["shared"] = shared;
-
-  //   return await GlobalAPIClient.postRequest(
-  //       baseUrlDev + apiUrlUpdateLifeDevo, param);
-  // }
   static updateLifeDevo(LifeDevoModel lifedevo) async {
     return await GlobalAPIClient.postRequest(
         baseUrlDev + apiUrlUpdateLifeDevo, lifedevo.toJSON());
@@ -54,5 +41,46 @@ class UserContentsAPIClient {
   static getSharedLifeDevo(String userId, List sessionIdList) async {
     return GlobalAPIClient.postRequest(baseUrlDev + apiUrlSearchLifeDevo,
         {"userId": userId, "sessionIdList": sessionIdList, "sharedToMe": true});
+  }
+
+  // ignore: slash_for_doc_comments
+  /*****************************************************************
+  * Comments
+  *****************************************************************/
+  static createComment(String sessionId, String userId, String content) async {
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlCreateComment,
+        {"lifeDevoId": sessionId, "userId": userId, "content": content});
+  }
+
+  static getComment(String sessionId, Map exclusiveStartKey) async {
+    Map param = {"lifeDevoId": sessionId};
+    if (exclusiveStartKey != null && exclusiveStartKey.isNotEmpty) {
+      param["exclusiveStartKey"] = exclusiveStartKey;
+    }
+    debugPrint('Param to get comments: ${param.toString()}');
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlGetComment, param);
+  }
+
+  static updateComment(
+      String sessionId, String commentSkCollection, String content) async {
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlUpdateComment, {
+      "lifeDevoId": sessionId,
+      "commentSkCollection": commentSkCollection,
+      "content": content
+    });
+  }
+
+  static deleteComment(String sessionId, String commentSkCollection) async {
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlDeleteComment,
+        {"lifeDevoId": sessionId, "commentSkCollection": commentSkCollection});
+  }
+
+  // ignore: slash_for_doc_comments
+  /*****************************************************************
+  * User
+  *****************************************************************/
+  static searchUserByUserId(List userIdList) async {
+    return GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlSearchUserByUserId, {"userIdList": userIdList});
   }
 }

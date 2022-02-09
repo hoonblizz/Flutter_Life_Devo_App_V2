@@ -110,4 +110,45 @@ class LifeDevoDetailController extends GetxController {
   gotoAuthPage() {
     Get.toNamed(Routes.AUTH);
   }
+
+  // ignore: slash_for_doc_comments
+  /******************************************************************
+   * Comments
+  ******************************************************************/
+  Future<Map> getComments(String sessionId, Map exclusiveStartKey) async {
+    try {
+      Map result =
+          await userContentRepo.getComment(sessionId, exclusiveStartKey);
+      gc.consoleLog('Result: ${result.toString()}',
+          curFileName: currentFileName);
+      return result;
+    } catch (e) {
+      gc.consoleLog('Error getting comments', curFileName: currentFileName);
+    }
+    return {};
+  }
+
+  Future createComments(String sessionId, String userId, String content) async {
+    try {
+      Map result =
+          await userContentRepo.createComment(sessionId, userId, content);
+      gc.consoleLog('Result creating comment: ${result.toString()}',
+          curFileName: currentFileName);
+    } catch (e) {
+      gc.consoleLog('Error creating comments', curFileName: currentFileName);
+    }
+  }
+
+  // ignore: slash_for_doc_comments
+  /******************************************************************
+   * User
+  ******************************************************************/
+  Future<Map> searchUserByUserId(List userIdList) async {
+    try {
+      return await userContentRepo.searchUserByUserId(userIdList);
+    } catch (e) {
+      gc.consoleLog('Error searching users', curFileName: currentFileName);
+    }
+    return {};
+  }
 }

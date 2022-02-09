@@ -93,23 +93,28 @@ class _LifeDevoSharedPageState extends State<LifeDevoSharedPage> {
                             const SizedBox(
                               height: 10,
                             ),
+
                             // 작성자
-                            Container(
-                              alignment: Alignment.bottomLeft,
-                              child: Text(
-                                el.createdBy,
-                                style: TextStyle(fontSize: contentListCardDate),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                DateFormat.yMMMEd().format(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      el.startDateEpoch),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  el.userName,
+                                  style: TextStyle(
+                                    fontSize: contentListCardDate,
+                                  ),
                                 ),
-                                style: TextStyle(fontSize: contentListCardDate),
-                              ),
+                                Text(
+                                  DateFormat.yMMMEd().format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        el.startDateEpoch),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: contentListCardDate,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
