@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
@@ -22,6 +25,8 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   final GlobalController _globalController = Get.find();
   final LifeDevoCompModel _curLifeDevoSession = Get.arguments[0];
 
+  final _scrollController = ScrollController();
+
   final TextEditingController _controllerAnswer = TextEditingController();
   final TextEditingController _controllerAnswer2 = TextEditingController();
   final TextEditingController _controllerAnswer3 = TextEditingController();
@@ -32,8 +37,11 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   bool isGetCommentLoading = false;
   bool isCommentLoading = false;
   bool isMyLifeDevo = false;
-  List<CommentModel> commentList = [];
+  List<List<CommentModel>> commentList = []; // 2d array -> new to old
+  List<CommentModel> commentListMerged = []; // Flattened
+  List<Map> lastEvaluatedKeyList = []; // 여기에 키값들 저장.
   Map lastEvaluatedKey = {};
+  Map lastEvaluatedKeyPrev = {}; // Previous key
 
   @override
   void initState() {
@@ -42,19 +50,51 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
     // 해당 life devo 의 코멘트 가져오기
     getComments();
 
+    scrollListener();
+
     super.initState();
   }
 
+  scrollListener() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        bool isTop = _scrollController.position.pixels == 0;
+        if (isTop) {
+          debugPrint('Scroll at the top');
+        } else {
+          debugPrint('Scroll at the bottom');
+          getComments();
+          // 코멘트 로딩을 보여주려면 좀더 내려가야함. -> 근데 이거 하면 bottom 에 한번 더 도달해서 코멘트를 두번 부르게 된다.
+          //_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      }
+    });
+  }
+
   getComments() async {
+    // 이미 로딩중이면 부르지 말자.
+    if (isGetCommentLoading) {
+      return;
+    }
+
     setState(() {
       isGetCommentLoading = true;
     });
+
+    // 바로 직전의 api 에서 나온 키가 있으면 그걸 쓰고, 아니면 그 전 키를 사용.
+    // 예를들어, 리스트 쭉 부르다가 맨 끝에 도달한 경우, 키 값은 비게 된다.
+    // 그 상태에서 리스트를 한번 더 부를때, 빈 키로 부르면 안된다.
+    Map keyToBeUsed = lastEvaluatedKeyList.isNotEmpty
+        ? lastEvaluatedKeyList[lastEvaluatedKeyList.length - 1]
+        : {};
+
     List<CommentModel> _tempList = [];
 
+    await Future.delayed(const Duration(seconds: 1));
     Map result = await _lifeDevoDetailController.getComments(
-        _curLifeDevoSession.id, lastEvaluatedKey);
+        _curLifeDevoSession.id, keyToBeUsed);
 
-    debugPrint('Result ${result.toString()}');
+    //debugPrint('Result ${result.toString()}');
 
     if (result["statusCode"] != null && result["statusCode"] == 200) {
       if (result["body"] != null) {
@@ -64,8 +104,17 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
       }
 
       if (result["resultExclusiveStartKey"] != null) {
-        lastEvaluatedKey = result["resultExclusiveStartKey"];
-        debugPrint('Pagination key: ${lastEvaluatedKey.toString()}');
+        // 만약 키가 있었으면 백업
+        Map lastEvaluatedKey = result["resultExclusiveStartKey"];
+
+        // ignore: iterable_contains_unrelated_type
+        if (!lastEvaluatedKeyList
+            .contains((Map el) => mapEquals(el, lastEvaluatedKey))) {
+          debugPrint('Last Eval not exist. Adding one...');
+          lastEvaluatedKeyList.add(lastEvaluatedKey);
+        }
+
+        debugPrint('Pagination key: ${lastEvaluatedKeyList.toString()}');
       }
 
       // user id 로 user data 구하기. username 코멘트에 등록.
@@ -91,7 +140,25 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
       }
 
       setState(() {
-        commentList = List<CommentModel>.from(_tempList); // Deep copy
+        // 키값의 0 인덱스는 코멘트의 1 인덱스.
+        if (lastEvaluatedKeyList.isEmpty) {
+          // 여기에 오는건 코멘트가 없거나 코멘트가 적을때. 전체 리스트를 세팅해준다.
+          debugPrint('Adding more comments');
+          commentList.assign(List<CommentModel>.from(_tempList)); // Deep copy
+        } else {
+          // 해당 인덱스가 존재하는지 확인. map 으로 바꿔서 확인.
+          if (commentList.asMap().containsKey(lastEvaluatedKeyList.length)) {
+            debugPrint('Replacing comments');
+            commentList[lastEvaluatedKeyList.length]
+                .assignAll(List<CommentModel>.from(_tempList));
+          } else {
+            debugPrint('Adding comments because its new');
+            commentList.add(List<CommentModel>.from(_tempList));
+          }
+        }
+
+        commentListMerged =
+            commentList.expand((element) => element).toList(); // Flatten
       });
     }
 
@@ -111,8 +178,9 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
       // 최신이 가장 위에 있으므로, 리셋 시켜주고 다시 불러오자
       setState(() {
         _controllerComment.text = "";
-        // commentList = [];
-        lastEvaluatedKey = {};
+        commentList =
+            []; // 실질적으로 쓰이는건 commentList 가 아니라 commnetListMerged 라서 괜찮다.
+        lastEvaluatedKeyList = [];
         isCommentLoading = false;
       });
 
@@ -199,6 +267,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                       horizontal: screenPaddingHorizontal,
                     ),
                     child: SingleChildScrollView(
+                      controller: _scrollController,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,8 +426,32 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                           _commentInputComponent(
                               _controllerComment, createComment),
 
+                          // 테스팅용 코멘트 부르기 버튼
+                          // GestureDetector(
+                          //   onTap: getComments,
+                          //   child: const Text('Load comments'),
+                          // ),
                           // 코멘트들
-                          _commentsComponent(commentList),
+                          _commentsComponent(commentListMerged),
+                          // 코멘트 로딩을 잘 보여주기 위해 넣은 공간
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          // 코멘트 로딩
+                          if (isGetCommentLoading)
+                            Container(
+                              alignment: Alignment.center,
+                              height: 30,
+                              width: double.infinity,
+                              child: const LoadingWidget(
+                                shape: "CIRCLE",
+                                loaderSize: 26,
+                              ),
+                            ),
+                          // 코멘트 로딩을 잘 보여주기 위해 넣은 공간
+                          const SizedBox(
+                            height: 30,
+                          )
                         ],
                       ),
                     ),

@@ -54,7 +54,7 @@ class UserContentsAPIClient {
 
   static getComment(String sessionId, Map exclusiveStartKey) async {
     Map param = {"lifeDevoId": sessionId};
-    if (exclusiveStartKey != null && exclusiveStartKey.isNotEmpty) {
+    if (exclusiveStartKey.isNotEmpty) {
       param["exclusiveStartKey"] = exclusiveStartKey;
     }
     debugPrint('Param to get comments: ${param.toString()}');
