@@ -80,11 +80,18 @@ class MainController extends GetxController {
           _tempList.add(LifeDevoModel.fromJSON(resultMyLifeDevo['body'][x]));
         }
         myLifeDevoList = List<LifeDevoModel>.from(_tempList); // deep copy
+        // 라이프 디보가 하나만 나올거라 생각.
+        if (myLifeDevoList.isNotEmpty) {
+          latestLifeDevoSession.value =
+              LifeDevoCompModel.generate(_tempSession, myLifeDevoList[0]);
+        } else {
+          latestLifeDevoSession.value =
+              LifeDevoCompModel.generate(_tempSession, LifeDevoModel());
+        }
+      } else {
+        latestLifeDevoSession.value =
+            LifeDevoCompModel.generate(_tempSession, LifeDevoModel());
       }
-
-      // 라이프 디보가 하나만 나올거라 생각.
-      latestLifeDevoSession.value =
-          LifeDevoCompModel.generate(_tempSession, myLifeDevoList[0]);
 
       // Get latest sermon
 

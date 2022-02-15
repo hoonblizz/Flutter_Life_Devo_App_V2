@@ -450,7 +450,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                             ),
                           // 코멘트 로딩을 잘 보여주기 위해 넣은 공간
                           const SizedBox(
-                            height: 30,
+                            height: 50,
                           )
                         ],
                       ),
