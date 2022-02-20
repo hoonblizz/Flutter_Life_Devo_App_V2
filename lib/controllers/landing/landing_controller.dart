@@ -33,10 +33,10 @@ class LandingController extends GetxController {
   _checkUserLoggedIn() async {
     // Get the token
     UserTokenModel userToken = await authRepo.getUserTokenFromLocal();
-    gc.consoleLog(
-      "Token from local: ${userToken.toJson().toString()}",
-      curFileName: currentFileName,
-    );
+    // gc.consoleLog(
+    //   "Token from local: ${userToken.toJson().toString()}",
+    //   curFileName: currentFileName,
+    // );
 
     // Save the token data into global controller
     gc.userToken = userToken;
@@ -59,6 +59,8 @@ class LandingController extends GetxController {
 
           if (resultUserData['statusCode'] == 200) {
             gc.currentUser = User.fromJSON(resultUserData['body']);
+          } else {
+            gc.userLoggedIn.value = false;
           }
         } catch (e) {
           gc.consoleLog('Error getting user data by system id: ${e.toString()}',

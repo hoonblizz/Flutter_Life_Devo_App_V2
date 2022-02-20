@@ -16,6 +16,7 @@ class User {
   bool sessionCreator;
   int created;
   String lastModified;
+  List partners;
 
   User({
     this.pkCollection = "",
@@ -28,20 +29,22 @@ class User {
     this.sessionCreator = false,
     this.created = 0,
     this.lastModified = "",
+    this.partners = const [],
   });
 
   factory User.fromJSON(Map map) {
     return User(
-      pkCollection: map['pkCollection'],
-      skCollection: map['skCollection'],
-      fromFirebase: map['fromFirebase'],
-      systemId: map['systemId'],
-      userId: map['userId'],
-      email: map['email'],
-      name: map['name'],
-      sessionCreator: map['sessionCreator'],
-      created: map['created'],
-      lastModified: map['lastModified'],
+      pkCollection: map['pkCollection'] ?? '',
+      skCollection: map['skCollection'] ?? '',
+      fromFirebase: map['fromFirebase'] ?? false,
+      systemId: map['systemId'] ?? '',
+      userId: map['userId'] ?? '',
+      email: map['email'] ?? '',
+      name: map['name'] ?? '',
+      sessionCreator: map['sessionCreator'] ?? false,
+      created: map['created'] ?? 0,
+      lastModified: map['lastModified'] ?? '',
+      partners: map['partners'] ?? [],
     );
   }
 }
