@@ -1,4 +1,4 @@
-package com.example.life_devo_app
+package com.taehoon.lifeDevoApp
 
 import io.flutter.embedding.android.FlutterActivity
 

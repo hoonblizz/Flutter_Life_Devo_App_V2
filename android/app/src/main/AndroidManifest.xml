@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.life_devo_app">
+    package="com.taehoon.lifeDevoApp">
    <application
         android:label="flutter_life_devo_app_v2"
         android:icon="@mipmap/ic_launcher">
