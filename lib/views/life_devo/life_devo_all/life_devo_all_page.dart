@@ -53,8 +53,8 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
       children: [
         // Life devo 리스트
         Obx(() {
-          List<LifeDevoCompModel> _sessionList =
-              _lifeDevoController.allLifeDevoList;
+          // List<LifeDevoCompModel> _sessionList =
+          //     _lifeDevoController.allLifeDevoList;
 
           if (_lifeDevoController.isTabAllLoading.value) {
             return const LoadingWidget();
@@ -68,7 +68,8 @@ class _LifeDevoAllPageState extends State<LifeDevoAllPage> {
               ), // 밑에 캘린더 버튼 보이도록
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: _sessionList.map((LifeDevoCompModel el) {
+                children: _lifeDevoController.allLifeDevoList
+                    .map((LifeDevoCompModel el) {
                   return GestureDetector(
                     onTap: () => _lifeDevoController.gotoLifeDevoDetail(el),
                     child: Card(

@@ -20,5 +20,12 @@ double adminContentDetailSpace = mainPageContentsSpace;
 
 // Content List
 double contentListCardTitle = Get.width * 0.045;
+double contentListCardDesc = mainPageContentsDesc;
 double contentListCardDate = mainPageContentsDesc;
 double contentListCardHeight = 120;
+
+// ChatRoom List
+double chatRoomListCardUserName = Get.width * 0.035;
+double chatRoomListCardLastMsg = Get.width * 0.035;
+double chatRoomListCardDate = Get.width * 0.035;
+double chatRoomListCardHeight = 100;

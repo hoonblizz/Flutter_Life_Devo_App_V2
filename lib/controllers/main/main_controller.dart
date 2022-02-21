@@ -63,7 +63,7 @@ class MainController extends GetxController {
       // Get latest life devo
       LifeDevoSessionModel _tempSession = LifeDevoSessionModel();
       Map result = await adminContentRepo.getLatestLifeDevoSession();
-      gc.consoleLog('Result: ${result.toString()}');
+      //gc.consoleLog('Result: ${result.toString()}');
       if (result['statusCode'] == 200) {
         _tempSession = LifeDevoSessionModel.fromJSON(result['body']);
       }

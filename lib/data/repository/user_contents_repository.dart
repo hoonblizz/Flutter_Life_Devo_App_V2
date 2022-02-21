@@ -53,4 +53,28 @@ class UserContentsRepository {
   Future searchUserByUserId(List userIdList) async {
     return await UserContentsAPIClient.searchUserByUserId(userIdList);
   }
+
+  // ignore: slash_for_doc_comments
+  /*****************************************************************
+  * Friend Request
+  *****************************************************************/
+  Future getFriendRequest(String userId) async {
+    return await UserContentsAPIClient.getFriendRequest(userId);
+  }
+
+  Future cretaeFriendRequest(String fromUserId, String toUserId) async {
+    return await UserContentsAPIClient.createFriendRequest(
+        fromUserId, toUserId);
+  }
+
+  Future acceptFriendRequest(
+      String requestSkCollection, String fromUserId, String toUserId) async {
+    return await UserContentsAPIClient.acceptFriendRequest(
+        requestSkCollection, fromUserId, toUserId);
+  }
+
+  Future declineFriendRequest(String requestSkCollection) async {
+    return await UserContentsAPIClient.declineFriendRequest(
+        requestSkCollection);
+  }
 }

@@ -87,8 +87,8 @@ class LifeDevoDetailController extends GetxController {
   Future<LifeDevoModel?> createLifeDevo(LifeDevoModel _lifeDevo) async {
     try {
       Map result = await userContentRepo.createLifeDevo(_lifeDevo);
-      gc.consoleLog('Result: ${result.toString()}',
-          curFileName: currentFileName);
+      // gc.consoleLog('Result: ${result.toString()}',
+      //     curFileName: currentFileName);
       if (result['statusCode'] == 200 && result['body'] != null) {
         return LifeDevoModel.fromJSON(result['body']);
       }
@@ -100,8 +100,8 @@ class LifeDevoDetailController extends GetxController {
   Future updateLifeDevo(LifeDevoModel _lifeDevo) async {
     try {
       Map result = await userContentRepo.updateLifeDevo(_lifeDevo);
-      gc.consoleLog('Result: ${result.toString()}',
-          curFileName: currentFileName);
+      // gc.consoleLog('Result: ${result.toString()}',
+      //     curFileName: currentFileName);
     } catch (e) {
       gc.consoleLog('Error updating life devo', curFileName: currentFileName);
     }
@@ -119,8 +119,8 @@ class LifeDevoDetailController extends GetxController {
     try {
       Map result =
           await userContentRepo.getComment(sessionId, exclusiveStartKey);
-      gc.consoleLog('Result: ${result.toString()}',
-          curFileName: currentFileName);
+      // gc.consoleLog('Result: ${result.toString()}',
+      //     curFileName: currentFileName);
       return result;
     } catch (e) {
       gc.consoleLog('Error getting comments', curFileName: currentFileName);

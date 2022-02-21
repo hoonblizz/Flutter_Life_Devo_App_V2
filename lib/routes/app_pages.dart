@@ -1,5 +1,7 @@
+import 'package:flutter_life_devo_app_v2/bindings/chat_detail_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/life_devo_detail_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
+import 'package:flutter_life_devo_app_v2/views/chat/chat_page.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo_detail/life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/main/main_page.dart';
 import 'package:get/get.dart';
@@ -36,5 +38,11 @@ class AppPages {
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 150),
     ),
+
+    // GetPage(
+    //   name: Routes.CHAT_DETAIL,
+    //   page: () => ChatPage(),
+    //   binding: ChatBinding(),
+    // ),
   ];
 }

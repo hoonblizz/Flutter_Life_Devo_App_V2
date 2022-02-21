@@ -14,6 +14,10 @@ const apiUrlUpdateComment = "user/comment/updateComment";
 const apiUrlDeleteComment = "user/comment/deleteComment";
 // User
 const apiUrlSearchUserByUserId = "user/user/searchUserByUserId";
+// Friend Request
+const apiUrlSearchFriendRequest = "user/friendRequest/searchFriendRequest";
+const apiUrlCreateFriendRequest = "user/friendRequest/createFriendRequest";
+const apiUrlUpdateFriendRequest = "user/friendRequest/updateFriendRequest";
 
 class UserContentsAPIClient {
   static getLifeDevo(String skCollection) async {
@@ -82,5 +86,34 @@ class UserContentsAPIClient {
   static searchUserByUserId(List userIdList) async {
     return GlobalAPIClient.postRequest(
         baseUrlDev + apiUrlSearchUserByUserId, {"userIdList": userIdList});
+  }
+
+  // ignore: slash_for_doc_comments
+  /*****************************************************************
+  * Friend Requests
+  *****************************************************************/
+  static getFriendRequest(String userId) async {
+    return GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlSearchFriendRequest, {"userId": userId});
+  }
+
+  static createFriendRequest(String fromUserId, String toUserId) async {
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlCreateFriendRequest,
+        {"fromUserId": fromUserId, "toUserId": toUserId});
+  }
+
+  static acceptFriendRequest(
+      String requestSkCollection, String fromUserId, String toUserId) async {
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlUpdateFriendRequest, {
+      "requestSkCollection": requestSkCollection,
+      "status": "ACCEPTED",
+      "fromUserId": fromUserId,
+      "toUserId": toUserId
+    });
+  }
+
+  static declineFriendRequest(String requestSkCollection) async {
+    return GlobalAPIClient.postRequest(baseUrlDev + apiUrlUpdateFriendRequest,
+        {"requestSkCollection": requestSkCollection, "status": "DECLINED"});
   }
 }
