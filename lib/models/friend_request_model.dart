@@ -2,11 +2,15 @@
   Life devo 에 종속되는 코멘트 모델
 */
 
+import 'package:flutter_life_devo_app_v2/models/user_model.dart';
+
 class FriendRequestModel {
   String pkCollection;
   String skCollection; // email
   String toUserId;
+  late User toUser;
   String fromUserId;
+  late User fromUser;
   String status;
   int lastModifiedEpoch;
   int createdEpoch;

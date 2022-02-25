@@ -2,6 +2,7 @@ import 'package:flutter_life_devo_app_v2/controllers/chat/chat_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo/life_devo_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/life_devo_detail/life_devo_detail_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
+import 'package:flutter_life_devo_app_v2/controllers/profile/profile_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/messenger_repository.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
@@ -42,6 +43,12 @@ class MainBinding implements Bindings {
           authRepo: Get.find<AuthRepository>(),
           userContentRepo: Get.find<UserContentsRepository>(),
           messengerRepo: Get.find<MessengerRepository>()),
+    );
+    Get.lazyPut<ProfileController>(
+      () => ProfileController(
+        authRepo: Get.find<AuthRepository>(),
+        userContentRepo: Get.find<UserContentsRepository>(),
+      ),
     );
   }
 }

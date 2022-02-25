@@ -29,3 +29,7 @@ double chatRoomListCardUserName = Get.width * 0.035;
 double chatRoomListCardLastMsg = Get.width * 0.035;
 double chatRoomListCardDate = Get.width * 0.035;
 double chatRoomListCardHeight = 100;
+
+// Friend Request
+double friendRequestUserName = Get.width * 0.035;
+double friendRequestDate = Get.width * 0.030;
