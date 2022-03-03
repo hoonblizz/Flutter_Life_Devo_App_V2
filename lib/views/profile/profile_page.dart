@@ -14,6 +14,55 @@ class ProfilePage extends StatelessWidget {
   final GlobalController _gc = Get.find<GlobalController>();
   final ProfileController _profileCtrler = Get.find();
 
+  final TextEditingController _controllerInviteFriend = TextEditingController();
+
+  onPressInviteFriend() {
+    Get.defaultDialog(
+      title: "Enter email",
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _controllerInviteFriend,
+            keyboardType: TextInputType.text,
+            maxLines: 1,
+            decoration: const InputDecoration(
+              labelText: 'Email',
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              minimumSize: const Size(double.infinity, 40),
+              backgroundColor: kPrimaryColor,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+            ),
+            onPressed: () {
+              if (_controllerInviteFriend.text.isNotEmpty) {
+                debugPrint('Send a request! ${_controllerInviteFriend.text}');
+                _profileCtrler
+                    .onPressInviteFriend(_controllerInviteFriend.text);
+                _controllerInviteFriend.text = "";
+              }
+              Get.back();
+            },
+            child: Text(
+              'Send a request',
+              style: TextStyle(
+                fontSize: mainPageContentsDesc,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -42,6 +91,30 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: mainPageContentsSpace * 10,
+                ),
+
+                // Invite button
+                Center(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 40),
+                      backgroundColor: kPrimaryColor,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 0),
+                    ),
+                    onPressed: onPressInviteFriend,
+                    child: Text(
+                      'Invite a friend',
+                      style: TextStyle(
+                          fontSize: mainPageContentsDesc,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+
                 SizedBox(
                   height: mainPageContentsSpace,
                 ),

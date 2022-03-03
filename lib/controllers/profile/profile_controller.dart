@@ -116,6 +116,38 @@ class ProfileController extends GetxController {
     await getFriendRequests();
   }
 
+  onPressInviteFriend(String email) async {
+    Map foundUser = {};
+    // 해당 이메일을 가진 유저 찾기
+    try {
+      Map result = await userContentRepo.searchUserByEmail(email);
+      if (result['statusCode'] == 200 && result['body'].length > 0) {
+        foundUser = result['body'][0]; // 하나만 찾아질것. 무조건 0 인덱스만 보내주자.
+      }
+      debugPrint('Result searching user: ${result.toString()}');
+    } catch (e) {
+      debugPrint('Error searching user: ${e.toString()}');
+    }
+
+    if (foundUser.isEmpty || foundUser['userId'] == null) {
+      return;
+    }
+
+    String targetUserId = foundUser['userId'];
+
+    // 친구 추가 초대 보내기
+    try {
+      Map result = await userContentRepo.cretaeFriendRequest(
+          gc.currentUser.userId, targetUserId);
+      debugPrint('Result sending request: ${result.toString()}');
+    } catch (e) {
+      debugPrint('Error sending request: ${e.toString()}');
+    }
+
+    // 리프레쉬
+    await getFriendRequests();
+  }
+
   @override
   void onInit() {
     gc.consoleLog(

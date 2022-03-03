@@ -54,6 +54,10 @@ class UserContentsRepository {
     return await UserContentsAPIClient.searchUserByUserId(userIdList);
   }
 
+  Future searchUserByEmail(String email) async {
+    return await UserContentsAPIClient.searchUserByEmail(email);
+  }
+
   // ignore: slash_for_doc_comments
   /*****************************************************************
   * Friend Request

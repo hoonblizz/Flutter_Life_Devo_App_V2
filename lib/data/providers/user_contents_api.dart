@@ -14,6 +14,7 @@ const apiUrlUpdateComment = "user/comment/updateComment";
 const apiUrlDeleteComment = "user/comment/deleteComment";
 // User
 const apiUrlSearchUserByUserId = "user/user/searchUserByUserId";
+const apiUrlSearchUserByEmail = "user/user/searchUserByEmail";
 // Friend Request
 const apiUrlSearchFriendRequest = "user/friendRequest/searchFriendRequest";
 const apiUrlCreateFriendRequest = "user/friendRequest/createFriendRequest";
@@ -86,6 +87,11 @@ class UserContentsAPIClient {
   static searchUserByUserId(List userIdList) async {
     return GlobalAPIClient.postRequest(
         baseUrlDev + apiUrlSearchUserByUserId, {"userIdList": userIdList});
+  }
+
+  static searchUserByEmail(String email) async {
+    return GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlSearchUserByEmail, {"email": email});
   }
 
   // ignore: slash_for_doc_comments
