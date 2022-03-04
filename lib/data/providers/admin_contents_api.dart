@@ -8,9 +8,20 @@ const apiUrlSearchLifeDevoSession =
     "admin/lifeDevoSession/searchLifeDevoSession";
 
 // Live Life devo APIs
-const apiUrlGetLatestLiveLifeDevo = "admin/liveLifeDevo/getLatestLiveLifeDevo";
+const apiUrlGetAllLiveLifeDevo = "admin/liveLifeDevo/getAllLiveLifeDevo";
+
+// Discipline Topic
+const apiUrlGetDisciplineTopic =
+    "admin/disciplineTopic/getDisciplineTopic"; // Get request
+// Discipline
+const apiUrlGetAllDiscipline = "admin/discipline/getAllDiscipline";
+// Sermon
+const apiUrlGetAllSermon = "admin/sermon/getAllSermon";
 
 class AdminContentsAPIClient {
+  /// **********************************************************************
+  /// Life Devo
+  /// **********************************************************************
   static getLatestLifeDevoSession() async {
     return await GlobalAPIClient.getRequest(
         baseUrlDev + apiUrlGetLatestLifeDevoSession);
@@ -22,8 +33,38 @@ class AdminContentsAPIClient {
         {"startDateFrom": startDateFrom, "startDateTo": startDateTo});
   }
 
-  static getLatestLiveLifeDevo() async {
+  /// **********************************************************************
+  /// Live Life Devo:
+  /// 최근꺼는 전체에서 가장 첫번째만 불러온다.
+  /// **********************************************************************
+  static getAllLiveLifeDevo(Map? exclusiveStartKey) async {
+    return await GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlGetAllLiveLifeDevo,
+        {"exclusiveStartKey": exclusiveStartKey});
+  }
+
+  /// **********************************************************************
+  /// Dicipline Topic
+  /// **********************************************************************
+  static getDisciplineTopic() async {
     return await GlobalAPIClient.getRequest(
-        baseUrlDev + apiUrlGetLatestLiveLifeDevo);
+        baseUrlDev + apiUrlGetDisciplineTopic);
+  }
+
+  /// **********************************************************************
+  /// Discipline
+  /// Pagination 없는 해당 토픽에 대한 내용만 가져온다.
+  /// **********************************************************************
+  static getAllDiscipline(String selectedTopic) async {
+    return await GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlGetAllDiscipline, {"selectedTopic": selectedTopic});
+  }
+
+  /// **********************************************************************
+  /// Sermon
+  /// **********************************************************************
+  static getAllSermon(Map? exclusiveStartKey) async {
+    return await GlobalAPIClient.postRequest(baseUrlDev + apiUrlGetAllSermon,
+        {"exclusiveStartKey": exclusiveStartKey});
   }
 }

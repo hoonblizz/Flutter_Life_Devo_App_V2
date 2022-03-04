@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class LiveLifeDevoModel {
+class DisciplineModel {
   final String pkCollection;
   final String skCollection;
   final String id;
@@ -10,7 +10,7 @@ class LiveLifeDevoModel {
   final DateTime created;
   final DateTime selectedDate;
 
-  LiveLifeDevoModel({
+  DisciplineModel({
     required this.pkCollection,
     required this.skCollection,
     this.id = "",
@@ -22,7 +22,7 @@ class LiveLifeDevoModel {
   })  : created = created ?? DateTime.now(),
         selectedDate = selectedDate ?? DateTime.now();
 
-  factory LiveLifeDevoModel.fromJSON(Map map) {
+  factory DisciplineModel.fromJSON(Map map) {
     // 특수문자가 안나올수 있기 때문에, conversion 필요
     String newTitle = map['title'] != null
         ? const Utf8Decoder().convert(map['title'].toString().codeUnits)
@@ -32,7 +32,7 @@ class LiveLifeDevoModel {
         ? const Utf8Decoder().convert(map['contentText'].toString().codeUnits)
         : '';
 
-    return LiveLifeDevoModel(
+    return DisciplineModel(
       pkCollection: map['pkCollection'] ?? '',
       skCollection: map['skCollection'] ?? '',
       id: map['id'] ?? '',
