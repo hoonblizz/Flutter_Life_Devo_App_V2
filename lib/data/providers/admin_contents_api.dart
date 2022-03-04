@@ -64,9 +64,10 @@ class AdminContentsAPIClient {
   /// Discipline
   /// Pagination 없는 해당 토픽에 대한 내용만 가져온다.
   /// **********************************************************************
-  static getAllDiscipline(String selectedTopic) async {
+  static getAllDiscipline([String selectedTopic = ""]) async {
     return await GlobalAPIClient.postRequest(
-        baseUrlDev + apiUrlGetAllDiscipline, {"selectedTopic": selectedTopic});
+        baseUrlDev + apiUrlGetAllDiscipline,
+        {"selectedTopic": selectedTopic.isEmpty ? null : selectedTopic});
   }
 
   static getDiscipline(String skCollection) async {

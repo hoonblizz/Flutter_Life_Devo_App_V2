@@ -3,6 +3,7 @@ import 'package:flutter_life_devo_app_v2/bindings/life_devo_detail_binding.dart'
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
 import 'package:flutter_life_devo_app_v2/views/chat/chat_page.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo_detail/life_devo_detail_page.dart';
+import 'package:flutter_life_devo_app_v2/views/live_life_devo_detail/live_life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/main/main_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/bindings/auth_binding.dart';
@@ -35,6 +36,14 @@ class AppPages {
       name: Routes.LIFE_DEVO_DETAIL,
       page: () => const LifeDevoDetailPage(),
       binding: LifeDevoDetailBinding(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 150),
+    ),
+
+    GetPage(
+      name: Routes.LIVE_LIFE_DEVO_DETAIL,
+      page: () => const LiveLifeDevoDetailPage(),
+      //binding: LiveLifeDevoDetailBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 150),
     ),

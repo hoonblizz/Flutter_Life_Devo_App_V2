@@ -68,8 +68,9 @@ class MainController extends GetxController {
 
     // Load latest life devo, sermon and live life devo, discipline
     await getLatestLifeDevo();
-
     await getLatestLiveLifeDevo();
+    await getLatestDiscipline();
+    await getLatestSermon();
 
     stopHomeTabLoading();
   }
@@ -131,8 +132,44 @@ class MainController extends GetxController {
     }
   }
 
+  getLatestDiscipline() async {
+    try {
+      // 맨위의것을 가져와야 하니까 pagination key 없이 가져온다.
+      Map result = await adminContentRepo.getAllDiscipline();
+      debugPrint('Latest discipline: ${result.toString()}');
+      if (result.isNotEmpty &&
+          result['statusCode'] == 200 &&
+          result['body'].length > 0) {
+        debugPrint('Copying discipline: ${result['body'][0].toString()}');
+        latestDiscipline.value = DisciplineModel.fromJSON(result['body'][0]);
+      }
+    } catch (e) {
+      debugPrint('Error getting latest discipline: ${e.toString()}');
+    }
+  }
+
+  getLatestSermon() async {
+    try {
+      // 맨위의것을 가져와야 하니까 pagination key 없이 가져온다.
+      Map result = await adminContentRepo.getAllSermon();
+      debugPrint('Latest sermon: ${result.toString()}');
+      if (result.isNotEmpty &&
+          result['statusCode'] == 200 &&
+          result['body'].length > 0) {
+        debugPrint('Copying sermon: ${result['body'][0].toString()}');
+        latestSermon.value = SermonModel.fromJSON(result['body'][0]);
+      }
+    } catch (e) {
+      debugPrint('Error getting latest sermon: ${e.toString()}');
+    }
+  }
+
   gotoLifeDevoDetail(LifeDevoCompModel lifeDevo) {
     Get.toNamed(Routes.LIFE_DEVO_DETAIL, arguments: [lifeDevo]);
+  }
+
+  gotoLiveLifeDevoDetailPage(LiveLifeDevoModel liveLifeDevo) {
+    Get.toNamed(Routes.LIVE_LIFE_DEVO_DETAIL, arguments: [liveLifeDevo]);
   }
 
   /******************************************************************

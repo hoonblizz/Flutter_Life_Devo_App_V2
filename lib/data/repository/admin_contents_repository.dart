@@ -34,7 +34,7 @@ class AdminContentsRepository {
   /// **********************************************************************
   /// Discipline
   /// **********************************************************************
-  Future getAllDiscipline(String selectedTopic) async {
+  Future getAllDiscipline([String selectedTopic = ""]) async {
     return await AdminContentsAPIClient.getAllDiscipline(selectedTopic);
   }
 

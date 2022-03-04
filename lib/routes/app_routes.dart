@@ -15,5 +15,15 @@ abstract class Routes {
 
   // ignore: constant_identifier_names
   static const CHAT = '/chat';
+  // ignore: constant_identifier_names
   static const CHAT_DETAIL = '/chat_detail';
+
+  // ignore: constant_identifier_names
+  static const LIVE_LIFE_DEVO_DETAIL = '/live_life_devo_detail';
+
+  // ignore: constant_identifier_names
+  static const DISPLINE_DETAIL = '/discipline_detail';
+
+  // ignore: constant_identifier_names
+  static const SERMON_DETAIL = '/sermon_detail';
 }

@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
 import 'package:flutter_life_devo_app_v2/models/live_life_devo_model.dart';
+import 'package:flutter_life_devo_app_v2/models/sermon_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
-class LatestLiveLifeDevo extends StatelessWidget {
-  LiveLifeDevoModel latestLiveLifeDevo;
+class LatestSermon extends StatelessWidget {
+  SermonModel latestSermon;
 
-  LatestLiveLifeDevo(this.latestLiveLifeDevo, {Key? key}) : super(key: key);
+  LatestSermon(this.latestSermon, {Key? key}) : super(key: key);
 
-  final MainController _mainController = Get.find();
+  //final MainController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +30,11 @@ class LatestLiveLifeDevo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           // Thumbnail image
-          (latestLiveLifeDevo.thumbnailUrl.isNotEmpty)
+          (latestSermon.thumbnailUrl.isNotEmpty)
               ? SizedBox(
                   width: double.infinity,
                   child: Image.network(
-                    latestLiveLifeDevo.thumbnailUrl,
+                    latestSermon.thumbnailUrl,
                     fit: BoxFit.fitWidth,
                   ))
               : Container(),
@@ -42,7 +43,7 @@ class LatestLiveLifeDevo extends StatelessWidget {
             height: mainPageContentsSpace,
           ),
           Text(
-            latestLiveLifeDevo.title,
+            latestSermon.title,
             maxLines: 6,
             overflow: TextOverflow.ellipsis,
             softWrap: false,
@@ -61,8 +62,6 @@ class LatestLiveLifeDevo extends StatelessWidget {
                 ),
                 onPressed: () {
                   //_mainController.gotoLifeDevoDetail(latestLifeDevoSession)
-                  _mainController
-                      .gotoLiveLifeDevoDetailPage(latestLiveLifeDevo);
                 },
                 child: Text(
                   'Watch the video',
