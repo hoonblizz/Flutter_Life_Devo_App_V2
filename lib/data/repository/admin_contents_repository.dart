@@ -16,8 +16,12 @@ class AdminContentsRepository {
   /// **********************************************************************
   /// Live Life Devo:
   /// **********************************************************************
-  Future getAllLiveLifeDevo(Map? exclusiveStartKey) async {
+  Future getAllLiveLifeDevo([Map exclusiveStartKey = const {}]) async {
     return await AdminContentsAPIClient.getAllLiveLifeDevo(exclusiveStartKey);
+  }
+
+  Future getLiveLifeDevo(String skCollection) async {
+    return await AdminContentsAPIClient.getLiveLifeDevo(skCollection);
   }
 
   /// **********************************************************************
@@ -34,10 +38,18 @@ class AdminContentsRepository {
     return await AdminContentsAPIClient.getAllDiscipline(selectedTopic);
   }
 
+  Future getDiscipline(String skCollection) async {
+    return await AdminContentsAPIClient.getDiscipline(skCollection);
+  }
+
   /// **********************************************************************
   /// Sermon
   /// **********************************************************************
-  static getAllSermon(Map? exclusiveStartKey) async {
+  Future getAllSermon([Map exclusiveStartKey = const {}]) async {
     return await AdminContentsAPIClient.getAllSermon(exclusiveStartKey);
+  }
+
+  Future getSermon(String skCollection) async {
+    return await AdminContentsAPIClient.getSermon(skCollection);
   }
 }

@@ -1,8 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
+import 'package:flutter_life_devo_app_v2/models/discipline_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
+import 'package:flutter_life_devo_app_v2/models/live_life_devo_model.dart';
+import 'package:flutter_life_devo_app_v2/models/sermon_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
@@ -30,6 +34,9 @@ class MainController extends GetxController {
   ******************************************************************/
   RxBool isHomeTabLoading = false.obs;
   Rx<LifeDevoCompModel> latestLifeDevoSession = LifeDevoCompModel().obs;
+  Rx<LiveLifeDevoModel> latestLiveLifeDevo = LiveLifeDevoModel().obs;
+  Rx<DisciplineModel> latestDiscipline = DisciplineModel().obs;
+  Rx<SermonModel> latestSermon = SermonModel().obs;
 
   // ignore: slash_for_doc_comments
   /******************************************************************
@@ -59,6 +66,15 @@ class MainController extends GetxController {
   loadHomeTabFeatures() async {
     startHomeTabLoading();
 
+    // Load latest life devo, sermon and live life devo, discipline
+    await getLatestLifeDevo();
+
+    await getLatestLiveLifeDevo();
+
+    stopHomeTabLoading();
+  }
+
+  getLatestLifeDevo() async {
     try {
       // Get latest life devo
       LifeDevoSessionModel _tempSession = LifeDevoSessionModel();
@@ -92,18 +108,27 @@ class MainController extends GetxController {
         latestLifeDevoSession.value =
             LifeDevoCompModel.generate(_tempSession, LifeDevoModel());
       }
-
-      // Get latest sermon
-
-      // Get latest Spiritual discipline
-
-      // Get latest live life devo
     } catch (e) {
       gc.consoleLog('Error falls here: ${e.toString()}');
       // TODO: Do something about errors
     }
+  }
 
-    stopHomeTabLoading();
+  getLatestLiveLifeDevo() async {
+    try {
+      // 맨위의것을 가져와야 하니까 pagination key 없이 가져온다.
+      Map result = await adminContentRepo.getAllLiveLifeDevo();
+      debugPrint('Latest live life devo: ${result.toString()}');
+      if (result.isNotEmpty &&
+          result['statusCode'] == 200 &&
+          result['body'].length > 0) {
+        debugPrint('Copying live life devo: ${result['body'][0].toString()}');
+        latestLiveLifeDevo.value =
+            LiveLifeDevoModel.fromJSON(result['body'][0]);
+      }
+    } catch (e) {
+      debugPrint('Error getting latest live life devo: ${e.toString()}');
+    }
   }
 
   gotoLifeDevoDetail(LifeDevoCompModel lifeDevo) {

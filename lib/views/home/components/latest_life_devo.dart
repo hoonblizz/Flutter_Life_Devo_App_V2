@@ -59,7 +59,9 @@ class LatestLifeDevo extends StatelessWidget {
             softWrap: false,
             style: TextStyle(fontSize: mainPageContentsDesc),
           ),
-
+          SizedBox(
+            height: mainPageContentsSpace,
+          ),
           Center(
             child: TextButton(
                 style: TextButton.styleFrom(

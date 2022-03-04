@@ -11,8 +11,8 @@ class SermonModel {
   final DateTime selectedDate;
 
   SermonModel({
-    required this.pkCollection,
-    required this.skCollection,
+    this.pkCollection = "",
+    this.skCollection = "",
     this.id = "",
     this.title = "",
     this.contentText = "",

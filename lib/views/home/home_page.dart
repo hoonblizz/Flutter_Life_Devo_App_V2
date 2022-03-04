@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
 import 'package:flutter_life_devo_app_v2/views/home/components/latest_life_devo.dart';
+import 'package:flutter_life_devo_app_v2/views/home/components/latest_live_life_devo.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
 import 'package:get/get.dart';
 
@@ -53,7 +54,36 @@ class HomePage extends StatelessWidget {
                     );
                   }
                   return Container();
-                })
+                }),
+
+                SizedBox(
+                  height: mainPageContentsSpace * 4,
+                ),
+
+                // Live Life devo title
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    'Latest Live Life Devo',
+                    style: TextStyle(
+                      fontSize: mainPageContentsTitle,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black.withOpacity(.8),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: mainPageContentsSpace,
+                ),
+                // Live Life devo content
+                Obx(() {
+                  if (_mainController
+                      .latestLiveLifeDevo.value.pkCollection.isNotEmpty) {
+                    return LatestLiveLifeDevo(
+                        _mainController.latestLiveLifeDevo.value);
+                  }
+                  return Container();
+                }),
               ],
             ),
           ),

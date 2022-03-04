@@ -9,14 +9,17 @@ const apiUrlSearchLifeDevoSession =
 
 // Live Life devo APIs
 const apiUrlGetAllLiveLifeDevo = "admin/liveLifeDevo/getAllLiveLifeDevo";
+const apiUrlGetLiveLifeDevo = "admin/liveLifeDevo/getLiveLifeDevo";
 
 // Discipline Topic
 const apiUrlGetDisciplineTopic =
     "admin/disciplineTopic/getDisciplineTopic"; // Get request
 // Discipline
 const apiUrlGetAllDiscipline = "admin/discipline/getAllDiscipline";
+const apiUrlGetDiscipline = "admin/discipline/getDiscipline";
 // Sermon
 const apiUrlGetAllSermon = "admin/sermon/getAllSermon";
+const apiUrlGetSermon = "admin/sermon/getSermon";
 
 class AdminContentsAPIClient {
   /// **********************************************************************
@@ -37,10 +40,16 @@ class AdminContentsAPIClient {
   /// Live Life Devo:
   /// 최근꺼는 전체에서 가장 첫번째만 불러온다.
   /// **********************************************************************
-  static getAllLiveLifeDevo(Map? exclusiveStartKey) async {
+  static getAllLiveLifeDevo([Map exclusiveStartKey = const {}]) async {
     return await GlobalAPIClient.postRequest(
-        baseUrlDev + apiUrlGetAllLiveLifeDevo,
-        {"exclusiveStartKey": exclusiveStartKey});
+        baseUrlDev + apiUrlGetAllLiveLifeDevo, {
+      "exclusiveStartKey": exclusiveStartKey.isEmpty ? null : exclusiveStartKey
+    });
+  }
+
+  static getLiveLifeDevo(String skCollection) async {
+    return await GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlGetLiveLifeDevo, {"skCollection": skCollection});
   }
 
   /// **********************************************************************
@@ -60,11 +69,22 @@ class AdminContentsAPIClient {
         baseUrlDev + apiUrlGetAllDiscipline, {"selectedTopic": selectedTopic});
   }
 
+  static getDiscipline(String skCollection) async {
+    return await GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlGetDiscipline, {"skCollection": skCollection});
+  }
+
   /// **********************************************************************
   /// Sermon
   /// **********************************************************************
-  static getAllSermon(Map? exclusiveStartKey) async {
-    return await GlobalAPIClient.postRequest(baseUrlDev + apiUrlGetAllSermon,
-        {"exclusiveStartKey": exclusiveStartKey});
+  static getAllSermon([Map exclusiveStartKey = const {}]) async {
+    return await GlobalAPIClient.postRequest(baseUrlDev + apiUrlGetAllSermon, {
+      "exclusiveStartKey": exclusiveStartKey.isEmpty ? null : exclusiveStartKey
+    });
+  }
+
+  static getSermon(String skCollection) async {
+    return await GlobalAPIClient.postRequest(
+        baseUrlDev + apiUrlGetSermon, {"skCollection": skCollection});
   }
 }

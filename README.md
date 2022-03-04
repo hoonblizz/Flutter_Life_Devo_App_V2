@@ -34,7 +34,7 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 
 # 2022.03.03 ~ 2022.03.04    
 - [X] Live life devo, Discipline topic, Discipline, Sermon Model 만들기  
-- [ ] admin repo 에 각 데이터에 대한 CRUD 구현  
+- [X] admin repo 에 각 데이터에 대한 CRUD 구현  
 - [ ] Live life devo, sermon 의 Latest 가져노는거 구현  
 - [ ] 두번째 탭에 대한 컨트롤러 만들기  
 - [ ] 두번째 탭 페이지 꾸미기. Live life devo, Discipline, Sermon 버튼들 크게 만들기  

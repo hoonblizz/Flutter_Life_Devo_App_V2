@@ -11,8 +11,8 @@ class DisciplineModel {
   final DateTime selectedDate;
 
   DisciplineModel({
-    required this.pkCollection,
-    required this.skCollection,
+    this.pkCollection = "",
+    this.skCollection = "",
     this.id = "",
     this.title = "",
     this.contentText = "",
