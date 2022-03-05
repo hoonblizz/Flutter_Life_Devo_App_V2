@@ -53,22 +53,23 @@ class LatestDiscipline extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: TextButton(
-                style: TextButton.styleFrom(
-                  //minimumSize: Size(_width, _height),
-                  backgroundColor: kPrimaryColor,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                ),
-                onPressed: () {
-                  _mainController.gotoDisciplineDetailPage(latestDiscipline);
-                },
-                child: Text(
-                  'Watch the video',
-                  style: TextStyle(
-                      fontSize: mainPageContentsDesc,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
-                )),
+              style: TextButton.styleFrom(
+                //minimumSize: Size(_width, _height),
+                backgroundColor: kPrimaryColor,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+              ),
+              onPressed: () {
+                _mainController.gotoDisciplineDetailPage(latestDiscipline);
+              },
+              child: Text(
+                'Watch the video',
+                style: TextStyle(
+                    fontSize: mainPageContentsDesc,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
           ),
         ],
       ),

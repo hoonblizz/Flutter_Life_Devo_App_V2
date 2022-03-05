@@ -20,10 +20,18 @@ abstract class Routes {
 
   // ignore: constant_identifier_names
   static const LIVE_LIFE_DEVO_DETAIL = '/live_life_devo_detail';
+  // ignore: constant_identifier_names
+  static const LIVE_LIFE_DEVO_LIST = '/live_life_devo_list';
 
   // ignore: constant_identifier_names
   static const DISPLINE_DETAIL = '/discipline_detail';
+  // ignore: constant_identifier_names
+  static const DISPLINE_LIST = '/discipline_list';
+  // ignore: constant_identifier_names
+  static const DISPLINE_TOPIC = '/discipline_topic';
 
   // ignore: constant_identifier_names
   static const SERMON_DETAIL = '/sermon_detail';
+  // ignore: constant_identifier_names
+  static const SERMON_LIST = '/sermon_list';
 }
