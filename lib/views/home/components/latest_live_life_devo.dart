@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
-import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
 import 'package:flutter_life_devo_app_v2/models/live_life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
@@ -51,10 +50,10 @@ class LatestLiveLifeDevo extends StatelessWidget {
           SizedBox(
             height: mainPageContentsSpace,
           ),
-          Center(
+          SizedBox(
+            width: double.infinity,
             child: TextButton(
                 style: TextButton.styleFrom(
-                  //minimumSize: Size(_width, _height),
                   backgroundColor: kPrimaryColor,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 0),

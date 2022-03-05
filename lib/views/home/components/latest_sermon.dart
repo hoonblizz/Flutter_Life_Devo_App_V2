@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/main/main_controller.dart';
-import 'package:flutter_life_devo_app_v2/models/life_devo_comp_model.dart';
-import 'package:flutter_life_devo_app_v2/models/live_life_devo_model.dart';
 import 'package:flutter_life_devo_app_v2/models/sermon_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
@@ -13,7 +11,7 @@ class LatestSermon extends StatelessWidget {
 
   LatestSermon(this.latestSermon, {Key? key}) : super(key: key);
 
-  //final MainController _mainController = Get.find();
+  final MainController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +50,8 @@ class LatestSermon extends StatelessWidget {
           SizedBox(
             height: mainPageContentsSpace,
           ),
-          Center(
+          SizedBox(
+            width: double.infinity,
             child: TextButton(
                 style: TextButton.styleFrom(
                   //minimumSize: Size(_width, _height),
@@ -61,7 +60,7 @@ class LatestSermon extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                 ),
                 onPressed: () {
-                  //_mainController.gotoLifeDevoDetail(latestLifeDevoSession)
+                  _mainController.gotoSermonDetailPage(latestSermon);
                 },
                 child: Text(
                   'Watch the video',

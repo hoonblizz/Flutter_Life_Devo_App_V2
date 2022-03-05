@@ -44,7 +44,7 @@ class DisciplineModel {
       parsedUri.queryParameters.forEach((key, value) {
         if (key == "v") {
           videoId = value;
-          thumbnailUrl = "https://img.youtube.com/vi/${value}/hqdefault.jpg";
+          thumbnailUrl = "https://img.youtube.com/vi/$value/hqdefault.jpg";
         }
       });
     }

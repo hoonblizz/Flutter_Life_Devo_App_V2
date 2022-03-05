@@ -7,7 +7,9 @@ import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
 class LandingPage extends StatelessWidget {
   LandingPage({Key? key}) : super(key: key);
   // 여기서 find 해주면 onInit 이 발생. 쓸데는 없을지라도 일단 두자.
+  // ignore: unused_field
   final LandingController _landingController = Get.find<LandingController>();
+  // ignore: unused_field
   final GlobalController _globalController = Get.find<GlobalController>();
 
   @override

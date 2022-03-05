@@ -172,6 +172,14 @@ class MainController extends GetxController {
     Get.toNamed(Routes.LIVE_LIFE_DEVO_DETAIL, arguments: [liveLifeDevo]);
   }
 
+  gotoDisciplineDetailPage(DisciplineModel discipline) {
+    Get.toNamed(Routes.DISPLINE_DETAIL, arguments: [discipline]);
+  }
+
+  gotoSermonDetailPage(SermonModel sermon) {
+    Get.toNamed(Routes.SERMON_DETAIL, arguments: [sermon]);
+  }
+
   /******************************************************************
    * Contents Tab (2nd)
   ******************************************************************/

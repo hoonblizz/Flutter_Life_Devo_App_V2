@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_life_devo_app_v2/models/live_life_devo_model.dart';
+import 'package:flutter_life_devo_app_v2/models/discipline_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class LiveLifeDevoDetailPage extends StatefulWidget {
-  const LiveLifeDevoDetailPage({Key? key}) : super(key: key);
+class DisciplineDetailPage extends StatefulWidget {
+  const DisciplineDetailPage({Key? key}) : super(key: key);
 
   @override
-  State<LiveLifeDevoDetailPage> createState() => _LiveLifeDevoDetailPageState();
+  State<DisciplineDetailPage> createState() => _DisciplineDetailPageState();
 }
 
-class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
+class _DisciplineDetailPageState extends State<DisciplineDetailPage> {
   late YoutubePlayerController _controller;
-  final LiveLifeDevoModel _curLiveLifeDevo = Get.arguments[0];
+  final DisciplineModel _curDiscipline = Get.arguments[0];
   final double spaceBetweenInputs = 35.0;
   final double horizonatalPadding = 25.0;
   final Color horizontalLineColor = Colors.grey.shade300;
@@ -23,12 +23,10 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
 
   @override
   void initState() {
-    if (_curLiveLifeDevo.videoUrl.isNotEmpty &&
-        _curLiveLifeDevo.videoId.isNotEmpty) {
-      //String tempUrl = _getVideoIdFromUrl(_curLiveLifeDevo.videoUrl);
-      //print('Video id is, $tempUrl');
+    if (_curDiscipline.videoUrl.isNotEmpty &&
+        _curDiscipline.videoId.isNotEmpty) {
       _controller = YoutubePlayerController(
-        initialVideoId: _curLiveLifeDevo.videoId,
+        initialVideoId: _curDiscipline.videoId,
         flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: false,
@@ -38,17 +36,6 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
 
     super.initState();
   }
-
-  // String _getVideoIdFromUrl(String urlString) {
-  //   final regex =
-  //       RegExp(r'.*\?v=(.+?)($|[\&])', caseSensitive: false, multiLine: false);
-  //   if (regex.hasMatch(urlString)) {
-  //     final videoId = regex.firstMatch(urlString).group(1);
-  //     return videoId;
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   @override
   void deactivate() {
@@ -107,7 +94,7 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
                               Text(
                                 DateFormat.yMMMMEEEEd().format(
                                     DateTime.fromMillisecondsSinceEpoch(
-                                        _curLiveLifeDevo.selectedDate
+                                        _curDiscipline.selectedDate
                                             .millisecondsSinceEpoch)),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -115,7 +102,7 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
                               ),
                               // Title
                               Text(
-                                _curLiveLifeDevo.title,
+                                _curDiscipline.title,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: adminContentDetailTitle),
@@ -132,7 +119,7 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
                               ),
                               // Contents
                               Text(
-                                _curLiveLifeDevo.contentText,
+                                _curDiscipline.contentText,
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: adminContentDetailDesc),
@@ -166,7 +153,7 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.only(bottom: 4), // 오묘하게 센터가 안맞아서 그냥 넣어줌
         child: const Text(
-          'Live Life Devo Detail',
+          'Discipline Detail',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
@@ -176,45 +163,4 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
       backgroundColor: kPrimaryColor,
     );
   }
-
-  // Widget _disciplineTitleWidget(Size screenSize) {
-  //   return Container(
-  //     color: kPrimary,
-  //     child: Padding(
-  //       padding: EdgeInsets.fromLTRB(horizonatalPadding,
-  //           screenSize.height * 0.03, horizonatalPadding, horizonatalPadding),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text(
-  //             widget.liveLifeDevo.title,
-  //             style: TextStyle(
-  //                 color: Colors.white,
-  //                 fontWeight: FontWeight.w700,
-  //                 fontSize: kFontM),
-  //           ),
-  //           SizedBox(height: 5.0),
-  //           Text(
-  //             '${_dateFormat(widget.liveLifeDevo.selectedDate)}',
-  //             style: TextStyle(
-  //               fontSize: kFontS,
-  //               color: Colors.white,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _disciplineContentWidget(Size screenSize) {
-  //   return Padding(
-  //     padding: EdgeInsets.fromLTRB(
-  //         horizonatalPadding, screenSize.height * 0.06, horizonatalPadding, 0),
-  //     child: Text(
-  //       widget.liveLifeDevo.contentText,
-  //       style: TextStyle(fontSize: kFontS, fontWeight: FontWeight.w500),
-  //     ),
-  //   );
-  // }
 }

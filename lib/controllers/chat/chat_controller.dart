@@ -42,7 +42,7 @@ class ChatController extends GetxController {
     socketConnection.stream.listen(
       (dataPacket) async {
         Map data = jsonDecode(dataPacket);
-        //debugPrint('New message: ${data['message']}');
+        debugPrint('New message: ${data['message']}');
       },
       cancelOnError: true,
       onError: (e) {

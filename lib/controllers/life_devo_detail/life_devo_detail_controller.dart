@@ -82,6 +82,8 @@ class LifeDevoDetailController extends GetxController {
       gc.consoleLog('Error get life devo: ${e.toString()}',
           curFileName: currentFileName);
     }
+
+    return null;
   }
 
   Future<LifeDevoModel?> createLifeDevo(LifeDevoModel _lifeDevo) async {
@@ -95,13 +97,15 @@ class LifeDevoDetailController extends GetxController {
     } catch (e) {
       gc.consoleLog('Error creating life devo', curFileName: currentFileName);
     }
+
+    return null;
   }
 
   Future updateLifeDevo(LifeDevoModel _lifeDevo) async {
     try {
       Map result = await userContentRepo.updateLifeDevo(_lifeDevo);
-      // gc.consoleLog('Result: ${result.toString()}',
-      //     curFileName: currentFileName);
+      gc.consoleLog('Result: ${result.toString()}',
+          curFileName: currentFileName);
     } catch (e) {
       gc.consoleLog('Error updating life devo', curFileName: currentFileName);
     }

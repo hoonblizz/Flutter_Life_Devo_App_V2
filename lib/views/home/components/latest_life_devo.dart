@@ -27,31 +27,6 @@ class LatestLifeDevo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // Image.asset(
-          //   'assets/nature.jpg',
-          //   fit: BoxFit.cover,
-          // ),
-
-          // ListTile(
-          //   leading: CircleAvatar(
-          //     backgroundImage: AssetImage('assets/user.png'),
-          //   ),
-          //   title: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: <Widget>[
-          //       Text(
-          //         'Hossin El ghazli',
-          //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-          //       ),
-          //       Text('31m ago',
-          //           style: TextStyle(
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               fontWeight: FontWeight.bold)),
-          //     ],
-          //   ),
-          // ),
-
           Text(
             latestLifeDevoSession.question,
             maxLines: 6,
@@ -62,79 +37,26 @@ class LatestLifeDevo extends StatelessWidget {
           SizedBox(
             height: mainPageContentsSpace,
           ),
-          Center(
+          SizedBox(
+            width: double.infinity,
             child: TextButton(
-                style: TextButton.styleFrom(
-                  //minimumSize: Size(_width, _height),
-                  backgroundColor: kPrimaryColor,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                ),
-                onPressed: () =>
-                    _mainController.gotoLifeDevoDetail(latestLifeDevoSession),
-                child: Text(
-                  'Continue Reading',
-                  style: TextStyle(
-                      fontSize: mainPageContentsDesc,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
-                )),
+              style: TextButton.styleFrom(
+                //minimumSize: Size(_width, _height),
+                backgroundColor: kPrimaryColor,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+              ),
+              onPressed: () =>
+                  _mainController.gotoLifeDevoDetail(latestLifeDevoSession),
+              child: Text(
+                'Continue Reading',
+                style: TextStyle(
+                    fontSize: mainPageContentsDesc,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
           ),
-
-          // Likes and # of comments
-          // Padding(
-          //   padding: const EdgeInsets.all(12),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Row(
-          //         children: <Widget>[
-          //           Icon(
-          //             Icons.favorite,
-          //             color: Colors.red,
-          //           ),
-          //           SizedBox(
-          //             width: 4,
-          //           ),
-          //           Text(
-          //             "231",
-          //             style: TextStyle(fontWeight: FontWeight.bold),
-          //           )
-          //         ],
-          //       ),
-          //       SizedBox(
-          //         width: 24,
-          //       ),
-          //       Row(
-          //         children: <Widget>[
-          //           Icon(
-          //             Icons.comment,
-          //           ),
-          //           SizedBox(
-          //             width: 4,
-          //           ),
-          //           Text(
-          //             "231",
-          //             style: TextStyle(fontWeight: FontWeight.bold),
-          //           )
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          // Filled space
-          // Container(
-          //   color: Colors.red,
-          //   child: Center(
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(32),
-          //       child: Text(
-          //         'data test new text for flutter app',
-          //         style: TextStyle(color: Colors.white),
-          //       ),
-          //     ),
-          //   ),
-          // )
         ],
       ),
     );
