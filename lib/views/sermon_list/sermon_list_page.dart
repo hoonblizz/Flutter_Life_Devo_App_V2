@@ -70,7 +70,7 @@ class _SermonListPageState extends State<SermonListPage> {
                     ),
                     ..._sermonController.sermonListMerged.map((SermonModel el) {
                       return GestureDetector(
-                        //onTap: () => _lifeDevoController.gotoLifeDevoDetail(el),
+                        onTap: () => _sermonController.gotoContentDetail(el),
                         child: Card(
                           elevation: 3,
                           child: Container(

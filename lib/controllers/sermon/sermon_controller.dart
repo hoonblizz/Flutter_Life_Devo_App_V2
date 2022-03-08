@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/models/sermon_model.dart';
+import 'package:flutter_life_devo_app_v2/routes/app_pages.dart';
 import 'package:get/get.dart';
 
 class SermonController extends GetxController {
@@ -27,6 +28,10 @@ class SermonController extends GetxController {
     sermonList.add(contents); // in 2D
     sermonListMerged.value =
         sermonList.expand((element) => element).toList(); // Flatten to 1D
+  }
+
+  gotoContentDetail(SermonModel content) {
+    Get.toNamed(Routes.SERMON_DETAIL, arguments: [content]);
   }
 
   getAllSermon() async {
