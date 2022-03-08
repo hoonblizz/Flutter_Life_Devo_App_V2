@@ -46,6 +46,7 @@ class ContentsPage extends StatelessWidget {
                       Get.toNamed(Routes.SERMON_LIST);
                       break;
                     case "Live Life Devo":
+                      Get.toNamed(Routes.LIVE_LIFE_DEVO_LIST);
                       break;
                     case "Spiritual Discipline":
                       break;

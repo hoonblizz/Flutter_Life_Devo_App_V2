@@ -23,32 +23,16 @@ class _LiveLifeDevoDetailPageState extends State<LiveLifeDevoDetailPage> {
 
   @override
   void initState() {
-    if (_curLiveLifeDevo.videoUrl.isNotEmpty &&
-        _curLiveLifeDevo.videoId.isNotEmpty) {
-      //String tempUrl = _getVideoIdFromUrl(_curLiveLifeDevo.videoUrl);
-      //print('Video id is, $tempUrl');
-      _controller = YoutubePlayerController(
-        initialVideoId: _curLiveLifeDevo.videoId,
-        flags: const YoutubePlayerFlags(
-          autoPlay: true,
-          mute: false,
-        ),
-      ); //..addListener(listener);
-    }
+    _controller = YoutubePlayerController(
+      initialVideoId: _curLiveLifeDevo.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    ); //..addListener(listener);
 
     super.initState();
   }
-
-  // String _getVideoIdFromUrl(String urlString) {
-  //   final regex =
-  //       RegExp(r'.*\?v=(.+?)($|[\&])', caseSensitive: false, multiLine: false);
-  //   if (regex.hasMatch(urlString)) {
-  //     final videoId = regex.firstMatch(urlString).group(1);
-  //     return videoId;
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   @override
   void deactivate() {

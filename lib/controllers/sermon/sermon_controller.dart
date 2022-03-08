@@ -24,8 +24,7 @@ class SermonController extends GetxController {
     isLoadingList.value = false;
   }
 
-  mergeContentsList(List<SermonModel> contents) {
-    sermonList.add(contents); // in 2D
+  mergeContentsList() {
     sermonListMerged.value =
         sermonList.expand((element) => element).toList(); // Flatten to 1D
   }
@@ -43,23 +42,41 @@ class SermonController extends GetxController {
       latestEvalKey = lastEvaluatedKeyList[lastContentIndex];
     }
 
+    List<SermonModel> _tempList = [];
+
     try {
       Map result = await adminContentRepo.getAllSermon(latestEvalKey);
       debugPrint('Result getting contents: ${result.toString()}');
       if (result.isNotEmpty && result['statusCode'] == 200) {
-        List<SermonModel> _tempList = [];
-
         for (int x = 0; x < result['body'].length; x++) {
           _tempList.add(SermonModel.fromJSON(result['body'][x]));
         }
-
-        mergeContentsList(_tempList);
       }
 
       // Pagination key 등록
-      if (result['exclusiveStartKey'] != null) {
+      // LEK 크기가 같거나 작다는건, 아직 등록이 안되었고 등록할 필요가 있다는 뜻.
+      if (result['exclusiveStartKey'] != null &&
+          lastEvaluatedKeyList.length <= sermonList.length) {
         lastEvaluatedKeyList.add(result['exclusiveStartKey']);
       }
+
+      if (lastEvaluatedKeyList.isEmpty) {
+        // 여기에 오는건 컨텐츠가 없거나 컨텐츠가 적을때. 전체 리스트를 세팅해준다.
+        debugPrint('Adding more contents');
+        sermonList.assign(List<SermonModel>.from(_tempList)); // Deep copy
+      } else {
+        // 해당 인덱스가 존재하는지 확인. map 으로 바꿔서 확인.
+        if (sermonList.asMap().containsKey(lastEvaluatedKeyList.length)) {
+          debugPrint('Replacing contents');
+          sermonList[lastEvaluatedKeyList.length]
+              .assignAll(List<SermonModel>.from(_tempList));
+        } else {
+          debugPrint('Adding contents because its new');
+          sermonList.add(List<SermonModel>.from(_tempList));
+        }
+      }
+
+      mergeContentsList(); // 2D -> 1D 로
 
       debugPrint('Pagination lists: ${lastEvaluatedKeyList.toString()}');
     } catch (e) {

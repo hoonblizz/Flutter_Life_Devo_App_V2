@@ -6,6 +6,7 @@ import 'package:flutter_life_devo_app_v2/bindings/sermon_binding.dart';
 import 'package:flutter_life_devo_app_v2/views/discipline_detail/discipline_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo_detail/life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/live_life_devo_detail/live_life_devo_detail_page.dart';
+import 'package:flutter_life_devo_app_v2/views/live_life_devo_list/live_life_devo_list_page.dart';
 import 'package:flutter_life_devo_app_v2/views/main/main_page.dart';
 import 'package:flutter_life_devo_app_v2/views/sermon_detail/sermon_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/sermon_list/sermon_list_page.dart';
@@ -54,7 +55,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.LIVE_LIFE_DEVO_LIST,
-      page: () => const LiveLifeDevoDetailPage(),
+      page: () => const LiveLifeDevoListPage(),
       binding: LiveLifeDevoBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 150),

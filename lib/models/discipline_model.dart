@@ -39,7 +39,9 @@ class DisciplineModel {
     // Youtube 비디오 주소가 있으면 parse 해서 썸네일까지 뽑아낸다.
     String videoId = "";
     String thumbnailUrl = "";
-    if (map['url'] != null && map['url'] != "") {
+    if (map['url'] != null &&
+        map['url'] != "" &&
+        map['url'].contains('https://www.youtube.com/')) {
       var parsedUri = Uri.parse(map['url']);
       parsedUri.queryParameters.forEach((key, value) {
         if (key == "v") {
@@ -55,7 +57,10 @@ class DisciplineModel {
       id: map['id'] ?? '',
       title: newTitle,
       contentText: newContentText,
-      videoUrl: map['url'] ?? '',
+      videoUrl:
+          map['url'] != null && map['url'].contains('https://www.youtube.com/')
+              ? map['url']
+              : '',
       videoId: videoId,
       thumbnailUrl: thumbnailUrl,
       created: map['created'] != null

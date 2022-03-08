@@ -23,17 +23,13 @@ class _DisciplineDetailPageState extends State<DisciplineDetailPage> {
 
   @override
   void initState() {
-    if (_curDiscipline.videoUrl.isNotEmpty &&
-        _curDiscipline.videoId.isNotEmpty) {
-      _controller = YoutubePlayerController(
-        initialVideoId: _curDiscipline.videoId,
-        flags: const YoutubePlayerFlags(
-          autoPlay: true,
-          mute: false,
-        ),
-      ); //..addListener(listener);
-    }
-
+    _controller = YoutubePlayerController(
+      initialVideoId: _curDiscipline.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    ); //..addListener(listener);
     super.initState();
   }
 

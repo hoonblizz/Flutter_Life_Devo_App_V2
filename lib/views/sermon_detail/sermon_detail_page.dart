@@ -23,15 +23,13 @@ class _SermonDetailPageState extends State<SermonDetailPage> {
 
   @override
   void initState() {
-    if (_curSermon.videoUrl.isNotEmpty && _curSermon.videoId.isNotEmpty) {
-      _controller = YoutubePlayerController(
-        initialVideoId: _curSermon.videoId,
-        flags: const YoutubePlayerFlags(
-          autoPlay: true,
-          mute: false,
-        ),
-      ); //..addListener(listener);
-    }
+    _controller = YoutubePlayerController(
+      initialVideoId: _curSermon.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    ); //..addListener(listener);
 
     super.initState();
   }
