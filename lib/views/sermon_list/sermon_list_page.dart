@@ -17,35 +17,36 @@ class SermonListPage extends StatefulWidget {
 class _SermonListPageState extends State<SermonListPage> {
   final SermonController _sermonController = Get.find();
 
-  List<SermonModel> _sermonList = [];
+  final _scrollController = ScrollController();
+
   bool isLoading = false;
 
   @override
   void initState() {
     // 이제 처음부터 불러오자.
-    callInit();
+    callContents();
+    scrollListener();
     super.initState();
   }
 
-  startLoading() {
-    setState(() {
-      isLoading = true;
+  scrollListener() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        bool isTop = _scrollController.position.pixels == 0;
+        if (isTop) {
+          debugPrint('Scroll at the top');
+        } else {
+          debugPrint('Scroll at the bottom');
+          callContents();
+          // 코멘트 로딩을 보여주려면 좀더 내려가야함. -> 근데 이거 하면 bottom 에 한번 더 도달해서 코멘트를 두번 부르게 된다.
+          //_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      }
     });
   }
 
-  stopLoading() {
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  callInit() async {
-    startLoading();
-    List<SermonModel> _tempList = await _sermonController.getAllSermon();
-    setState(() {
-      _sermonList = _tempList;
-      isLoading = false;
-    });
+  callContents() async {
+    await _sermonController.getAllSermon();
   }
 
   @override
@@ -53,20 +54,21 @@ class _SermonListPageState extends State<SermonListPage> {
     return Scaffold(
       appBar: _customAppBar(),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenPaddingHorizontal,
-              ),
-              child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenPaddingHorizontal,
+          ),
+          child: Obx(
+            () {
+              return SingleChildScrollView(
+                controller: _scrollController,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
                       height: screenPaddingVertical,
                     ),
-                    ..._sermonList.map((SermonModel el) {
+                    ..._sermonController.sermonListMerged.map((SermonModel el) {
                       return GestureDetector(
                         //onTap: () => _lifeDevoController.gotoLifeDevoDetail(el),
                         child: Card(
@@ -108,14 +110,30 @@ class _SermonListPageState extends State<SermonListPage> {
                         ),
                       );
                     }).toList(),
+
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    // Loading
+                    if (_sermonController.isLoadingList.value)
+                      Container(
+                        alignment: Alignment.center,
+                        height: 30,
+                        width: double.infinity,
+                        child: const LoadingWidget(
+                          shape: "CIRCLE",
+                          loaderSize: 26,
+                        ),
+                      ),
+
+                    const SizedBox(
+                      height: 50,
+                    )
                   ],
                 ),
-              ),
-            ),
-
-            // Loading
-            if (isLoading) const LoadingWidget(),
-          ],
+              );
+            },
+          ),
         ),
       ),
     );

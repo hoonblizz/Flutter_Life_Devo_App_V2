@@ -10,10 +10,36 @@ class SermonController extends GetxController {
 
   GlobalController gc = Get.find();
 
-  Future<List<SermonModel>> getAllSermon(
-      [Map exclusiveStartKey = const {}]) async {
+  RxBool isLoadingList = false.obs;
+  List<List<SermonModel>> sermonList = []; // 2d array -> new to old
+  RxList<SermonModel> sermonListMerged = <SermonModel>[].obs; // Flattened
+  List<Map> lastEvaluatedKeyList = [];
+
+  startLoadingList() {
+    isLoadingList.value = true;
+  }
+
+  stopLoadingList() {
+    isLoadingList.value = false;
+  }
+
+  mergeContentsList(List<SermonModel> contents) {
+    sermonList.add(contents); // in 2D
+    sermonListMerged.value =
+        sermonList.expand((element) => element).toList(); // Flatten to 1D
+  }
+
+  getAllSermon() async {
+    startLoadingList();
+    // 마지막 evaluated key 구하기
+    int lastContentIndex = lastEvaluatedKeyList.length - 1;
+    Map latestEvalKey = {};
+    if (lastContentIndex > -1) {
+      latestEvalKey = lastEvaluatedKeyList[lastContentIndex];
+    }
+
     try {
-      Map result = await adminContentRepo.getAllSermon(exclusiveStartKey);
+      Map result = await adminContentRepo.getAllSermon(latestEvalKey);
       debugPrint('Result getting contents: ${result.toString()}');
       if (result.isNotEmpty && result['statusCode'] == 200) {
         List<SermonModel> _tempList = [];
@@ -22,12 +48,19 @@ class SermonController extends GetxController {
           _tempList.add(SermonModel.fromJSON(result['body'][x]));
         }
 
-        // return when its done
-        return _tempList;
+        mergeContentsList(_tempList);
       }
+
+      // Pagination key 등록
+      if (result['exclusiveStartKey'] != null) {
+        lastEvaluatedKeyList.add(result['exclusiveStartKey']);
+      }
+
+      debugPrint('Pagination lists: ${lastEvaluatedKeyList.toString()}');
     } catch (e) {
       debugPrint('Error getting contents: ${e.toString()}');
     }
-    return [];
+
+    stopLoadingList();
   }
 }

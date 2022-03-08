@@ -40,8 +40,8 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   List<List<CommentModel>> commentList = []; // 2d array -> new to old
   List<CommentModel> commentListMerged = []; // Flattened
   List<Map> lastEvaluatedKeyList = []; // 여기에 키값들 저장.
-  Map lastEvaluatedKey = {};
-  Map lastEvaluatedKeyPrev = {}; // Previous key
+  // Map lastEvaluatedKey = {};
+  // Map lastEvaluatedKeyPrev = {}; // Previous key
 
   @override
   void initState() {
