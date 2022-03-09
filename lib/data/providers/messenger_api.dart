@@ -16,7 +16,7 @@ class MessengerAPIClient {
       "chatRoomId": chatRoomId,
       "username": username,
       "oldToNew": oldToNew,
-      "lastEvaluatedKey": lastEvaluatedKey
+      "lastEvaluatedKey": lastEvaluatedKey.isEmpty ? null : lastEvaluatedKey
     });
   }
 }

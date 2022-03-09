@@ -1,5 +1,5 @@
 /*
-  Life devo 에 종속되는 코멘트 모델
+  
 */
 
 import 'package:flutter_life_devo_app_v2/models/user_model.dart';

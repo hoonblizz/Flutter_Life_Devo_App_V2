@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/messenger_repository.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
+import 'package:flutter_life_devo_app_v2/models/chat_message_model.dart';
 import 'package:flutter_life_devo_app_v2/models/chat_room_model.dart';
 import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,31 @@ class ChatController extends GetxController {
   RxList<ChatRoomModel> chatRoomList = <ChatRoomModel>[].obs;
   RxBool isChatRoomLoading = false.obs;
 
+  // Chat messages
+  RxBool isChatMessagesLoading = false.obs;
+  List<List<ChatMessageModel>> _chatMessagesList = []; // 2D
+  RxList<ChatMessageModel> chatMessagesListMerged =
+      <ChatMessageModel>[].obs; // 1D
+  List<Map> lastEvaluatedKeyList = [];
+  ScrollController scrollController = ScrollController();
+
+  scrollListener(String chatRoomId) {
+    scrollController.addListener(() {
+      debugPrint('Notified?');
+      if (scrollController.position.atEdge) {
+        bool isTop = scrollController.position.pixels == 0;
+        if (isTop) {
+          debugPrint('[$chatRoomId] Scroll at the top');
+        } else {
+          debugPrint('[$chatRoomId] Scroll at the bottom');
+          //getComments();
+          // 코멘트 로딩을 보여주려면 좀더 내려가야함. -> 근데 이거 하면 bottom 에 한번 더 도달해서 코멘트를 두번 부르게 된다.
+          //_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      }
+    });
+  }
+
   startWebSocket() {
     // 연결
     socketConnection = WebSocketChannel.connect(
@@ -42,7 +68,8 @@ class ChatController extends GetxController {
     socketConnection.stream.listen(
       (dataPacket) async {
         Map data = jsonDecode(dataPacket);
-        //debugPrint('New message: ${data['message']}');
+        // 해당 data 에 eventType: NEW_MESSAGE_RECEIVED 가 있을때만 새 메세지 받은것.
+        //debugPrint('New message: ${data.toString()}');
       },
       cancelOnError: true,
       onError: (e) {
@@ -123,7 +150,90 @@ class ChatController extends GetxController {
     chatRoomList.value = List<ChatRoomModel>.from(_tempChatRoomList);
   }
 
-  getMessages() async {}
+  startMessageLoading() {
+    isChatMessagesLoading.value = true;
+  }
+
+  stopMessageLoading() {
+    isChatMessagesLoading.value = false;
+  }
+
+  mergeContentsList() {
+    chatMessagesListMerged.value = _chatMessagesList
+        .expand((element) => element)
+        .toList(); // Flatten to 1D
+  }
+
+  getMessages(String chatRoomId,
+      {bool oldToNew = false, lastEvaluatedKey = const {}}) async {
+    startMessageLoading();
+    debugPrint('Chatroom: $chatRoomId, user: ${gc.currentUser.userId}');
+    // 마지막 evaluated key 구하기
+    int lastContentIndex = lastEvaluatedKeyList.length - 1;
+    Map latestEvalKey = {};
+    if (lastContentIndex > -1) {
+      latestEvalKey = lastEvaluatedKeyList[lastContentIndex];
+    }
+
+    List<ChatMessageModel> _tempList = [];
+
+    try {
+      Map result = await messengerRepo.getMessage(
+          chatRoomId, gc.currentUser.userId, oldToNew, lastEvaluatedKey);
+      debugPrint('Get messages result: ${result.toString()}');
+      if (result.isNotEmpty &&
+          result['statusCode'] == 200 &&
+          result['body']['messages'] != null) {
+        for (int x = 0; x < result['body']['messages'].length; x++) {
+          _tempList
+              .add(ChatMessageModel.fromJSON(result['body']['messages'][x]));
+        }
+      }
+
+      // oldToNew = false 면 최신부터 나오므로 순서를 뒤집어주자
+      _tempList.sort((a, b) => a.createdEpoch.compareTo(b.createdEpoch));
+
+      // Pagination key 등록
+      // LEK 크기가 같거나 작다는건, 아직 등록이 안되었고 등록할 필요가 있다는 뜻.
+      // 그게 아니면 이미 불러졌던 키라는 뜻.
+      // 키 갯수는 항상 메세지수보다 적기때문.
+      if (result['body']['exclusiveStartKey'] != null &&
+          lastEvaluatedKeyList.length <= _chatMessagesList.length) {
+        lastEvaluatedKeyList.add(result['body']['exclusiveStartKey']);
+      }
+
+      if (lastEvaluatedKeyList.isEmpty) {
+        // 여기에 오는건 컨텐츠가 없거나 컨텐츠가 적을때. 전체 리스트를 세팅해준다.
+        debugPrint('Adding more contents');
+        _chatMessagesList
+            .assign(List<ChatMessageModel>.from(_tempList)); // Deep copy
+      } else {
+        // 해당 인덱스가 존재하는지 확인. map 으로 바꿔서 확인.
+        // -> 가장 마지막 키값을 반복적으로 부르는걸 방지.
+        if (_chatMessagesList
+            .asMap()
+            .containsKey(lastEvaluatedKeyList.length)) {
+          debugPrint('Replacing contents');
+          _chatMessagesList[lastEvaluatedKeyList.length]
+              .assignAll(List<ChatMessageModel>.from(_tempList));
+        } else {
+          debugPrint('Adding contents because its new');
+          _chatMessagesList.add(List<ChatMessageModel>.from(_tempList));
+        }
+      }
+
+      mergeContentsList(); // 2D -> 1D 로
+
+    } catch (e) {
+      debugPrint('Error getting message data: ${e.toString()}');
+    }
+
+    await Future.delayed(const Duration(milliseconds: 500)); // 렌더링 기다려준다.
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    await Future.delayed(const Duration(milliseconds: 500)); // 스크롤 기다려준다.
+
+    stopMessageLoading();
+  }
 
   gotoAuthPage() {
     Get.toNamed(Routes.AUTH);
