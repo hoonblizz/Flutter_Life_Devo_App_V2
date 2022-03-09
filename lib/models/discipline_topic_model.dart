@@ -5,7 +5,7 @@
 class DisciplineTopicModel {
   String pkCollection;
   String skCollection; // email
-  List<Map> topicList;
+  List topicList;
 
   DisciplineTopicModel({
     this.pkCollection = "",

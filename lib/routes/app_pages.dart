@@ -4,6 +4,8 @@ import 'package:flutter_life_devo_app_v2/bindings/live_life_devo_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/sermon_binding.dart';
 import 'package:flutter_life_devo_app_v2/views/discipline_detail/discipline_detail_page.dart';
+import 'package:flutter_life_devo_app_v2/views/discipline_list/discipline_list_page.dart';
+import 'package:flutter_life_devo_app_v2/views/discipline_topic_list/discipline_topic_list_page.dart';
 import 'package:flutter_life_devo_app_v2/views/life_devo_detail/life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/live_life_devo_detail/live_life_devo_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/live_life_devo_list/live_life_devo_list_page.dart';
@@ -71,14 +73,14 @@ class AppPages {
     ),
     GetPage(
       name: Routes.DISPLINE_LIST,
-      page: () => const DisciplineDetailPage(),
+      page: () => const DisciplineListPage(),
       binding: DisciplineBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 150),
     ),
     GetPage(
       name: Routes.DISPLINE_TOPIC,
-      page: () => const DisciplineDetailPage(),
+      page: () => const DisciplineTopicListPage(),
       binding: DisciplineBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 150),

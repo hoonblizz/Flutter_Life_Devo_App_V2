@@ -49,6 +49,7 @@ class ContentsPage extends StatelessWidget {
                       Get.toNamed(Routes.LIVE_LIFE_DEVO_LIST);
                       break;
                     case "Spiritual Discipline":
+                      Get.toNamed(Routes.DISPLINE_TOPIC);
                       break;
                   }
                 },
