@@ -30,7 +30,7 @@ class ChatController extends GetxController {
 
   // Variables
   late WebSocketChannel socketConnection;
-  List<ChatRoomModel> chatRoomList = <ChatRoomModel>[].obs;
+  RxList<ChatRoomModel> chatRoomList = <ChatRoomModel>[].obs;
   RxBool isChatRoomLoading = false.obs;
 
   startWebSocket() {
@@ -79,14 +79,13 @@ class ChatController extends GetxController {
     List<ChatRoomModel> _tempChatRoomList = [];
     try {
       Map result = await messengerRepo.getChatRoomListByUser(userId);
-      debugPrint('Result getting chat room: ${result.toString()}');
+      //debugPrint('Result getting chat room: ${result.toString()}');
       if (result.isNotEmpty && result['statusCode'] == 200) {
-        List<ChatRoomModel> _tempList = [];
+        //List<ChatRoomModel> _tempList = [];
         for (int x = 0; x < result['body'].length; x++) {
-          _tempList.add(ChatRoomModel.fromJSON(result['body'][x]));
+          _tempChatRoomList.add(ChatRoomModel.fromJSON(result['body'][x]));
         }
-        _tempChatRoomList = _tempList;
-        //chatRoomList = List<ChatRoomModel>.from(_tempList); // Deep copy
+        //_tempChatRoomList = _tempList;
       }
     } catch (e) {
       debugPrint('Error getting chatroom list: ${e.toString()}');
@@ -99,13 +98,13 @@ class ChatController extends GetxController {
     }
     _userIdList.toSet();
 
-    debugPrint('User id collected: ${_userIdList.toString()}');
+    //debugPrint('User id collected: ${_userIdList.toString()}');
 
     // 유저정보들 한꺼번에 받아서 각각의 채팅방 정보에 붙여넣기
     try {
       Map result =
           await userContentRepo.searchUserByUserId(_userIdList.toList());
-      debugPrint('Result getting user data: ${result.toString()}');
+      //debugPrint('Result getting user data: ${result.toString()}');
 
       if (result['statusCode'] == 200 && result['body'] != null) {
         for (var x = 0; x < _tempChatRoomList.length; x++) {
@@ -121,13 +120,17 @@ class ChatController extends GetxController {
     }
 
     // 결과를 Deep copy
-    chatRoomList = List<ChatRoomModel>.from(_tempChatRoomList);
+    chatRoomList.value = List<ChatRoomModel>.from(_tempChatRoomList);
   }
 
   getMessages() async {}
 
   gotoAuthPage() {
     Get.toNamed(Routes.AUTH);
+  }
+
+  gotoChatDetailPage(String chatRoomId) {
+    Get.toNamed(Routes.CHAT_DETAIL, arguments: [chatRoomId]);
   }
 
   @override

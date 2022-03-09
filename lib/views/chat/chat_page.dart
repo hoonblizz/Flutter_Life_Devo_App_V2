@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/chat/chat_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/models/chat_room_model.dart';
+import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
 import 'package:get/get.dart';
@@ -29,18 +30,39 @@ class ChatPage extends StatelessWidget {
                 SizedBox(
                   height: screenPaddingVertical,
                 ),
-                // Life devo title
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Messenger',
-                    style: TextStyle(
-                      fontSize: mainPageContentsTitle,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black.withOpacity(.8),
+                // Page title
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      //width: double.infinity,
+                      child: Text(
+                        'Messenger',
+                        style: TextStyle(
+                          fontSize: mainPageContentsTitle,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black.withOpacity(.8),
+                        ),
+                      ),
                     ),
-                  ),
+                    IconButton(
+                      icon: const Icon(Icons.refresh,
+                          size: 32, color: kPrimaryColor),
+                      onPressed: _chatCtrler.getChatRoomList,
+                    ),
+                  ],
                 ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: Text(
+                //     'Messenger',
+                //     style: TextStyle(
+                //       fontSize: mainPageContentsTitle,
+                //       fontWeight: FontWeight.bold,
+                //       color: Colors.black.withOpacity(.8),
+                //     ),
+                //   ),
+                // ),
                 SizedBox(
                   height: mainPageContentsSpace,
                 ),
@@ -57,7 +79,8 @@ class ChatPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: _chatCtrler.chatRoomList.map((ChatRoomModel el) {
                       return GestureDetector(
-                        //onTap: () => _lifeDevoController.gotoLifeDevoDetail(el),
+                        onTap: () =>
+                            _chatCtrler.gotoChatDetailPage(el.chatRoomId),
                         child: Card(
                           elevation: 3,
                           child: Container(

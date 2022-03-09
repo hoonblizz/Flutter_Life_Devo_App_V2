@@ -1,8 +1,10 @@
+import 'package:flutter_life_devo_app_v2/bindings/chat_detail_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/discipline_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/life_devo_detail_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/live_life_devo_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/main_binding.dart';
 import 'package:flutter_life_devo_app_v2/bindings/sermon_binding.dart';
+import 'package:flutter_life_devo_app_v2/views/chat_detail/chat_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/discipline_detail/discipline_detail_page.dart';
 import 'package:flutter_life_devo_app_v2/views/discipline_list/discipline_list_page.dart';
 import 'package:flutter_life_devo_app_v2/views/discipline_topic_list/discipline_topic_list_page.dart';
@@ -102,10 +104,11 @@ class AppPages {
       transitionDuration: const Duration(milliseconds: 150),
     ),
 
-    // GetPage(
-    //   name: Routes.CHAT_DETAIL,
-    //   page: () => ChatPage(),
-    //   binding: ChatBinding(),
-    // ),
+    // Messenger
+    GetPage(
+      name: Routes.CHAT_DETAIL,
+      page: () => const ChatDetailPage(),
+      binding: ChatDetailBinding(),
+    ),
   ];
 }

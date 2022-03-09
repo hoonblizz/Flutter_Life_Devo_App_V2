@@ -114,7 +114,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
           lastEvaluatedKeyList.add(lastEvaluatedKey);
         }
 
-        debugPrint('Pagination key: ${lastEvaluatedKeyList.toString()}');
+        //debugPrint('Pagination key: ${lastEvaluatedKeyList.toString()}');
       }
 
       // user id 로 user data 구하기. username 코멘트에 등록.
@@ -124,7 +124,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
         try {
           Map result =
               await _lifeDevoDetailController.searchUserByUserId(_userIdList);
-          debugPrint('Result getting user data: ${result.toString()}');
+          //debugPrint('Result getting user data: ${result.toString()}');
 
           if (result['statusCode'] == 200 && result['body'] != null) {
             for (var x = 0; x < _tempList.length; x++) {

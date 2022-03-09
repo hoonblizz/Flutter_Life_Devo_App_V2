@@ -71,8 +71,8 @@ class LifeDevoDetailController extends GetxController {
 
     try {
       Map result = await userContentRepo.getLifeDevo(_skCollection);
-      gc.consoleLog('Result getting User life devo: ${result.toString()}',
-          curFileName: currentFileName);
+      // gc.consoleLog('Result getting User life devo: ${result.toString()}',
+      //     curFileName: currentFileName);
       if (result['statusCode'] == 200 &&
           result['body'] != null &&
           result['body']['pkCollection'] != null) {

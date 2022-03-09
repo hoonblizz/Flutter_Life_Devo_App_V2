@@ -349,7 +349,7 @@ class LifeDevoController extends GetxController {
             .toList(); // toSet 으로 중복 없애줌.
         try {
           Map result = await userContentRepo.searchUserByUserId(_userIdList);
-          debugPrint('Result getting user data: ${result.toString()}');
+          //debugPrint('Result getting user data: ${result.toString()}');
 
           if (result['statusCode'] == 200 && result['body'] != null) {
             for (var x = 0; x < _tempCompModel.length; x++) {

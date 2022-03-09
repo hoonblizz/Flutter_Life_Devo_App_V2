@@ -49,7 +49,7 @@ class DisciplineController extends GetxController {
   getDisciplineTopic() async {
     try {
       Map result = await adminContentRepo.getDisciplineTopic();
-      debugPrint('Result getting contents: ${result.toString()}');
+      //debugPrint('Result getting contents: ${result.toString()}');
       if (result.isNotEmpty &&
           result['statusCode'] == 200 &&
           result['body'] != null) {
@@ -65,7 +65,7 @@ class DisciplineController extends GetxController {
     List<DisciplineModel> _tempList = [];
     try {
       Map result = await adminContentRepo.getAllDiscipline(topicId);
-      debugPrint('Result getting contents: ${result.toString()}');
+      //debugPrint('Result getting contents: ${result.toString()}');
       if (result.isNotEmpty &&
           result['statusCode'] == 200 &&
           result['body'] != null) {

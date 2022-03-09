@@ -4,4 +4,10 @@ class MessengerRepository {
   Future getChatRoomListByUser(String userId) async {
     return await MessengerAPIClient.getChatRoomListByUser(userId);
   }
+
+  Future getMessage(String chatRoomId, String username,
+      [bool oldToNew = false, Map lastEvaluatedKey = const {}]) async {
+    return await MessengerAPIClient.getMessage(
+        chatRoomId, username, oldToNew, lastEvaluatedKey);
+  }
 }

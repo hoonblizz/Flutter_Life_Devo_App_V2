@@ -71,7 +71,7 @@ class ProfileController extends GetxController {
     try {
       Map result =
           await userContentRepo.searchUserByUserId(_userIdList.toList());
-      debugPrint('Result getting user data: ${result.toString()}');
+      //debugPrint('Result getting user data: ${result.toString()}');
 
       if (result['statusCode'] == 200 && result['body'] != null) {
         for (var x = 0; x < _tempRequestList.length; x++) {

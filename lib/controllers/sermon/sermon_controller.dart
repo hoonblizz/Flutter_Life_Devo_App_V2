@@ -46,7 +46,7 @@ class SermonController extends GetxController {
 
     try {
       Map result = await adminContentRepo.getAllSermon(latestEvalKey);
-      debugPrint('Result getting contents: ${result.toString()}');
+      //debugPrint('Result getting contents: ${result.toString()}');
       if (result.isNotEmpty && result['statusCode'] == 200) {
         for (int x = 0; x < result['body'].length; x++) {
           _tempList.add(SermonModel.fromJSON(result['body'][x]));

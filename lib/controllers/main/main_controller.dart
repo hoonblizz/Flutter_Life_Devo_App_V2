@@ -119,11 +119,11 @@ class MainController extends GetxController {
     try {
       // 맨위의것을 가져와야 하니까 pagination key 없이 가져온다.
       Map result = await adminContentRepo.getAllLiveLifeDevo();
-      debugPrint('Latest live life devo: ${result.toString()}');
+      //debugPrint('Latest live life devo: ${result.toString()}');
       if (result.isNotEmpty &&
           result['statusCode'] == 200 &&
           result['body'].length > 0) {
-        debugPrint('Copying live life devo: ${result['body'][0].toString()}');
+        //debugPrint('Copying live life devo: ${result['body'][0].toString()}');
         latestLiveLifeDevo.value =
             LiveLifeDevoModel.fromJSON(result['body'][0]);
       }
@@ -136,11 +136,11 @@ class MainController extends GetxController {
     try {
       // 맨위의것을 가져와야 하니까 pagination key 없이 가져온다.
       Map result = await adminContentRepo.getAllDiscipline();
-      debugPrint('Latest discipline: ${result.toString()}');
+      //debugPrint('Latest discipline: ${result.toString()}');
       if (result.isNotEmpty &&
           result['statusCode'] == 200 &&
           result['body'].length > 0) {
-        debugPrint('Copying discipline: ${result['body'][0].toString()}');
+        //debugPrint('Copying discipline: ${result['body'][0].toString()}');
         latestDiscipline.value = DisciplineModel.fromJSON(result['body'][0]);
       }
     } catch (e) {
@@ -152,11 +152,11 @@ class MainController extends GetxController {
     try {
       // 맨위의것을 가져와야 하니까 pagination key 없이 가져온다.
       Map result = await adminContentRepo.getAllSermon();
-      debugPrint('Latest sermon: ${result.toString()}');
+      //debugPrint('Latest sermon: ${result.toString()}');
       if (result.isNotEmpty &&
           result['statusCode'] == 200 &&
           result['body'].length > 0) {
-        debugPrint('Copying sermon: ${result['body'][0].toString()}');
+        //debugPrint('Copying sermon: ${result['body'][0].toString()}');
         latestSermon.value = SermonModel.fromJSON(result['body'][0]);
       }
     } catch (e) {
