@@ -109,6 +109,8 @@ class AppPages {
       name: Routes.CHAT_DETAIL,
       page: () => const ChatDetailPage(),
       binding: ChatDetailBinding(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 150),
     ),
   ];
 }

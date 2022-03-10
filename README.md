@@ -28,13 +28,32 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 
 
 
-## TODO:  
-- Login 성공 웹페이지 만들고 여기에 적용. 
-- 라이프 디보 시작한김에 세번째 탭 (라이프디보) 마저 하기  
+## TODO (Optional):  
+- Login 성공했을시의 사이트 (웹) 만들고 여기에 적용. 
+- 
 
 # 2022.03.09  
+- [ ] Post signup 에러 확인 -> check user exists 수정하기 (sk 교체로 인한 에러)  
 - [X] Chatroom 리프레쉬 버튼 생성  
-- [ ] Chatroom 의 메세지 model 생성  
+- [X] Chatroom 의 메세지 model 생성  
+- [ ] Messenger 의 backward pagination 구현.  
+```
+무조건 최신 -> 올드 로 부른다는 조건이 있기 때문에, pagination key 는 무조건 올드쪽으로 가는 키다.
+감안하고 그냥 키값으로 불러와서 기존의 데이타와 머지시켜주는쪽으로 해보자.
+예를들어 기존 데이터가 [A, B, C, D] 그리고 pagination key 가 E 인데, 새 데이터 Z 가 생겨서
+다시 똑같이 부르면 [Z, A, B, C] 그리고 pagination 이 D 가 된다고 하면
+[A, B, C, D] 와 [Z, A, B, C] 를 머지해주고 pagination 을 D 로 놓는것.
+중복을 제거하는 코드는 다음을 써본다.  
+List two = 
+  one.map((f) => f.toString()).toSet().toList()
+  .map((f) => json.decode(f) as List<dynamic>).toList();
+
+```
+- [ ] Messenger 의 최신 메세지가 챗 리스트에 나오게  
+- [ ] App Foreground, background 핸들링 -> 메신저 부분만  
+- [ ] App Icon, splash page 등록  
+- [ ] 안드로이드 버전 확인  
+- [ ] Life devo (Save / Share / Post)  
 
 # 2022.03.03 ~ 2022.03.04    
 - [X] Live life devo, Discipline topic, Discipline, Sermon Model 만들기  

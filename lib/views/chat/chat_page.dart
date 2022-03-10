@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/chat/chat_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/models/chat_room_model.dart';
+import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
@@ -71,71 +72,88 @@ class ChatPage extends StatelessWidget {
                 Obx(() {
                   //List<ChatRoomModel> _chatRoomList = _chatCtrler.chatRoomList;
 
+                  // Length 가 0 이면 빈걸로 보여줌
+
                   if (_chatCtrler.isChatRoomLoading.value) {
                     return const LoadingWidget();
                   }
+                  if (_chatCtrler.chatRoomList.isNotEmpty) {
+                    debugPrint('Chatroom list not empty...');
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ..._chatCtrler.chatRoomList.map((ChatRoomModel el) {
+                          debugPrint('Element: ${el.chatRoomId}');
+                          debugPrint('My id: ${_gc.currentUser.userId}');
+                          debugPrint(
+                              'User list: ${el.userDataList[0].userId} and ${el.userDataList[1].userId}');
+                          // 내가 아닌 사람의 아이디 찾기
+                          String friendName = el.userDataList
+                              .firstWhere(
+                                (User element) =>
+                                    element.userId != _gc.currentUser.userId,
+                              )
+                              .name;
 
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: _chatCtrler.chatRoomList.map((ChatRoomModel el) {
-                      return GestureDetector(
-                        onTap: () =>
-                            _chatCtrler.gotoChatDetailPage(el.chatRoomId),
-                        child: Card(
-                          elevation: 3,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 10),
-                            height: chatRoomListCardHeight,
-                            width: double.maxFinite,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // User info
-                                Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      el.userDataList
-                                          .firstWhere((element) =>
-                                              element.userId !=
-                                              _gc.currentUser.userId)
-                                          .name,
-                                      style: TextStyle(
-                                          fontSize: chatRoomListCardUserName,
-                                          fontWeight: FontWeight.w600),
-                                    )),
+                          return GestureDetector(
+                            onTap: () =>
+                                _chatCtrler.gotoChatDetailPage(el.chatRoomId),
+                            child: Card(
+                              elevation: 3,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 10),
+                                height: chatRoomListCardHeight,
+                                width: double.maxFinite,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // User info
+                                    Container(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          friendName,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  chatRoomListCardUserName,
+                                              fontWeight: FontWeight.w600),
+                                        )),
 
-                                // Last message
-                                Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      el.chatRoomId,
-                                      style: TextStyle(
-                                          fontSize: chatRoomListCardLastMsg,
-                                          fontWeight: FontWeight.w500),
-                                    )),
+                                    // Last message
+                                    Container(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          el.chatRoomId,
+                                          style: TextStyle(
+                                              fontSize: chatRoomListCardLastMsg,
+                                              fontWeight: FontWeight.w500),
+                                        )),
 
-                                // Last message time
-                                Container(
-                                  alignment: Alignment.bottomRight,
-                                  child: Text(
-                                    DateFormat.yMMMEd().format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          el.lastMessageEventEpoch),
+                                    // Last message time
+                                    Container(
+                                      alignment: Alignment.bottomRight,
+                                      child: Text(
+                                        DateFormat.yMMMEd().format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              el.lastMessageEventEpoch),
+                                        ),
+                                        style: TextStyle(
+                                            fontSize: chatRoomListCardDate),
+                                      ),
                                     ),
-                                    style: TextStyle(
-                                        fontSize: chatRoomListCardDate),
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  );
-                })
+                          );
+                        }).toList()
+                      ],
+                    );
+                  }
+                  return const Text('Empty list');
+                }),
 
                 // Life devo content
                 // Obx(() {

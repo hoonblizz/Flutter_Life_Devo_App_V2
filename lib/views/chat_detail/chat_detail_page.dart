@@ -55,14 +55,14 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   // }
 
   initChatDetails() async {
-    await getMessages();
+    await getMessages(loadingNeeded: true);
     //await Future.delayed(const Duration(seconds: 1));
     // _chatController.scrollController
     //     .jumpTo(_chatController.scrollController.position.maxScrollExtent);
   }
 
-  getMessages() async {
-    await _chatController.getMessages(chatRoomId);
+  getMessages({bool loadingNeeded = false}) async {
+    await _chatController.getMessages(loadingNeeded, chatRoomId);
   }
 
   @override
@@ -75,6 +75,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Attach scroll
+    _chatController.scrollController = _privateScrollController;
+
     return Scaffold(
       backgroundColor: navBG,
       appBar: _customAppBar(),

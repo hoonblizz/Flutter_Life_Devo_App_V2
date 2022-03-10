@@ -44,7 +44,7 @@ class ChatController extends GetxController {
 
   scrollListener(String chatRoomId) {
     scrollController.addListener(() {
-      debugPrint('Notified?');
+      //debugPrint('Notified?');
       if (scrollController.position.atEdge) {
         bool isTop = scrollController.position.pixels == 0;
         if (isTop) {
@@ -70,6 +70,12 @@ class ChatController extends GetxController {
         Map data = jsonDecode(dataPacket);
         // 해당 data 에 eventType: NEW_MESSAGE_RECEIVED 가 있을때만 새 메세지 받은것.
         //debugPrint('New message: ${data.toString()}');
+
+        if (data['eventType'] == "NEW_MESSAGE_RECEIVED" &&
+            data['chatRoomId'] != null) {
+          debugPrint('New message: ${data.toString()}');
+          await getMessages(false, data['chatRoomId']);
+        }
       },
       cancelOnError: true,
       onError: (e) {
@@ -106,13 +112,11 @@ class ChatController extends GetxController {
     List<ChatRoomModel> _tempChatRoomList = [];
     try {
       Map result = await messengerRepo.getChatRoomListByUser(userId);
-      //debugPrint('Result getting chat room: ${result.toString()}');
+      debugPrint('Result getting chat room: ${result.toString()}');
       if (result.isNotEmpty && result['statusCode'] == 200) {
-        //List<ChatRoomModel> _tempList = [];
         for (int x = 0; x < result['body'].length; x++) {
           _tempChatRoomList.add(ChatRoomModel.fromJSON(result['body'][x]));
         }
-        //_tempChatRoomList = _tempList;
       }
     } catch (e) {
       debugPrint('Error getting chatroom list: ${e.toString()}');
@@ -125,21 +129,29 @@ class ChatController extends GetxController {
     }
     _userIdList.toSet();
 
-    //debugPrint('User id collected: ${_userIdList.toString()}');
+    debugPrint('User id collected: ${_userIdList.toString()}');
 
     // 유저정보들 한꺼번에 받아서 각각의 채팅방 정보에 붙여넣기
     try {
       Map result =
           await userContentRepo.searchUserByUserId(_userIdList.toList());
-      //debugPrint('Result getting user data: ${result.toString()}');
+      debugPrint('Result getting user data: ${result.toString()}');
 
       if (result['statusCode'] == 200 && result['body'] != null) {
+        // 각 방마다 돌면서
         for (var x = 0; x < _tempChatRoomList.length; x++) {
           List _foundUserData = result['body'];
-          Map _foundMatchUser = _foundUserData.firstWhere((el) =>
-              _tempChatRoomList[x].usernameList.contains(el["userId"])) as Map;
-          //debugPrint('Match found: ${_foundMatchUser.toString()}');
-          _tempChatRoomList[x].userDataList.add(User.fromJSON(_foundMatchUser));
+          List _curUserNameList = _tempChatRoomList[x].usernameList;
+
+          // 각 방의 포함된 유저들 보면서, 찾아낸 유저 리스트에서 매칭 되는거 찾아서 넣어줌.
+          for (var y = 0; y < _curUserNameList.length; y++) {
+            Map _foundMatchUser = _foundUserData
+                .firstWhere((el) => _curUserNameList[y] == el["userId"]) as Map;
+            debugPrint('Match found: ${_foundMatchUser.toString()}');
+            _tempChatRoomList[x]
+                .userDataList
+                .add(User.fromJSON(_foundMatchUser));
+          }
         }
       }
     } catch (e) {
@@ -148,6 +160,7 @@ class ChatController extends GetxController {
 
     // 결과를 Deep copy
     chatRoomList.value = List<ChatRoomModel>.from(_tempChatRoomList);
+    debugPrint('Chat room list: ${chatRoomList.length}');
   }
 
   startMessageLoading() {
@@ -164,9 +177,12 @@ class ChatController extends GetxController {
         .toList(); // Flatten to 1D
   }
 
-  getMessages(String chatRoomId,
+  getMessages(bool loadingNeeded, String chatRoomId,
       {bool oldToNew = false, lastEvaluatedKey = const {}}) async {
-    startMessageLoading();
+    if (loadingNeeded) {
+      startMessageLoading();
+    }
+
     debugPrint('Chatroom: $chatRoomId, user: ${gc.currentUser.userId}');
     // 마지막 evaluated key 구하기
     int lastContentIndex = lastEvaluatedKeyList.length - 1;
@@ -228,11 +244,18 @@ class ChatController extends GetxController {
       debugPrint('Error getting message data: ${e.toString()}');
     }
 
-    await Future.delayed(const Duration(milliseconds: 500)); // 렌더링 기다려준다.
-    scrollController.jumpTo(scrollController.position.maxScrollExtent);
-    await Future.delayed(const Duration(milliseconds: 500)); // 스크롤 기다려준다.
+    if (scrollController.position.atEdge) {
+      bool isBottom = scrollController.position.pixels != 0;
+      if (isBottom) {
+        await Future.delayed(const Duration(milliseconds: 500)); // 렌더링 기다려준다.
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        await Future.delayed(const Duration(milliseconds: 500)); // 스크롤 기다려준다.
+      }
+    }
 
-    stopMessageLoading();
+    if (loadingNeeded) {
+      stopMessageLoading();
+    }
   }
 
   gotoAuthPage() {
