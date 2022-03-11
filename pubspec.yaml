@@ -36,7 +36,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.2
   change_app_package_name: ^1.0.0
   web_socket_channel: 2.1.0
-  scroll_to_index: any
+  #scroll_to_index: any
 
 dev_dependencies:
   flutter_test:

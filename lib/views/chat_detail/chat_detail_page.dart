@@ -13,7 +13,6 @@ import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 class ChatDetailPage extends StatefulWidget {
   const ChatDetailPage({Key? key}) : super(key: key);
@@ -138,7 +137,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   void dispose() {
     _messageTextController.dispose();
     _scrollController.dispose();
-
     debugPrint('Dispose takes an action!!!!');
     super.dispose();
   }
@@ -157,9 +155,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 Expanded(
                   child: Scrollable(
                     controller: _scrollController,
-                    // physics: isLoadingData
-                    //     ? const NeverScrollableScrollPhysics()
-                    //     : const AlwaysScrollableScrollPhysics(),
                     viewportBuilder:
                         (BuildContext context, ViewportOffset position) {
                       return Viewport(
@@ -167,7 +162,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         center: !newMessageNumIsSmall
                             ? newMessageListKey
                             : bottomKey,
-                        anchor: !newMessageNumIsSmall ? 0.42 : 0.98,
+                        anchor: !newMessageNumIsSmall ? 0.40 : 0.90,
                         slivers: [
                           _messagesList(_oldChatMessageList, isLoadingData,
                               oldMessageListKey),
@@ -282,10 +277,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
 
                   // // 마지막 아이템에는 sizedbox 를 더 넣어준다.
-                  // if (index == _curChatMessageList.length - 1)
-                  //   const SizedBox(
-                  //     height: 100,
-                  //   ),
                 ],
               ),
             ),
