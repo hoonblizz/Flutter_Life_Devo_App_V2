@@ -36,7 +36,7 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 - [ ] Post signup 에러 확인 -> check user exists 수정하기 (sk 교체로 인한 에러)  
 - [X] Chatroom 리프레쉬 버튼 생성  
 - [X] Chatroom 의 메세지 model 생성  
-- [ ] Messenger 의 backward pagination 구현.  
+- [ ] Messenger 의 backward pagination 구현. (https://github.com/EdsonBueno/infinite_scroll_pagination/issues/56)  
 ```
 무조건 최신 -> 올드 로 부른다는 조건이 있기 때문에, pagination key 는 무조건 올드쪽으로 가는 키다.
 감안하고 그냥 키값으로 불러와서 기존의 데이타와 머지시켜주는쪽으로 해보자.
