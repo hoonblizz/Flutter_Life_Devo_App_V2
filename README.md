@@ -33,22 +33,14 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 - 
 
 # 2022.03.09  
-- [ ] Post signup 에러 확인 -> check user exists 수정하기 (sk 교체로 인한 에러)  
+- [X] Post signup 에러 확인 -> check user exists 수정하기 (sk 교체로 인한 에러)  
 - [X] Chatroom 리프레쉬 버튼 생성  
 - [X] Chatroom 의 메세지 model 생성  
-- [ ] Messenger 의 backward pagination 구현. (https://github.com/EdsonBueno/infinite_scroll_pagination/issues/56)  
+- [X] Messenger 의 backward pagination 구현. (https://github.com/EdsonBueno/infinite_scroll_pagination/issues/56)  
 ```
 무조건 최신 -> 올드 로 부른다는 조건이 있기 때문에, pagination key 는 무조건 올드쪽으로 가는 키다.
-감안하고 그냥 키값으로 불러와서 기존의 데이타와 머지시켜주는쪽으로 해보자.
-예를들어 기존 데이터가 [A, B, C, D] 그리고 pagination key 가 E 인데, 새 데이터 Z 가 생겨서
-다시 똑같이 부르면 [Z, A, B, C] 그리고 pagination 이 D 가 된다고 하면
-[A, B, C, D] 와 [Z, A, B, C] 를 머지해주고 pagination 을 D 로 놓는것.
-중복을 제거하는 코드는 다음을 써본다.  
-List two = 
-  one.map((f) => f.toString()).toSet().toList()
-  .map((f) => json.decode(f) as List<dynamic>).toList();
-
-```
+새로운 메세지를 부르면 pagination key 를 부르기보다 message until key 를 쓰도록 한다.  
+이건 최근 메세지의 가장 나중 (Sliver 를 쓰면 인덱스 0 이 되겠다) 메세지의 sk 가 된다.  
 - [ ] Messenger 의 최신 메세지가 챗 리스트에 나오게  
 - [ ] App Foreground, background 핸들링 -> 메신저 부분만  
 - [ ] App Icon, splash page 등록  
@@ -66,6 +58,7 @@ List two =
 - [X] Discipline 은 전체 리스트전에 Topic 리스트 먼저 (pagination 없이)  
 - [X] 각 토픽을 누르면 그제서야 해당 토픽의 전체 리스트 불러오기 (pagination 없이)  
 - [ ] Svelte dashboard project 에 Pagination 구현 (https://svelte.dev/repl/4863a658f3584b81bbe3d9f54eb67899?version=3.32.3)   
+      쉽게 하려면 그냥 화살표 페이지가 가장 낫다.
 
 # 2022.02.19  
 - Friend search, request 구현까지만 (Back & Front)  

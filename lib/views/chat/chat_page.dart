@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/chat/chat_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
+import 'package:flutter_life_devo_app_v2/models/chat_comp_model.dart';
 import 'package:flutter_life_devo_app_v2/models/chat_room_model.dart';
 import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
@@ -70,25 +71,31 @@ class ChatPage extends StatelessWidget {
 
                 // Chat room list
                 Obx(() {
-                  //List<ChatRoomModel> _chatRoomList = _chatCtrler.chatRoomList;
+                  // Map to List
+                  List<ChatCompModel> _chatCompList = [];
+                  _chatCtrler.chatListMap.forEach((key, compModel) {
+                    _chatCompList.add(compModel);
+                  });
 
                   // Length 가 0 이면 빈걸로 보여줌
-
                   if (_chatCtrler.isChatRoomLoading.value) {
                     return const LoadingWidget();
                   }
-                  if (_chatCtrler.chatRoomList.isNotEmpty) {
+                  // if (_chatCtrler.chatRoomList.isNotEmpty) {
+                  if (_chatCtrler.chatListMap.isNotEmpty) {
                     debugPrint('Chatroom list not empty...');
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ..._chatCtrler.chatRoomList.map((ChatRoomModel el) {
-                          debugPrint('Element: ${el.chatRoomId}');
+                        ..._chatCompList.map((ChatCompModel el) {
+                          ChatRoomModel _chatRoomData = el.chatRoomData;
+
+                          debugPrint('Element: ${_chatRoomData.chatRoomId}');
                           debugPrint('My id: ${_gc.currentUser.userId}');
                           debugPrint(
-                              'User list: ${el.userDataList[0].userId} and ${el.userDataList[1].userId}');
+                              'User list: ${_chatRoomData.userDataList[0].userId} and ${_chatRoomData.userDataList[1].userId}');
                           // 내가 아닌 사람의 아이디 찾기
-                          String friendName = el.userDataList
+                          String friendName = _chatRoomData.userDataList
                               .firstWhere(
                                 (User element) =>
                                     element.userId != _gc.currentUser.userId,
@@ -96,8 +103,8 @@ class ChatPage extends StatelessWidget {
                               .name;
 
                           return GestureDetector(
-                            onTap: () =>
-                                _chatCtrler.gotoChatDetailPage(el.chatRoomId),
+                            onTap: () => _chatCtrler
+                                .gotoChatDetailPage(_chatRoomData.chatRoomId),
                             child: Card(
                               elevation: 3,
                               child: Container(
@@ -125,7 +132,7 @@ class ChatPage extends StatelessWidget {
                                     Container(
                                         alignment: Alignment.topLeft,
                                         child: Text(
-                                          el.chatRoomId,
+                                          _chatRoomData.chatRoomId,
                                           style: TextStyle(
                                               fontSize: chatRoomListCardLastMsg,
                                               fontWeight: FontWeight.w500),
@@ -137,7 +144,8 @@ class ChatPage extends StatelessWidget {
                                       child: Text(
                                         DateFormat.yMMMEd().format(
                                           DateTime.fromMillisecondsSinceEpoch(
-                                              el.lastMessageEventEpoch),
+                                              _chatRoomData
+                                                  .lastMessageEventEpoch),
                                         ),
                                         style: TextStyle(
                                             fontSize: chatRoomListCardDate),

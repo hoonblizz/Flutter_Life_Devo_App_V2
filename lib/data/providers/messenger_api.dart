@@ -11,12 +11,15 @@ class MessengerAPIClient {
   }
 
   static getMessage(String chatRoomId, String username,
-      [bool oldToNew = false, Map lastEvaluatedKey = const {}]) async {
+      [bool oldToNew = false,
+      Map lastEvaluatedKey = const {},
+      String messageUntilKey = ""]) async {
     return await GlobalAPIClient.postRequest(baseUrlDev + apiUrlGetMessage, {
       "chatRoomId": chatRoomId,
       "username": username,
       "oldToNew": oldToNew,
-      "lastEvaluatedKey": lastEvaluatedKey.isEmpty ? null : lastEvaluatedKey
+      "lastEvaluatedKey": lastEvaluatedKey.isEmpty ? null : lastEvaluatedKey,
+      "messageUntilKey": messageUntilKey, // nullable 이 아니고 빈 스트링이 들어가야한다.
     });
   }
 }

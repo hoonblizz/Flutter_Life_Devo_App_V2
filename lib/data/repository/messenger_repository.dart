@@ -6,8 +6,10 @@ class MessengerRepository {
   }
 
   Future getMessage(String chatRoomId, String username,
-      [bool oldToNew = false, Map lastEvaluatedKey = const {}]) async {
+      [bool oldToNew = false,
+      Map lastEvaluatedKey = const {},
+      String messageUntilKey = ""]) async {
     return await MessengerAPIClient.getMessage(
-        chatRoomId, username, oldToNew, lastEvaluatedKey);
+        chatRoomId, username, oldToNew, lastEvaluatedKey, messageUntilKey);
   }
 }

@@ -71,31 +71,45 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     // }
 
     if (_scrollController.position.extentBefore < 100 && !isLoadingData) {
-      debugPrint(
-          'Last eval key: ${_curLastEvalKey.toString()}. Calling Previous messages...');
+      debugPrint('Calling Previous messages...');
       getOldMessages();
     }
   }
 
-  checkNewMessageNum() {
-    if (_newChatMessageList.length < 8) {
-      newMessageNumIsSmall = true;
-    } else {
-      newMessageNumIsSmall = false;
-    }
-  }
+  // checkNewMessageNum() {
+  //   // 이거에 따라서 viewport 의 center 가 달라진다.
+  //   if (_newChatMessageList.length < 8) {
+  //     newMessageNumIsSmall = true;
+  //   } else {
+  //     newMessageNumIsSmall = false;
+  //   }
+  // }
+
+  // getLatestMessageSK() {
+  //   // 이거에 따라서 어디까지 새 메세지를 받아오는지 결정
+  //   if (_newChatMessageList.isNotEmpty) {
+  //     _chatController.latestMessageSK =
+  //         _newChatMessageList[_newChatMessageList.length - 1].skCollection;
+  //   } else if (_oldChatMessageList.isNotEmpty) {
+  //     _chatController.latestMessageSK =
+  //         _oldChatMessageList[_oldChatMessageList.length - 1].skCollection;
+  //   } else {
+  //     _chatController.latestMessageSK = "";
+  //   }
+  // }
 
   initChatDetails() async {
     setState(() {
       displayLoading = true;
     });
-    Map result = await _chatController.getMessages(chatRoomId);
-    setState(() {
-      _curLastEvalKey = result['lastEvaluatedKey'];
-      List<ChatMessageModel> _tempList = result['messageList'];
-      _oldChatMessageList = _tempList;
-      checkNewMessageNum();
-    });
+    await _chatController.getMessages(chatRoomId);
+    // setState(() {
+    //   _curLastEvalKey = result['lastEvaluatedKey'];
+    //   List<ChatMessageModel> _tempList = result['messageList'];
+    //   _oldChatMessageList = _tempList;
+    //   checkNewMessageNum();
+    //   getLatestMessageSK();
+    // });
 
     setState(() {
       displayLoading = false;
@@ -103,27 +117,35 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   getOldMessages() async {
+    Map _curLastEvalKey =
+        _chatController.chatListMap[chatRoomId]!.lastEvaluatedKey;
+
     if (_curLastEvalKey.isNotEmpty) {
       debugPrint('Start calling OLD messages =======================>');
       isLoadingData = true;
+      debugPrint(
+          'Last eval key: ${_chatController.chatListMap[chatRoomId]!.lastEvaluatedKey.toString()}');
+      await _chatController.getMessages(
+        chatRoomId,
+        attachTo: "OLD",
+        attachType: "ADD",
+        lastEvaluatedKey: _curLastEvalKey,
+      );
 
-      Map result = await _chatController.getMessages(chatRoomId,
-          lastEvaluatedKey: _curLastEvalKey);
-
-      setState(() {
-        _curLastEvalKey = result['lastEvaluatedKey'];
-        List<ChatMessageModel> _tempList = result['messageList'];
-        if (_tempList.isNotEmpty) {
-          _oldChatMessageList = [
-            ..._oldChatMessageList,
-            ..._tempList,
-          ];
-          debugPrint(
-              '${_tempList.length} more messages attached to OLD: \nFrom: ${_tempList[0].message}  \nTo: ${_tempList[_tempList.length - 1].message}');
-        } else {
-          debugPrint('More old messages returned empty. No need to attach.');
-        }
-      });
+      // setState(() {
+      //   _curLastEvalKey = result['lastEvaluatedKey'];
+      //   List<ChatMessageModel> _tempList = result['messageList'];
+      //   if (_tempList.isNotEmpty) {
+      //     _oldChatMessageList = [
+      //       ..._oldChatMessageList,
+      //       ..._tempList,
+      //     ];
+      //     debugPrint(
+      //         '${_tempList.length} more messages attached to OLD: \nFrom: ${_tempList[0].message}  \nTo: ${_tempList[_tempList.length - 1].message}');
+      //   } else {
+      //     debugPrint('More old messages returned empty. No need to attach.');
+      //   }
+      // });
 
       await Future.delayed(const Duration(milliseconds: 1000));
 
@@ -149,33 +171,53 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
-            Flex(
-              direction: Axis.vertical,
-              children: [
-                Expanded(
-                  child: Scrollable(
-                    controller: _scrollController,
-                    viewportBuilder:
-                        (BuildContext context, ViewportOffset position) {
-                      return Viewport(
-                        offset: position,
-                        center: !newMessageNumIsSmall
-                            ? newMessageListKey
-                            : bottomKey,
-                        anchor: !newMessageNumIsSmall ? 0.40 : 0.90,
-                        slivers: [
-                          _messagesList(_oldChatMessageList, isLoadingData,
-                              oldMessageListKey),
-                          _messagesList(_newChatMessageList, isLoadingData,
-                              newMessageListKey),
-                          _messagesList([], isLoadingData, bottomKey),
-                        ],
-                      );
-                    },
+            Obx(() {
+              // 강제로 렌더링 시켜줘야 되므로 로딩을 넣었다.
+
+              List<ChatMessageModel> _oldMessagesList =
+                  _chatController.chatListMap[chatRoomId]!.oldMessagesList;
+
+              List<ChatMessageModel> _newMessagesList =
+                  _chatController.chatListMap[chatRoomId]!.newMessagesList;
+
+              bool _newMessageNumIsSmall =
+                  _chatController.chatListMap[chatRoomId]!.newMessageNumIsSmall;
+
+              return Flex(
+                direction: Axis.vertical,
+                children: [
+                  Expanded(
+                    child: Scrollable(
+                      controller: _scrollController,
+                      viewportBuilder:
+                          (BuildContext context, ViewportOffset position) {
+                        return Viewport(
+                          offset: position,
+                          center: !_newMessageNumIsSmall
+                              ? newMessageListKey
+                              : bottomKey,
+                          anchor: !_newMessageNumIsSmall ? 0.40 : 0.90,
+                          axisDirection: AxisDirection.down,
+                          slivers: [
+                            _messagesList(
+                              _oldMessagesList,
+                              isLoadingData,
+                              oldMessageListKey,
+                            ),
+                            _messagesList(
+                              _newMessagesList,
+                              isLoadingData,
+                              newMessageListKey,
+                            ),
+                            _messagesList([], isLoadingData, bottomKey),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
 
             // 이니셜하게 로딩했을때 스크롤이 밑으로 내려가는걸 가려준다.
             if (displayLoading)
@@ -240,6 +282,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           ChatMessageModel _curMessage = messageList[index];
           bool isMyself = _curMessage.sentFrom == _gc.currentUser.userId;
 
+          debugPrint('Attaching: ${_curMessage.message}');
+
           return Container(
             padding:
                 const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
@@ -275,8 +319,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       style: const TextStyle(fontSize: 12),
                     ),
                   ),
-
-                  // // 마지막 아이템에는 sizedbox 를 더 넣어준다.
                 ],
               ),
             ),
