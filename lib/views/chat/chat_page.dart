@@ -90,10 +90,10 @@ class ChatPage extends StatelessWidget {
                         ..._chatCompList.map((ChatCompModel el) {
                           ChatRoomModel _chatRoomData = el.chatRoomData;
 
-                          debugPrint('Element: ${_chatRoomData.chatRoomId}');
-                          debugPrint('My id: ${_gc.currentUser.userId}');
-                          debugPrint(
-                              'User list: ${_chatRoomData.userDataList[0].userId} and ${_chatRoomData.userDataList[1].userId}');
+                          // debugPrint('Element: ${_chatRoomData.chatRoomId}');
+                          // debugPrint('My id: ${_gc.currentUser.userId}');
+                          // debugPrint(
+                          //     'User list: ${_chatRoomData.userDataList[0].userId} and ${_chatRoomData.userDataList[1].userId}');
                           // 내가 아닌 사람의 아이디 찾기
                           String friendName = _chatRoomData.userDataList
                               .firstWhere(

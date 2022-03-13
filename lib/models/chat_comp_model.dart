@@ -14,14 +14,15 @@ class ChatCompModel {
   List<ChatMessageModel> newMessagesList; // 리얼타임으로 새로 불러온 메세지들
   Map lastEvaluatedKey; // 더 올드 메세지로 가야할때 필요
   bool newMessageNumIsSmall;
+  String latestMessageSK;
 
-  ChatCompModel({
-    required this.chatRoomData,
-    this.oldMessagesList = const [],
-    this.newMessagesList = const [],
-    this.lastEvaluatedKey = const {},
-    this.newMessageNumIsSmall = false,
-  });
+  ChatCompModel(
+      {required this.chatRoomData,
+      this.oldMessagesList = const [],
+      this.newMessagesList = const [],
+      this.lastEvaluatedKey = const {},
+      this.newMessageNumIsSmall = false,
+      this.latestMessageSK = ""});
 
   // factory ChatCompModel.generate(ChatRoomModel chatRoomModel) {
   //   return ChatCompModel(

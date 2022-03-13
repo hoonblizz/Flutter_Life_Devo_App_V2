@@ -57,6 +57,16 @@ class ChatController extends GetxController {
             data['chatRoomId'] != null) {
           debugPrint('New message: ${data.toString()}');
           //await getMessages(false, data['chatRoomId']);
+          // 어디까지 받아와야 하는지 sk
+          debugPrint(
+              'Message until key: ${chatListMap[data['chatRoomId']]!.latestMessageSK}');
+          await getMessages(
+            data['chatRoomId'],
+            attachTo: "NEW",
+            attachType: "ADD",
+            //oldToNew: false,
+            messageUntilKey: chatListMap[data['chatRoomId']]!.latestMessageSK,
+          );
         }
       },
       cancelOnError: true,
@@ -194,12 +204,14 @@ class ChatController extends GetxController {
 
     // ChatRoom list 구할때 init 되었지만 그래도 확인.
     // attachTo 에 따라서 어느 메세지 리스트에 붙이는지 달라짐.
+    // Pagination 은 올드 메세지에만 붙는다.
+    // 대신 new 는 message until 로 커버
     if (chatListMap[chatRoomId] != null) {
-      // Pagination key
-      chatListMap[chatRoomId]!.lastEvaluatedKey = _newLastEvaluatedKey;
-
       // 실제 데이터
       if (attachTo == "OLD") {
+        // Pagination key
+        chatListMap[chatRoomId]!.lastEvaluatedKey = _newLastEvaluatedKey;
+
         if (attachType == "OVERWRITE") {
           chatListMap[chatRoomId] = ChatCompModel(
             chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
@@ -222,19 +234,19 @@ class ChatController extends GetxController {
         }
       } else if (attachTo == "NEW") {
         if (attachType == "OVERWRITE") {
-          chatListMap[chatRoomId] = ChatCompModel(
-            chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-            oldMessagesList: chatListMap[chatRoomId]!.oldMessagesList,
-            newMessagesList: _tempList,
-            lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
-          );
+          // chatListMap[chatRoomId] = ChatCompModel(
+          //   chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
+          //   oldMessagesList: chatListMap[chatRoomId]!.oldMessagesList,
+          //   newMessagesList: _tempList,
+          //   lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
+          // );
         } else if (attachType == "ADD") {
           chatListMap[chatRoomId] = ChatCompModel(
             chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-            oldMessagesList: chatListMap[chatRoomId]!.oldMessagesList,
-            newMessagesList: [
-              ...chatListMap[chatRoomId]!.newMessagesList,
-              ..._tempList
+            newMessagesList: chatListMap[chatRoomId]!.newMessagesList,
+            oldMessagesList: [
+              ..._tempList,
+              ...chatListMap[chatRoomId]!.oldMessagesList,
             ],
             lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
           );
@@ -242,15 +254,26 @@ class ChatController extends GetxController {
       }
     }
 
-    checkNewMessageNum(chatRoomId); // Viewport ui 조정을 위해
+    checkLatestMessageSK(chatRoomId); // 새 메세지 받아올때 기준점 제시
   }
 
-  checkNewMessageNum(String chatRoomId) {
-    // 이거에 따라서 viewport 의 center 가 달라진다.
-    List<ChatMessageModel> _curNewMessagesList =
-        chatListMap[chatRoomId]!.newMessagesList;
-    chatListMap[chatRoomId]!.newMessageNumIsSmall =
-        (_curNewMessagesList.length < 8);
+  checkLatestMessageSK(String chatRoomId) {
+    // List<ChatMessageModel> _curNewMessagesList =
+    //     chatListMap[chatRoomId]!.newMessagesList;
+    List<ChatMessageModel> _curOldMessagesList =
+        chatListMap[chatRoomId]!.oldMessagesList;
+
+    // if (_curNewMessagesList.isNotEmpty) {
+    //   chatListMap[chatRoomId]!.latestMessageSK =
+    //       _curNewMessagesList[0].skCollection;
+    // } else if (_curOldMessagesList.isNotEmpty) {
+    //   chatListMap[chatRoomId]!.latestMessageSK =
+    //       _curOldMessagesList[0].skCollection;
+    // }
+    if (_curOldMessagesList.isNotEmpty) {
+      chatListMap[chatRoomId]!.latestMessageSK =
+          _curOldMessagesList[0].skCollection;
+    }
   }
 
   gotoAuthPage() {

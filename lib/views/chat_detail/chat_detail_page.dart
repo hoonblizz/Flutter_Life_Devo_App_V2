@@ -120,11 +120,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     Map _curLastEvalKey =
         _chatController.chatListMap[chatRoomId]!.lastEvaluatedKey;
 
+    debugPrint(
+        'Last eval key: ${_chatController.chatListMap[chatRoomId]!.lastEvaluatedKey.toString()}');
+
     if (_curLastEvalKey.isNotEmpty) {
       debugPrint('Start calling OLD messages =======================>');
       isLoadingData = true;
-      debugPrint(
-          'Last eval key: ${_chatController.chatListMap[chatRoomId]!.lastEvaluatedKey.toString()}');
+
       await _chatController.getMessages(
         chatRoomId,
         attachTo: "OLD",
@@ -193,10 +195,14 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                           (BuildContext context, ViewportOffset position) {
                         return Viewport(
                           offset: position,
-                          center: !_newMessageNumIsSmall
-                              ? newMessageListKey
-                              : bottomKey,
-                          anchor: !_newMessageNumIsSmall ? 0.40 : 0.90,
+                          // center: !_newMessageNumIsSmall
+                          //     ? newMessageListKey
+                          //     : bottomKey,
+                          // center: _newMessagesList.isEmpty
+                          //     ? newMessageListKey
+                          //     : bottomKey,
+                          center: bottomKey,
+                          anchor: 0.9, //!_newMessageNumIsSmall ? 0.40 : 0.90,
                           axisDirection: AxisDirection.down,
                           slivers: [
                             _messagesList(
@@ -204,11 +210,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                               isLoadingData,
                               oldMessageListKey,
                             ),
-                            _messagesList(
-                              _newMessagesList,
-                              isLoadingData,
-                              newMessageListKey,
-                            ),
+                            // _messagesList(
+                            //   _newMessagesList,
+                            //   isLoadingData,
+                            //   newMessageListKey,
+                            // ),
                             _messagesList([], isLoadingData, bottomKey),
                           ],
                         );
@@ -282,7 +288,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           ChatMessageModel _curMessage = messageList[index];
           bool isMyself = _curMessage.sentFrom == _gc.currentUser.userId;
 
-          debugPrint('Attaching: ${_curMessage.message}');
+          //debugPrint('Attaching: ${_curMessage.message}');
 
           return Container(
             padding:
@@ -337,7 +343,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.only(bottom: 4), // 오묘하게 센터가 안맞아서 그냥 넣어줌
         child: const Text(
-          'Friend chat',
+          "Chat detail", //_chatController.chatListMap[chatRoomId]!.chatRoomData.userDataList,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
