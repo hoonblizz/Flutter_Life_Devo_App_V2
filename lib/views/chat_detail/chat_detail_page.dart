@@ -198,10 +198,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                           // center: !_newMessageNumIsSmall
                           //     ? newMessageListKey
                           //     : bottomKey,
-                          // center: _newMessagesList.isEmpty
-                          //     ? newMessageListKey
-                          //     : bottomKey,
-                          center: bottomKey,
+                          center: _newMessagesList.isEmpty
+                              ? newMessageListKey
+                              : bottomKey,
+
                           anchor: 0.9, //!_newMessageNumIsSmall ? 0.40 : 0.90,
                           axisDirection: AxisDirection.down,
                           slivers: [
@@ -210,11 +210,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                               isLoadingData,
                               oldMessageListKey,
                             ),
-                            // _messagesList(
-                            //   _newMessagesList,
-                            //   isLoadingData,
-                            //   newMessageListKey,
-                            // ),
+                            _messagesList(
+                              _newMessagesList,
+                              isLoadingData,
+                              newMessageListKey,
+                            ),
                             _messagesList([], isLoadingData, bottomKey),
                           ],
                         );

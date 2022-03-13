@@ -213,9 +213,10 @@ class ChatController extends GetxController {
         chatListMap[chatRoomId]!.lastEvaluatedKey = _newLastEvaluatedKey;
 
         if (attachType == "OVERWRITE") {
+          // 올드 메세지를 오버라이트 해야되는 경우는, 채팅방에 막 들어와서 새로 깔아줘야 할때.
           chatListMap[chatRoomId] = ChatCompModel(
             chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-            newMessagesList: chatListMap[chatRoomId]!.newMessagesList,
+            newMessagesList: [],
             oldMessagesList: _tempList,
             lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
           );
@@ -234,19 +235,14 @@ class ChatController extends GetxController {
         }
       } else if (attachTo == "NEW") {
         if (attachType == "OVERWRITE") {
-          // chatListMap[chatRoomId] = ChatCompModel(
-          //   chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-          //   oldMessagesList: chatListMap[chatRoomId]!.oldMessagesList,
-          //   newMessagesList: _tempList,
-          //   lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
-          // );
+          // 새 메세지를 오버라이트 하는 경우는 아직 없는듯?
         } else if (attachType == "ADD") {
           chatListMap[chatRoomId] = ChatCompModel(
             chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-            newMessagesList: chatListMap[chatRoomId]!.newMessagesList,
-            oldMessagesList: [
+            oldMessagesList: chatListMap[chatRoomId]!.oldMessagesList,
+            newMessagesList: [
               ..._tempList,
-              ...chatListMap[chatRoomId]!.oldMessagesList,
+              ...chatListMap[chatRoomId]!.newMessagesList,
             ],
             lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
           );
@@ -254,23 +250,28 @@ class ChatController extends GetxController {
       }
     }
 
+    //checkNewMessageNum(chatRoomId); // Viewport ui 조정을 위해
     checkLatestMessageSK(chatRoomId); // 새 메세지 받아올때 기준점 제시
   }
 
+  checkNewMessageNum(String chatRoomId) {
+    // 이거에 따라서 viewport 의 center 가 달라진다.
+    List<ChatMessageModel> _curNewMessagesList =
+        chatListMap[chatRoomId]!.newMessagesList;
+    chatListMap[chatRoomId]!.newMessageNumIsSmall =
+        (_curNewMessagesList.length < 8);
+  }
+
   checkLatestMessageSK(String chatRoomId) {
-    // List<ChatMessageModel> _curNewMessagesList =
-    //     chatListMap[chatRoomId]!.newMessagesList;
+    List<ChatMessageModel> _curNewMessagesList =
+        chatListMap[chatRoomId]!.newMessagesList;
     List<ChatMessageModel> _curOldMessagesList =
         chatListMap[chatRoomId]!.oldMessagesList;
 
-    // if (_curNewMessagesList.isNotEmpty) {
-    //   chatListMap[chatRoomId]!.latestMessageSK =
-    //       _curNewMessagesList[0].skCollection;
-    // } else if (_curOldMessagesList.isNotEmpty) {
-    //   chatListMap[chatRoomId]!.latestMessageSK =
-    //       _curOldMessagesList[0].skCollection;
-    // }
-    if (_curOldMessagesList.isNotEmpty) {
+    if (_curNewMessagesList.isNotEmpty) {
+      chatListMap[chatRoomId]!.latestMessageSK =
+          _curNewMessagesList[0].skCollection;
+    } else if (_curOldMessagesList.isNotEmpty) {
       chatListMap[chatRoomId]!.latestMessageSK =
           _curOldMessagesList[0].skCollection;
     }

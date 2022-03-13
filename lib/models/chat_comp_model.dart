@@ -13,7 +13,7 @@ class ChatCompModel {
   List<ChatMessageModel> oldMessagesList; // 기존에 있던 메세지들
   List<ChatMessageModel> newMessagesList; // 리얼타임으로 새로 불러온 메세지들
   Map lastEvaluatedKey; // 더 올드 메세지로 가야할때 필요
-  bool newMessageNumIsSmall;
+  bool newMessageNumIsSmall; // 이제 안쓴다.
   String latestMessageSK;
 
   ChatCompModel(
