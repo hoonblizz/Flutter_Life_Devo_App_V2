@@ -77,8 +77,10 @@ class LifeDevoController extends GetxController {
     // 시작, 끝 지점 구하기
     DateTime curSelectedTime = selectedMonthForTabAll.value;
     int startDateFrom = curSelectedTime.millisecondsSinceEpoch;
+    // To 는 지금시간이 기준
+    DateTime timeNow = DateTime.now();
     int startDateTo =
-        DateTime(curSelectedTime.year, curSelectedTime.month + 1, 1)
+        DateTime(curSelectedTime.year, timeNow.month, timeNow.day + 1)
             .subtract(const Duration(seconds: 10))
             .millisecondsSinceEpoch;
 

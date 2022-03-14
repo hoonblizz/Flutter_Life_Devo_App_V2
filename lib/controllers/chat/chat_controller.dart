@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/messenger_repository.dart';
@@ -41,10 +42,16 @@ class ChatController extends GetxController {
   String latestMessageSK = ""; // getMessage로 최신꺼 가져올때 사용
   RxBool isChatDetailLoading = false.obs; // 대단한 기능은 아니지만 강제로 렌더링 시켜줄때 쓴다.
 
+  // Utils: 소켓 연결시간 확인
+  DateTime startConnectionTime = DateTime.now();
+  DateTime endConnectionTime = DateTime.now();
+
   startWebSocket() {
     // 연결
     socketConnection = WebSocketChannel.connect(
         Uri.parse('wss://ws.bclifedevo.com/messenger-dev'));
+
+    startConnectionTime = DateTime.now();
 
     // 리스너
     socketConnection.stream.listen(
@@ -74,7 +81,9 @@ class ChatController extends GetxController {
         debugPrint('Error on socket listener: ${e.toString()}');
       },
       onDone: () {
-        debugPrint('Done on socket listener');
+        endConnectionTime = DateTime.now();
+        debugPrint(
+            '==============> Done on socket listener: ${endConnectionTime.difference(startConnectionTime).inMinutes}');
       },
     );
 
@@ -89,8 +98,14 @@ class ChatController extends GetxController {
   socketConnector(socketConnection) {
     if (gc.currentUser.userId.isNotEmpty) {
       //sending login action to socket
-      socketConnection.sink.add(jsonEncode(
-          {"action": 'logConnection', "username": gc.currentUser.userId}));
+      socketConnection.sink.add(
+        jsonEncode(
+          {
+            "action": 'logConnection',
+            "username": gc.currentUser.userId,
+          },
+        ),
+      );
       //debugPrint('system notification : Sent Log to socket');
     }
   }
@@ -154,11 +169,51 @@ class ChatController extends GetxController {
       // 방 정보가 완성 되었으므로, 이제 Chat composite 모델 생성
       chatListMap[_curChatRoomData.chatRoomId] =
           ChatCompModel(chatRoomData: _curChatRoomData);
+
+      // 방의 마지막 메세지정도 불러본다.
+      await getLatestMessage(_curChatRoomData.chatRoomId);
     }
 
     // 결과를 Deep copy
     //chatRoomList.value = List<ChatCompModel>.from(_tempChatRoomList);
     //debugPrint('Chat room list: ${chatRoomList.length}');
+  }
+
+  getLatestMessage(String chatRoomId) async {
+    // 전에 맵에서 ChatCompModel 을 이미 생성했다고 가정한다.
+    // 어차피 방안에 들어가면 메세지들 새로 불러온다.
+    List<ChatMessageModel> _tempList = [];
+    try {
+      // 1 개 부르지만 결과는 여러개 나온다. 첫번째가 최신
+      Map result = await messengerRepo
+          .getMessage(chatRoomId, gc.currentUser.userId, maxNumOfMessages: 1);
+      //debugPrint('Get messages result: ${result.toString()}');
+      if (result.isNotEmpty &&
+          result['statusCode'] == 200 &&
+          result['body']['messages'] != null) {
+        for (int x = 0; x < result['body']['messages'].length; x++) {
+          _tempList
+              .add(ChatMessageModel.fromJSON(result['body']['messages'][x]));
+        }
+      }
+
+      debugPrint(
+          'First: ${_tempList[0].message}, Last: ${_tempList[_tempList.length - 1].message}');
+    } catch (e) {
+      debugPrint('Error getting message data: ${e.toString()}');
+    }
+
+    if (chatListMap[chatRoomId] != null) {
+      // 딥카피를 위해 하나 본 떠준다.
+      ChatCompModel _tempModel =
+          ChatCompModel.copyFrom(chatListMap[chatRoomId]!);
+
+      _tempModel.newMessagesList = [];
+      _tempModel.oldMessagesList = _tempList;
+
+      // 볼일 다 끝났으면 이제 교체해준다.
+      chatListMap[chatRoomId] = _tempModel;
+    }
   }
 
   getMessages(
@@ -175,9 +230,9 @@ class ChatController extends GetxController {
       Map result = await messengerRepo.getMessage(
         chatRoomId,
         gc.currentUser.userId,
-        oldToNew,
-        lastEvaluatedKey,
-        messageUntilKey,
+        oldToNew: oldToNew,
+        lastEvaluatedKey: lastEvaluatedKey,
+        messageUntilKey: messageUntilKey,
       );
       //debugPrint('Get messages result: ${result.toString()}');
       if (result.isNotEmpty &&
@@ -207,59 +262,50 @@ class ChatController extends GetxController {
     // Pagination 은 올드 메세지에만 붙는다.
     // 대신 new 는 message until 로 커버
     if (chatListMap[chatRoomId] != null) {
+      // 딥카피를 위해 하나 본 떠준다.
+      ChatCompModel _tempModel =
+          ChatCompModel.copyFrom(chatListMap[chatRoomId]!);
+
       // 실제 데이터
       if (attachTo == "OLD") {
         // Pagination key
-        chatListMap[chatRoomId]!.lastEvaluatedKey = _newLastEvaluatedKey;
+        _tempModel.lastEvaluatedKey = _newLastEvaluatedKey;
 
         if (attachType == "OVERWRITE") {
           // 올드 메세지를 오버라이트 해야되는 경우는, 채팅방에 막 들어와서 새로 깔아줘야 할때.
-          chatListMap[chatRoomId] = ChatCompModel(
-            chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-            newMessagesList: [],
-            oldMessagesList: _tempList,
-            lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
-          );
+
+          _tempModel.newMessagesList = [];
+          _tempModel.oldMessagesList = _tempList;
         } else if (attachType == "ADD") {
-          // Deep copy 도 렌더링을 못해주더라. 아마 너무 딥하게 들어가서 그런듯.
-          // 그냥 새로 assign 해주자
-          chatListMap[chatRoomId] = ChatCompModel(
-            chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-            newMessagesList: chatListMap[chatRoomId]!.newMessagesList,
-            oldMessagesList: [
-              ...chatListMap[chatRoomId]!.oldMessagesList,
-              ..._tempList
-            ],
-            lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
-          );
+          _tempModel.oldMessagesList = [
+            ..._tempModel.oldMessagesList,
+            ..._tempList
+          ];
         }
       } else if (attachTo == "NEW") {
         if (attachType == "OVERWRITE") {
           // 새 메세지를 오버라이트 하는 경우는 아직 없는듯?
         } else if (attachType == "ADD") {
-          chatListMap[chatRoomId] = ChatCompModel(
-            chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
-            oldMessagesList: chatListMap[chatRoomId]!.oldMessagesList,
-            newMessagesList: [
-              ..._tempList,
-              ...chatListMap[chatRoomId]!.newMessagesList,
-            ],
-            lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
-          );
+          // 새 메세지가 혹시 내가 보낸거면 tempClientId 로 필터 한번 해주자.
+          // tempClientId 는 유니크하고 하나만 있다고 가정
+          for (ChatMessageModel _curMes in _tempList) {
+            _tempModel.newMessagesList.removeWhere((element) =>
+                element.tempClientId.isNotEmpty &&
+                element.tempClientId == _curMes.tempClientId);
+          }
+
+          _tempModel.newMessagesList = [
+            ..._tempList,
+            ..._tempModel.newMessagesList,
+          ];
         }
       }
+
+      // 볼일 다 끝났으면 이제 교체해준다.
+      chatListMap[chatRoomId] = _tempModel;
     }
 
-    //checkNewMessageNum(chatRoomId); // Viewport ui 조정을 위해
     checkLatestMessageSK(chatRoomId); // 새 메세지 받아올때 기준점 제시
-  }
-
-  checkNewMessageNum(String chatRoomId) {
-    // 이거에 따라서 viewport 의 center 가 달라진다.
-    List<ChatMessageModel> _curNewMessagesList =
-        chatListMap[chatRoomId]!.newMessagesList;
-    chatListMap[chatRoomId]!.newMessageNumIsSmall =
-        (_curNewMessagesList.length < 8);
   }
 
   checkLatestMessageSK(String chatRoomId) {
@@ -275,6 +321,68 @@ class ChatController extends GetxController {
       chatListMap[chatRoomId]!.latestMessageSK =
           _curOldMessagesList[0].skCollection;
     }
+  }
+
+  sendMessage(String chatRoomId, String message) async {
+    // 메세지를 보낼때 clientId 를 같이 보내서, 내가 보낸 메세지를 구분지어준다.
+    // 나중에 getMessage 할때 필터링 해주도록 하자.
+    //debugPrint('Sending Message: ${message}');
+    String randomCode = generateRandomCode(20);
+
+    // 먼저 로컬로 메세지를 만들어서 리스트에 넣어서 보여주자.
+    // 기본적으로 메세지를 리스트에 보여주는데 필요한것만 있으면 된다.
+    chatListMap[chatRoomId] = ChatCompModel(
+      chatRoomData: chatListMap[chatRoomId]!.chatRoomData,
+      oldMessagesList: chatListMap[chatRoomId]!.oldMessagesList,
+      newMessagesList: [
+        ...[
+          ChatMessageModel(
+            chatRoomId: chatRoomId,
+            message: message,
+            createdEpoch: DateTime.now().millisecondsSinceEpoch,
+            sentFrom: gc.currentUser.userId,
+            tempClientId: randomCode,
+            isLocalMessage: true,
+          )
+        ],
+        ...chatListMap[chatRoomId]!.newMessagesList,
+      ],
+      lastEvaluatedKey: chatListMap[chatRoomId]!.lastEvaluatedKey,
+      latestMessageSK: chatListMap[chatRoomId]!.latestMessageSK,
+    );
+
+    // 이제 API 불러서 진짜 메세지 보내준다.
+    try {
+      Map result = await messengerRepo.sendMessage(
+        gc.currentUser.userId,
+        chatRoomId,
+        message,
+        randomCode,
+      );
+
+      // 메세지가 성공적으로 갔을때...는 아무것도 하게 없지만,
+      // 전송이 실패 하면 그 다음 할것이 있다. (다시 보내기랄지...)
+      if (result.isNotEmpty && result['statusCode'] == 200) {
+        // TODO:
+      }
+    } catch (e) {
+      debugPrint('Error sending a new message: ${e.toString()}');
+    }
+  }
+
+  String generateRandomCode(int length) {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+
+    return String.fromCharCodes(
+      Iterable.generate(
+        length,
+        (_) => _chars.codeUnitAt(
+          _rnd.nextInt(_chars.length),
+        ),
+      ),
+    );
   }
 
   gotoAuthPage() {

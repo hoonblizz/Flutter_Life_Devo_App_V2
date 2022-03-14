@@ -5,11 +5,31 @@ class MessengerRepository {
     return await MessengerAPIClient.getChatRoomListByUser(userId);
   }
 
-  Future getMessage(String chatRoomId, String username,
-      [bool oldToNew = false,
-      Map lastEvaluatedKey = const {},
-      String messageUntilKey = ""]) async {
+  Future getMessage(
+    String chatRoomId,
+    String username, {
+    bool oldToNew = false,
+    Map lastEvaluatedKey = const {},
+    String messageUntilKey = "",
+    int? maxNumOfMessages,
+  }) async {
     return await MessengerAPIClient.getMessage(
-        chatRoomId, username, oldToNew, lastEvaluatedKey, messageUntilKey);
+      chatRoomId,
+      username,
+      oldToNew: oldToNew,
+      lastEvaluatedKey: lastEvaluatedKey,
+      messageUntilKey: messageUntilKey,
+      maxNumOfMessages: maxNumOfMessages,
+    );
+  }
+
+  Future sendMessage(String myUserId, String chatRoomId, String message,
+      String tempClientId) async {
+    return await MessengerAPIClient.sendMessage(
+      myUserId,
+      chatRoomId,
+      message,
+      tempClientId,
+    );
   }
 }

@@ -8,6 +8,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_life_devo_app_v2/controllers/chat/chat_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/models/chat_message_model.dart';
+import 'package:flutter_life_devo_app_v2/models/chat_room_model.dart';
+import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_sizes.dart';
 import 'package:flutter_life_devo_app_v2/views/widgets/loading_widget.dart';
@@ -30,19 +32,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   bool displayLoading = false;
   bool isLoadingData = false;
-  int _curScrollIndex = 0;
-  int _prevScrollIndex = 0;
 
-  late ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   late Key oldMessageListKey;
   late Key newMessageListKey;
   late Key bottomKey;
   bool newMessageNumIsSmall = true;
   Map<String, Key> keyCollection = {}; // sk, key 모음
-
-  List<ChatMessageModel> _oldChatMessageList = [];
-  List<ChatMessageModel> _newChatMessageList = [];
-  Map _curLastEvalKey = {};
 
   @override
   void initState() {
@@ -58,58 +54,18 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   _scrollListener() {
-    //debugPrint('Position: ${_scrollController.position.extentBefore}');
-    // if (_scrollController.position.extentBefore < 2000 &&
-    //     _messengerController.chatroomList[foundIndex].readMessageList.length >= 198 &&
-    //     _messengerController.chatroomList[foundIndex].lastEvaluatedKey.isNotEmpty) {
-    //   _messengerController.createTempMessageList(chatroomData.chatRoomId, "top");
-    // } else if (_scrollController.position.extentAfter < 3000 &&
-    //     _messengerController.unreadMessageNotExisting.value == false) {
-    //   _messengerController.createTempMessageList(chatroomData.chatRoomId, "bottom");
-    // }else if(_scrollController.position.extentAfter == 0){
-    //   _messengerController.newMessageReceived(false);
-    // }
-
-    if (_scrollController.position.extentBefore < 100 && !isLoadingData) {
-      debugPrint('Calling Previous messages...');
+    // 메세지 하나당 대충 70~80 정도 잡는다 (싱글라인 메세지 경우)
+    if (_scrollController.position.extentBefore < (80 * 10) && !isLoadingData) {
+      debugPrint('Calling old messages...');
       getOldMessages();
     }
   }
-
-  // checkNewMessageNum() {
-  //   // 이거에 따라서 viewport 의 center 가 달라진다.
-  //   if (_newChatMessageList.length < 8) {
-  //     newMessageNumIsSmall = true;
-  //   } else {
-  //     newMessageNumIsSmall = false;
-  //   }
-  // }
-
-  // getLatestMessageSK() {
-  //   // 이거에 따라서 어디까지 새 메세지를 받아오는지 결정
-  //   if (_newChatMessageList.isNotEmpty) {
-  //     _chatController.latestMessageSK =
-  //         _newChatMessageList[_newChatMessageList.length - 1].skCollection;
-  //   } else if (_oldChatMessageList.isNotEmpty) {
-  //     _chatController.latestMessageSK =
-  //         _oldChatMessageList[_oldChatMessageList.length - 1].skCollection;
-  //   } else {
-  //     _chatController.latestMessageSK = "";
-  //   }
-  // }
 
   initChatDetails() async {
     setState(() {
       displayLoading = true;
     });
     await _chatController.getMessages(chatRoomId);
-    // setState(() {
-    //   _curLastEvalKey = result['lastEvaluatedKey'];
-    //   List<ChatMessageModel> _tempList = result['messageList'];
-    //   _oldChatMessageList = _tempList;
-    //   checkNewMessageNum();
-    //   getLatestMessageSK();
-    // });
 
     setState(() {
       displayLoading = false;
@@ -119,41 +75,29 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   getOldMessages() async {
     Map _curLastEvalKey =
         _chatController.chatListMap[chatRoomId]!.lastEvaluatedKey;
-
     debugPrint(
         'Last eval key: ${_chatController.chatListMap[chatRoomId]!.lastEvaluatedKey.toString()}');
 
     if (_curLastEvalKey.isNotEmpty) {
       debugPrint('Start calling OLD messages =======================>');
       isLoadingData = true;
-
       await _chatController.getMessages(
         chatRoomId,
         attachTo: "OLD",
         attachType: "ADD",
         lastEvaluatedKey: _curLastEvalKey,
       );
-
-      // setState(() {
-      //   _curLastEvalKey = result['lastEvaluatedKey'];
-      //   List<ChatMessageModel> _tempList = result['messageList'];
-      //   if (_tempList.isNotEmpty) {
-      //     _oldChatMessageList = [
-      //       ..._oldChatMessageList,
-      //       ..._tempList,
-      //     ];
-      //     debugPrint(
-      //         '${_tempList.length} more messages attached to OLD: \nFrom: ${_tempList[0].message}  \nTo: ${_tempList[_tempList.length - 1].message}');
-      //   } else {
-      //     debugPrint('More old messages returned empty. No need to attach.');
-      //   }
-      // });
-
+      // 마구잡이로 로딩하는걸 막아줌.
       await Future.delayed(const Duration(milliseconds: 1000));
-
       debugPrint('Finish calling OLD messages <=======================');
-
       isLoadingData = false;
+    }
+  }
+
+  sendMessage() async {
+    if (_messageTextController.text.isNotEmpty) {
+      _chatController.sendMessage(chatRoomId, _messageTextController.text);
+      _messageTextController.text = "";
     }
   }
 
@@ -167,10 +111,16 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    // UI 가 점핑하는게 별로다.
+    //bool _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return Scaffold(
+      //resizeToAvoidBottomInset: false,
       backgroundColor: navBG,
-      appBar: _customAppBar(),
+      appBar:
+          _customAppBar(_chatController.chatListMap[chatRoomId]!.chatRoomData),
       body: SafeArea(
+        bottom: false,
         child: Stack(
           children: <Widget>[
             Obx(() {
@@ -182,46 +132,51 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               List<ChatMessageModel> _newMessagesList =
                   _chatController.chatListMap[chatRoomId]!.newMessagesList;
 
-              bool _newMessageNumIsSmall =
-                  _chatController.chatListMap[chatRoomId]!.newMessageNumIsSmall;
+              // bool _newMessageNumIsSmall =
+              //     _chatController.chatListMap[chatRoomId]!.newMessageNumIsSmall;
 
-              return Flex(
-                direction: Axis.vertical,
-                children: [
-                  Expanded(
-                    child: Scrollable(
-                      controller: _scrollController,
-                      viewportBuilder:
-                          (BuildContext context, ViewportOffset position) {
-                        return Viewport(
-                          offset: position,
-                          // center: !_newMessageNumIsSmall
-                          //     ? newMessageListKey
-                          //     : bottomKey,
-                          center: _newMessagesList.isEmpty
-                              ? newMessageListKey
-                              : bottomKey,
+              return GestureDetector(
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: Flex(
+                  direction: Axis.vertical,
+                  children: [
+                    Expanded(
+                      child: Scrollable(
+                        controller: _scrollController,
+                        viewportBuilder:
+                            (BuildContext context, ViewportOffset position) {
+                          return Viewport(
+                            offset: position,
 
-                          anchor: 0.9, //!_newMessageNumIsSmall ? 0.40 : 0.90,
-                          axisDirection: AxisDirection.down,
-                          slivers: [
-                            _messagesList(
-                              _oldMessagesList,
-                              isLoadingData,
-                              oldMessageListKey,
-                            ),
-                            _messagesList(
-                              _newMessagesList,
-                              isLoadingData,
-                              newMessageListKey,
-                            ),
-                            _messagesList([], isLoadingData, bottomKey),
-                          ],
-                        );
-                      },
+                            center: _newMessagesList.isEmpty
+                                ? newMessageListKey
+                                : bottomKey,
+                            //center: bottomKey,
+
+                            anchor:
+                                0.78, //!_newMessageNumIsSmall ? 0.40 : 0.90,
+                            axisDirection: AxisDirection.down,
+                            slivers: [
+                              _messagesList(
+                                _oldMessagesList,
+                                isLoadingData,
+                                oldMessageListKey,
+                              ),
+                              _messagesList(
+                                _newMessagesList,
+                                isLoadingData,
+                                newMessageListKey,
+                              ),
+                              _messagesList([], isLoadingData, bottomKey),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }),
 
@@ -235,42 +190,69 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
             Align(
               alignment: Alignment.bottomLeft,
               child: Container(
-                padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                height: 60,
-                width: double.infinity,
-                color: Colors.white,
-                child: Row(
-                  children: <Widget>[
-                    const SizedBox(
-                      width: 15,
+                decoration: const BoxDecoration(
+                  color: kPrimaryColor,
+                  border: Border(
+                    left: BorderSide(
+                      color: kPrimaryColor,
+                      width: 8,
                     ),
-                    Expanded(
-                      child: TextField(
-                        controller: _messageTextController,
-                        decoration: const InputDecoration(
-                          hintText: "Write message...",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          border: InputBorder.none,
-                        ),
-                      ),
+                    right: BorderSide(
+                      color: kPrimaryColor,
+                      width: 8,
                     ),
-                    const SizedBox(
+                    top: BorderSide(
+                      color: kPrimaryColor,
+                      width: 8,
+                    ),
+                    bottom: BorderSide(
+                      color: kPrimaryColor,
                       width: 30,
                     ),
-                    FloatingActionButton(
-                      onPressed: () {},
-                      child: const Icon(
-                        Icons.send,
-                        color: Colors.white,
-                        size: 18,
+                  ),
+                ),
+
+                width: double.infinity,
+                //color: Colors.white,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: kPrimaryColor, width: 1),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
+                  padding: const EdgeInsets.only(
+                      left: 10, bottom: 5, top: 5, right: 10),
+                  constraints:
+                      const BoxConstraints(minHeight: 50, maxHeight: 200),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          controller: _messageTextController,
+                          minLines: 1,
+                          maxLines: 3,
+                          decoration: const InputDecoration(
+                            hintText: "Write message...",
+                            hintStyle: TextStyle(color: Colors.black54),
+                            border: InputBorder.none,
+                          ),
+                        ),
                       ),
-                      backgroundColor: kPrimaryColor,
-                      elevation: 0,
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                  ],
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      FloatingActionButton(
+                        onPressed: sendMessage,
+                        child: const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                        backgroundColor: kPrimaryColor,
+                        elevation: 0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -291,27 +273,52 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           //debugPrint('Attaching: ${_curMessage.message}');
 
           return Container(
+            // width: double.infinity,
             padding:
-                const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-            child: Align(
+                const EdgeInsets.only(left: 14, right: 14, top: 5, bottom: 5),
+            child: Container(
               alignment: (!isMyself ? Alignment.topLeft : Alignment.topRight),
               child: Column(
                 crossAxisAlignment: (!isMyself
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.end),
-                mainAxisSize: MainAxisSize.min,
+                // mainAxisSize: MainAxisSize.max,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color:
-                          (!isMyself ? Colors.grey.shade200 : Colors.blue[200]),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      _curMessage.message,
-                      style: const TextStyle(fontSize: 15),
-                    ),
+                  Row(
+                    mainAxisAlignment: (!isMyself
+                        ? MainAxisAlignment.start
+                        : MainAxisAlignment.end),
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
+                      // 로컬 메세지면 아이콘 하나 찍어준다.
+                      if (_curMessage.isLocalMessage)
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.upload,
+                              color: kPrimaryColor.withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                      Container(
+                        constraints: BoxConstraints(
+                            minWidth: 10, maxWidth: Get.width * 0.8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: (!isMyself
+                              ? Colors.grey.shade200
+                              : Colors.blue[200]),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
+                        child: Text(
+                          _curMessage.message,
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 2,
@@ -335,16 +342,20 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     );
   }
 
-  _customAppBar() {
+  _customAppBar(ChatRoomModel _chatRoomData) {
+    // 상대방 이름찾기
+    User _friendData = _chatRoomData.userDataList
+        .firstWhere((el) => el.userId != _gc.currentUser.userId);
+
     return AppBar(
       elevation: 0,
       iconTheme: const IconThemeData(color: Colors.white),
       title: Container(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.only(bottom: 4), // 오묘하게 센터가 안맞아서 그냥 넣어줌
-        child: const Text(
-          "Chat detail", //_chatController.chatListMap[chatRoomId]!.chatRoomData.userDataList,
-          style: TextStyle(
+        child: Text(
+          _friendData.name.isNotEmpty ? _friendData.name : "Messages",
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),

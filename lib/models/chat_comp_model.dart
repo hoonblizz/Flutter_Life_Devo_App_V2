@@ -24,9 +24,29 @@ class ChatCompModel {
       this.newMessageNumIsSmall = false,
       this.latestMessageSK = ""});
 
-  // factory ChatCompModel.generate(ChatRoomModel chatRoomModel) {
-  //   return ChatCompModel(
-  //     chatRoomData: chatRoomModel
-  //   );
-  // }
+  factory ChatCompModel.generate(
+    ChatRoomModel chatRoomData,
+    List<ChatMessageModel> oldMessagesList,
+    List<ChatMessageModel> newMessagesList,
+    Map lastEvaluatedKey,
+    String latestMessageSK,
+  ) {
+    return ChatCompModel(
+      chatRoomData: chatRoomData,
+      oldMessagesList: oldMessagesList,
+      newMessagesList: newMessagesList,
+      lastEvaluatedKey: lastEvaluatedKey,
+      latestMessageSK: latestMessageSK,
+    );
+  }
+
+  factory ChatCompModel.copyFrom(ChatCompModel _chatCompModel) {
+    return ChatCompModel(
+      chatRoomData: _chatCompModel.chatRoomData,
+      oldMessagesList: _chatCompModel.oldMessagesList,
+      newMessagesList: _chatCompModel.newMessagesList,
+      lastEvaluatedKey: _chatCompModel.lastEvaluatedKey,
+      latestMessageSK: _chatCompModel.latestMessageSK,
+    );
+  }
 }

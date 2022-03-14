@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_life_devo_app_v2/controllers/chat/chat_controller.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/models/chat_comp_model.dart';
+import 'package:flutter_life_devo_app_v2/models/chat_message_model.dart';
 import 'package:flutter_life_devo_app_v2/models/chat_room_model.dart';
 import 'package:flutter_life_devo_app_v2/models/user_model.dart';
 import 'package:flutter_life_devo_app_v2/theme/app_colors.dart';
@@ -102,6 +103,14 @@ class ChatPage extends StatelessWidget {
                               )
                               .name;
 
+                          // 가장 최신 메세지 찾기
+                          ChatMessageModel _latestMessage = ChatMessageModel();
+                          if (el.newMessagesList.isNotEmpty) {
+                            _latestMessage = el.newMessagesList[0];
+                          } else if (el.oldMessagesList.isNotEmpty) {
+                            _latestMessage = el.oldMessagesList[0];
+                          }
+
                           return GestureDetector(
                             onTap: () => _chatCtrler
                                 .gotoChatDetailPage(_chatRoomData.chatRoomId),
@@ -130,23 +139,29 @@ class ChatPage extends StatelessWidget {
 
                                     // Last message
                                     Container(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          _chatRoomData.chatRoomId,
-                                          style: TextStyle(
-                                              fontSize: chatRoomListCardLastMsg,
-                                              fontWeight: FontWeight.w500),
-                                        )),
+                                      padding:
+                                          const EdgeInsets.only(right: 15.0),
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        _latestMessage.skCollection.isNotEmpty
+                                            ? _latestMessage.message
+                                            : "No messages",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: chatRoomListCardLastMsg,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
 
                                     // Last message time
                                     Container(
                                       alignment: Alignment.bottomRight,
                                       child: Text(
-                                        DateFormat.yMMMEd().format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              _chatRoomData
-                                                  .lastMessageEventEpoch),
-                                        ),
+                                        DateFormat.yMMMd().add_Hms().format(
+                                              DateTime.fromMillisecondsSinceEpoch(
+                                                  _chatRoomData
+                                                      .lastMessageEventEpoch),
+                                            ),
                                         style: TextStyle(
                                             fontSize: chatRoomListCardDate),
                                       ),

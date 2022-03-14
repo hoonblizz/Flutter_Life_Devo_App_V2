@@ -27,7 +27,7 @@ double contentListCardHeight = 135;
 // ChatRoom List
 double chatRoomListCardUserName = Get.width * 0.035;
 double chatRoomListCardLastMsg = Get.width * 0.035;
-double chatRoomListCardDate = Get.width * 0.035;
+double chatRoomListCardDate = Get.width * 0.030;
 double chatRoomListCardHeight = 100;
 
 // Friend Request
