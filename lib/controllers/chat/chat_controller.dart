@@ -67,12 +67,15 @@ class ChatController extends GetxController {
           // 어디까지 받아와야 하는지 sk
           debugPrint(
               'Message until key: ${chatListMap[data['chatRoomId']]!.latestMessageSK}');
+          debugPrint('Current route: ${Get.currentRoute}');
           await getMessages(
             data['chatRoomId'],
             attachTo: "NEW",
             attachType: "ADD",
             //oldToNew: false,
             messageUntilKey: chatListMap[data['chatRoomId']]!.latestMessageSK,
+            addUpBadge:
+                Get.currentRoute == "/main", // 메인 (채팅방 리스트) 에서만 뱃지를 위해 카운트 해준다.
           );
         }
       },
@@ -223,6 +226,7 @@ class ChatController extends GetxController {
     bool oldToNew = false,
     Map lastEvaluatedKey = const {},
     String messageUntilKey = "",
+    bool addUpBadge = false,
   }) async {
     Map _newLastEvaluatedKey = {};
     List<ChatMessageModel> _tempList = [];
@@ -276,6 +280,7 @@ class ChatController extends GetxController {
 
           _tempModel.newMessagesList = [];
           _tempModel.oldMessagesList = _tempList;
+          _tempModel.newMessagesCount = 0;
         } else if (attachType == "ADD") {
           _tempModel.oldMessagesList = [
             ..._tempModel.oldMessagesList,
@@ -298,6 +303,10 @@ class ChatController extends GetxController {
             ..._tempList,
             ..._tempModel.newMessagesList,
           ];
+
+          if (addUpBadge) {
+            _tempModel.newMessagesCount++;
+          }
         }
       }
 

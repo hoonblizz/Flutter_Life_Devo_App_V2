@@ -114,61 +114,103 @@ class ChatPage extends StatelessWidget {
                           return GestureDetector(
                             onTap: () => _chatCtrler
                                 .gotoChatDetailPage(_chatRoomData.chatRoomId),
-                            child: Card(
-                              elevation: 3,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 10),
-                                height: chatRoomListCardHeight,
-                                width: double.maxFinite,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // User info
-                                    Container(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          friendName,
-                                          style: TextStyle(
-                                              fontSize:
-                                                  chatRoomListCardUserName,
-                                              fontWeight: FontWeight.w600),
-                                        )),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  // 메세지 뱃지를 위해 자리 비워둠
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  child: Card(
+                                    elevation: 3,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 10),
+                                      height: chatRoomListCardHeight,
+                                      width: double.maxFinite,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // User info
+                                          Container(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                friendName,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        chatRoomListCardUserName,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              )),
 
-                                    // Last message
-                                    Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 15.0),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        _latestMessage.skCollection.isNotEmpty
-                                            ? _latestMessage.message
-                                            : "No messages",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: chatRoomListCardLastMsg,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-
-                                    // Last message time
-                                    Container(
-                                      alignment: Alignment.bottomRight,
-                                      child: Text(
-                                        DateFormat.yMMMd().add_Hms().format(
-                                              DateTime.fromMillisecondsSinceEpoch(
-                                                  _chatRoomData
-                                                      .lastMessageEventEpoch),
+                                          // Last message
+                                          Container(
+                                            padding: const EdgeInsets.only(
+                                                right: 15.0),
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              _latestMessage
+                                                      .skCollection.isNotEmpty
+                                                  ? _latestMessage.message
+                                                  : "No messages",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      chatRoomListCardLastMsg,
+                                                  fontWeight: FontWeight.w500),
                                             ),
-                                        style: TextStyle(
-                                            fontSize: chatRoomListCardDate),
+                                          ),
+
+                                          // Last message time
+                                          Container(
+                                            alignment: Alignment.bottomRight,
+                                            child: Text(
+                                              DateFormat.yMMMd()
+                                                  .add_Hms()
+                                                  .format(
+                                                    DateTime.fromMillisecondsSinceEpoch(
+                                                        _chatRoomData
+                                                            .lastMessageEventEpoch),
+                                                  ),
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      chatRoomListCardDate),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+
+                                // 뱃지로 새 메세지수 보여준다.
+                                if (el.newMessagesCount > 0)
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                        color: kSecondaryColor.withOpacity(0.9),
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 32,
+                                        minHeight: 32,
+                                      ),
+                                      child: Text(
+                                        el.newMessagesCount.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                              ],
                             ),
                           );
                         }).toList()

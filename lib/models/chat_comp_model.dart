@@ -15,30 +15,33 @@ class ChatCompModel {
   Map lastEvaluatedKey; // 더 올드 메세지로 가야할때 필요
   bool newMessageNumIsSmall; // 이제 안쓴다.
   String latestMessageSK;
+  int newMessagesCount; // 뱃지 같은걸로 보여줄때 쓴다.
 
-  ChatCompModel(
-      {required this.chatRoomData,
-      this.oldMessagesList = const [],
-      this.newMessagesList = const [],
-      this.lastEvaluatedKey = const {},
-      this.newMessageNumIsSmall = false,
-      this.latestMessageSK = ""});
+  ChatCompModel({
+    required this.chatRoomData,
+    this.oldMessagesList = const [],
+    this.newMessagesList = const [],
+    this.lastEvaluatedKey = const {},
+    this.newMessageNumIsSmall = false,
+    this.latestMessageSK = "",
+    this.newMessagesCount = 0,
+  });
 
-  factory ChatCompModel.generate(
-    ChatRoomModel chatRoomData,
-    List<ChatMessageModel> oldMessagesList,
-    List<ChatMessageModel> newMessagesList,
-    Map lastEvaluatedKey,
-    String latestMessageSK,
-  ) {
-    return ChatCompModel(
-      chatRoomData: chatRoomData,
-      oldMessagesList: oldMessagesList,
-      newMessagesList: newMessagesList,
-      lastEvaluatedKey: lastEvaluatedKey,
-      latestMessageSK: latestMessageSK,
-    );
-  }
+  // factory ChatCompModel.generate(
+  //   ChatRoomModel chatRoomData,
+  //   List<ChatMessageModel> oldMessagesList,
+  //   List<ChatMessageModel> newMessagesList,
+  //   Map lastEvaluatedKey,
+  //   String latestMessageSK,
+  // ) {
+  //   return ChatCompModel(
+  //     chatRoomData: chatRoomData,
+  //     oldMessagesList: oldMessagesList,
+  //     newMessagesList: newMessagesList,
+  //     lastEvaluatedKey: lastEvaluatedKey,
+  //     latestMessageSK: latestMessageSK,
+  //   );
+  // }
 
   factory ChatCompModel.copyFrom(ChatCompModel _chatCompModel) {
     return ChatCompModel(
@@ -47,6 +50,7 @@ class ChatCompModel {
       newMessagesList: _chatCompModel.newMessagesList,
       lastEvaluatedKey: _chatCompModel.lastEvaluatedKey,
       latestMessageSK: _chatCompModel.latestMessageSK,
+      newMessagesCount: _chatCompModel.newMessagesCount,
     );
   }
 }
