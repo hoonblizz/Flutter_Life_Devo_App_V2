@@ -33,6 +33,7 @@ class ChatController extends GetxController {
 
   // Variables
   late WebSocketChannel socketConnection;
+  late Timer socketTimer;
   //RxList<ChatRoomModel> chatRoomList = <ChatRoomModel>[].obs;
   // Key 값으로 방 id를 쓴다.
   RxMap<String, ChatCompModel> chatListMap = <String, ChatCompModel>{}.obs;
@@ -41,6 +42,7 @@ class ChatController extends GetxController {
   // Chat detail
   String latestMessageSK = ""; // getMessage로 최신꺼 가져올때 사용
   RxBool isChatDetailLoading = false.obs; // 대단한 기능은 아니지만 강제로 렌더링 시켜줄때 쓴다.
+  //String _curChatRoomId = "";
 
   // Utils: 소켓 연결시간 확인
   DateTime startConnectionTime = DateTime.now();
@@ -74,31 +76,50 @@ class ChatController extends GetxController {
             attachType: "ADD",
             //oldToNew: false,
             messageUntilKey: chatListMap[data['chatRoomId']]!.latestMessageSK,
-            addUpBadge:
-                Get.currentRoute == "/main", // 메인 (채팅방 리스트) 에서만 뱃지를 위해 카운트 해준다.
+            addUpBadge: true,
+            // addUpBadge:
+            //     Get.currentRoute == "/main", // 메인 (채팅방 리스트) 에서만 뱃지를 위해 카운트 해준다.
           );
         }
       },
       cancelOnError: true,
-      onError: (e) {
+      onError: (e) async {
         debugPrint('Error on socket listener: ${e.toString()}');
+        endConnectionTime = DateTime.now();
+        debugPrint(
+            '==============> Error on socket listener: ${endConnectionTime.difference(startConnectionTime).inMinutes}');
+        debugPrint('ATTEMP RECONNECTING....');
+        socketTimer.cancel();
+        startWebSocket();
       },
       onDone: () {
         endConnectionTime = DateTime.now();
         debugPrint(
             '==============> Done on socket listener: ${endConnectionTime.difference(startConnectionTime).inMinutes}');
+        debugPrint('ATTEMP RECONNECTING....');
+        socketTimer.cancel();
+        startWebSocket();
       },
     );
 
     // 연결 지속
     socketConnector(socketConnection);
-    Timer.periodic(
+    socketTimer = Timer.periodic(
       const Duration(seconds: 10),
       (_) => socketConnector(socketConnection),
     );
   }
 
   socketConnector(socketConnection) {
+    endConnectionTime = DateTime.now();
+    int _timeDiff = endConnectionTime.difference(startConnectionTime).inMinutes;
+
+    // 커넥션 테스트용으로 일정시간마다 찍어주자.
+    if (_timeDiff > 0 && _timeDiff % 5 == 0) {
+      debugPrint(
+          '************ Time Stamp! Connection remained for $_timeDiff minutes!');
+    }
+
     if (gc.currentUser.userId.isNotEmpty) {
       //sending login action to socket
       socketConnection.sink.add(
@@ -230,6 +251,7 @@ class ChatController extends GetxController {
   }) async {
     Map _newLastEvaluatedKey = {};
     List<ChatMessageModel> _tempList = [];
+
     try {
       Map result = await messengerRepo.getMessage(
         chatRoomId,
@@ -261,6 +283,25 @@ class ChatController extends GetxController {
       debugPrint('Error getting message data: ${e.toString()}');
     }
 
+    organizeMessages(
+      chatRoomId: chatRoomId,
+      attachTo: attachTo,
+      attachType: attachType,
+      newLastEvaluatedKey: _newLastEvaluatedKey,
+      newMessages: _tempList,
+      addUpBadge: addUpBadge,
+    );
+  }
+
+  // 겟 메세지 후에 정리해주기
+  organizeMessages({
+    required String chatRoomId,
+    required String attachTo,
+    required String attachType,
+    Map newLastEvaluatedKey = const {},
+    List<ChatMessageModel> newMessages = const [],
+    bool addUpBadge = false,
+  }) {
     // ChatRoom list 구할때 init 되었지만 그래도 확인.
     // attachTo 에 따라서 어느 메세지 리스트에 붙이는지 달라짐.
     // Pagination 은 올드 메세지에만 붙는다.
@@ -273,18 +314,18 @@ class ChatController extends GetxController {
       // 실제 데이터
       if (attachTo == "OLD") {
         // Pagination key
-        _tempModel.lastEvaluatedKey = _newLastEvaluatedKey;
+        _tempModel.lastEvaluatedKey = newLastEvaluatedKey;
 
         if (attachType == "OVERWRITE") {
           // 올드 메세지를 오버라이트 해야되는 경우는, 채팅방에 막 들어와서 새로 깔아줘야 할때.
 
           _tempModel.newMessagesList = [];
-          _tempModel.oldMessagesList = _tempList;
+          _tempModel.oldMessagesList = newMessages;
           _tempModel.newMessagesCount = 0;
         } else if (attachType == "ADD") {
           _tempModel.oldMessagesList = [
             ..._tempModel.oldMessagesList,
-            ..._tempList
+            ...newMessages
           ];
         }
       } else if (attachTo == "NEW") {
@@ -293,18 +334,19 @@ class ChatController extends GetxController {
         } else if (attachType == "ADD") {
           // 새 메세지가 혹시 내가 보낸거면 tempClientId 로 필터 한번 해주자.
           // tempClientId 는 유니크하고 하나만 있다고 가정
-          for (ChatMessageModel _curMes in _tempList) {
+          for (ChatMessageModel _curMes in newMessages) {
             _tempModel.newMessagesList.removeWhere((element) =>
                 element.tempClientId.isNotEmpty &&
                 element.tempClientId == _curMes.tempClientId);
           }
 
           _tempModel.newMessagesList = [
-            ..._tempList,
+            ...newMessages,
             ..._tempModel.newMessagesList,
           ];
 
           if (addUpBadge) {
+            // _tempModel.newMessagesCount += newMessages.length;
             _tempModel.newMessagesCount++;
           }
         }
