@@ -281,252 +281,255 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: navBG,
-      appBar: _customAppBar(),
-      body: Container(
-        color: navBG,
-        child: SafeArea(
-          child: Stack(
-            children: [
-              if (_curLifeDevoSession.skCollectionSession.isEmpty)
-                const Center(
-                  child: Text('Session data not found.'),
-                ),
-              if (_curLifeDevoSession.skCollectionSession.isNotEmpty)
-                GestureDetector(
-                  onTap: () => KeyboardUtil.hideKeyboard(context),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenPaddingHorizontal,
-                    ),
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: screenPaddingVertical,
-                          ),
-                          // Date Time
-                          Text(
-                            DateFormat.yMMMMEEEEd().format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    _curLifeDevoSession.startDateEpoch)),
-                            style: TextStyle(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: navBG,
+        appBar: _customAppBar(),
+        body: Container(
+          color: navBG,
+          child: SafeArea(
+            child: Stack(
+              children: [
+                if (_curLifeDevoSession.skCollectionSession.isEmpty)
+                  const Center(
+                    child: Text('Session data not found.'),
+                  ),
+                if (_curLifeDevoSession.skCollectionSession.isNotEmpty)
+                  GestureDetector(
+                    onTap: () => KeyboardUtil.hideKeyboard(context),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenPaddingHorizontal,
+                      ),
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: screenPaddingVertical,
+                            ),
+                            // Date Time
+                            Text(
+                              DateFormat.yMMMMEEEEd().format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      _curLifeDevoSession.startDateEpoch)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: adminContentDetailDesc),
+                            ),
+
+                            // Title
+                            Text(
+                              _curLifeDevoSession.title,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: adminContentDetailTitle),
+                            ),
+
+                            // 타이틀 다음이라 조금 더 공간을 둔다
+                            SizedBox(
+                              height: adminContentDetailSpace * 2,
+                            ),
+
+                            // Contents
+                            Text(
+                              _curLifeDevoSession.scripture,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: adminContentDetailDesc),
+                            ),
+
+                            const Divider(
+                              color: kPrimaryColor,
+                            ),
+
+                            SizedBox(
+                              height: adminContentDetailSpace,
+                            ),
+
+                            // Question title
+                            Text(
+                              'Meditate',
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: adminContentDetailDesc),
-                          ),
-
-                          // Title
-                          Text(
-                            _curLifeDevoSession.title,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: adminContentDetailTitle),
-                          ),
-
-                          // 타이틀 다음이라 조금 더 공간을 둔다
-                          SizedBox(
-                            height: adminContentDetailSpace * 2,
-                          ),
-
-                          // Contents
-                          Text(
-                            _curLifeDevoSession.scripture,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: adminContentDetailDesc),
-                          ),
-
-                          const Divider(
-                            color: kPrimaryColor,
-                          ),
-
-                          SizedBox(
-                            height: adminContentDetailSpace,
-                          ),
-
-                          // Question title
-                          Text(
-                            'Meditate',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: adminContentDetailDesc,
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: adminContentDetailSpace,
-                          ),
-
-                          // Questions & answers
-                          if (!isLoading &&
-                              _curLifeDevoSession.question.isNotEmpty)
-                            _questionComponent(_curLifeDevoSession.question,
-                                _controllerAnswer, isMyLifeDevo),
-
-                          if (!isLoading &&
-                              _curLifeDevoSession.question2.isNotEmpty)
-                            _questionComponent(_curLifeDevoSession.question2,
-                                _controllerAnswer2, isMyLifeDevo),
-
-                          if (!isLoading &&
-                              _curLifeDevoSession.question2.isNotEmpty)
-                            _questionComponent(_curLifeDevoSession.question3,
-                                _controllerAnswer3, isMyLifeDevo),
-
-                          SizedBox(
-                            height: adminContentDetailSpace,
-                          ),
-
-                          // Meditate (only textfield): 유저 메모 같은거
-                          // const Divider(
-                          //   color: kPrimaryColor,
-                          // ),
-                          if (!isLoading)
-                            _meditationComponent(
-                                _controllerMeditation, isMyLifeDevo),
-
-                          // Save button
-                          if (isMyLifeDevo)
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: SizedBox(
-                                    //width: double.infinity,
-                                    //height: 33,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        primary: Colors.white,
-                                        backgroundColor: kPrimaryColor,
-                                      ),
-                                      onPressed: _onTapSaveLifeDevo,
-                                      child: Text(
-                                        'Save',
-                                        style: TextStyle(
-                                          fontSize: adminContentDetailDesc,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: SizedBox(
-                                    //width: double.infinity,
-                                    //height: 33,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        primary: Colors.white,
-                                        backgroundColor: kPrimaryColor,
-                                      ),
-                                      onPressed: _onTapShareButton,
-                                      child: Text(
-                                        'Share',
-                                        style: TextStyle(
-                                          fontSize: adminContentDetailDesc,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: SizedBox(
-                                    //width: double.infinity,
-                                    //height: 33,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        primary: Colors.white,
-                                        backgroundColor: kPrimaryColor,
-                                      ),
-                                      onPressed: _onTapShareWithComment,
-                                      child: Text(
-                                        'Comment',
-                                        style: TextStyle(
-                                          fontSize: adminContentDetailDesc,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-
-                          // 코멘트
-                          const Divider(
-                            color: kPrimaryColor,
-                          ),
-
-                          SizedBox(
-                            height: adminContentDetailSpace,
-                          ),
-
-                          // 내 코멘트 인풋 박스
-                          _commentInputComponent(
-                              _controllerComment, createComment),
-
-                          SizedBox(
-                            height: adminContentDetailSpace,
-                          ),
-                          // 테스팅용 코멘트 부르기 버튼
-                          // GestureDetector(
-                          //   onTap: getComments,
-                          //   child: const Text('Load comments'),
-                          // ),
-                          // 코멘트들
-                          _commentsComponent(commentListMerged),
-                          // 코멘트 로딩을 잘 보여주기 위해 넣은 공간
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          // 코멘트 로딩
-                          if (isGetCommentLoading)
-                            Container(
-                              alignment: Alignment.center,
-                              height: 30,
-                              width: double.infinity,
-                              child: const LoadingWidget(
-                                shape: "CIRCLE",
-                                loaderSize: 26,
+                                fontSize: adminContentDetailDesc,
                               ),
                             ),
-                          // 코멘트 로딩을 잘 보여주기 위해 넣은 공간
-                          const SizedBox(
-                            height: 50,
-                          )
-                        ],
+
+                            SizedBox(
+                              height: adminContentDetailSpace,
+                            ),
+
+                            // Questions & answers
+                            if (!isLoading &&
+                                _curLifeDevoSession.question.isNotEmpty)
+                              _questionComponent(_curLifeDevoSession.question,
+                                  _controllerAnswer, isMyLifeDevo),
+
+                            if (!isLoading &&
+                                _curLifeDevoSession.question2.isNotEmpty)
+                              _questionComponent(_curLifeDevoSession.question2,
+                                  _controllerAnswer2, isMyLifeDevo),
+
+                            if (!isLoading &&
+                                _curLifeDevoSession.question2.isNotEmpty)
+                              _questionComponent(_curLifeDevoSession.question3,
+                                  _controllerAnswer3, isMyLifeDevo),
+
+                            SizedBox(
+                              height: adminContentDetailSpace,
+                            ),
+
+                            // Meditate (only textfield): 유저 메모 같은거
+                            // const Divider(
+                            //   color: kPrimaryColor,
+                            // ),
+                            if (!isLoading)
+                              _meditationComponent(
+                                  _controllerMeditation, isMyLifeDevo),
+
+                            // Save button
+                            if (isMyLifeDevo)
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: SizedBox(
+                                      //width: double.infinity,
+                                      //height: 33,
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          primary: Colors.white,
+                                          backgroundColor: kPrimaryColor,
+                                        ),
+                                        onPressed: _onTapSaveLifeDevo,
+                                        child: Text(
+                                          'Save',
+                                          style: TextStyle(
+                                            fontSize: adminContentDetailDesc,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: SizedBox(
+                                      //width: double.infinity,
+                                      //height: 33,
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          primary: Colors.white,
+                                          backgroundColor: kPrimaryColor,
+                                        ),
+                                        onPressed: _onTapShareButton,
+                                        child: Text(
+                                          'Share',
+                                          style: TextStyle(
+                                            fontSize: adminContentDetailDesc,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: SizedBox(
+                                      //width: double.infinity,
+                                      //height: 33,
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          primary: Colors.white,
+                                          backgroundColor: kPrimaryColor,
+                                        ),
+                                        onPressed: _onTapShareWithComment,
+                                        child: Text(
+                                          'Comment',
+                                          style: TextStyle(
+                                            fontSize: adminContentDetailDesc,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+
+                            // 코멘트
+                            const Divider(
+                              color: kPrimaryColor,
+                            ),
+
+                            SizedBox(
+                              height: adminContentDetailSpace,
+                            ),
+
+                            // 내 코멘트 인풋 박스
+                            _commentInputComponent(
+                                _controllerComment, createComment),
+
+                            SizedBox(
+                              height: adminContentDetailSpace,
+                            ),
+                            // 테스팅용 코멘트 부르기 버튼
+                            // GestureDetector(
+                            //   onTap: getComments,
+                            //   child: const Text('Load comments'),
+                            // ),
+                            // 코멘트들
+                            _commentsComponent(commentListMerged),
+                            // 코멘트 로딩을 잘 보여주기 위해 넣은 공간
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            // 코멘트 로딩
+                            if (isGetCommentLoading)
+                              Container(
+                                alignment: Alignment.center,
+                                height: 30,
+                                width: double.infinity,
+                                child: const LoadingWidget(
+                                  shape: "CIRCLE",
+                                  loaderSize: 26,
+                                ),
+                              ),
+                            // 코멘트 로딩을 잘 보여주기 위해 넣은 공간
+                            const SizedBox(
+                              height: 50,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-              // Loading
-              Obx(() {
-                return _lifeDevoDetailController.isLifeDevoLoading.value
-                    ? const LoadingWidget()
-                    : Container();
-              })
-            ],
+                // Loading
+                Obx(() {
+                  return _lifeDevoDetailController.isLifeDevoLoading.value
+                      ? const LoadingWidget()
+                      : Container();
+                })
+              ],
+            ),
           ),
         ),
       ),
@@ -547,6 +550,10 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Get.back(),
       ),
       backgroundColor: kPrimaryColor,
     );

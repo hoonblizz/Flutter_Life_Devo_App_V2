@@ -114,149 +114,152 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     // UI 가 점핑하는게 별로다.
     //bool _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
-    return Scaffold(
-      //resizeToAvoidBottomInset: false,
-      backgroundColor: navBG,
-      appBar:
-          _customAppBar(_chatController.chatListMap[chatRoomId]!.chatRoomData),
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          children: <Widget>[
-            Obx(() {
-              // 강제로 렌더링 시켜줘야 되므로 로딩을 넣었다.
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        //resizeToAvoidBottomInset: false,
+        backgroundColor: navBG,
+        appBar: _customAppBar(
+            _chatController.chatListMap[chatRoomId]!.chatRoomData),
+        body: SafeArea(
+          bottom: false,
+          child: Stack(
+            children: <Widget>[
+              Obx(() {
+                // 강제로 렌더링 시켜줘야 되므로 로딩을 넣었다.
 
-              List<ChatMessageModel> _oldMessagesList =
-                  _chatController.chatListMap[chatRoomId]!.oldMessagesList;
+                List<ChatMessageModel> _oldMessagesList =
+                    _chatController.chatListMap[chatRoomId]!.oldMessagesList;
 
-              List<ChatMessageModel> _newMessagesList =
-                  _chatController.chatListMap[chatRoomId]!.newMessagesList;
+                List<ChatMessageModel> _newMessagesList =
+                    _chatController.chatListMap[chatRoomId]!.newMessagesList;
 
-              // bool _newMessageNumIsSmall =
-              //     _chatController.chatListMap[chatRoomId]!.newMessageNumIsSmall;
+                // bool _newMessageNumIsSmall =
+                //     _chatController.chatListMap[chatRoomId]!.newMessageNumIsSmall;
 
-              return GestureDetector(
-                onTap: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                child: Flex(
-                  direction: Axis.vertical,
-                  children: [
-                    Expanded(
-                      child: Scrollable(
-                        controller: _scrollController,
-                        viewportBuilder:
-                            (BuildContext context, ViewportOffset position) {
-                          return Viewport(
-                            offset: position,
-
-                            center: _newMessagesList.isEmpty
-                                ? newMessageListKey
-                                : bottomKey,
-                            //center: bottomKey,
-
-                            anchor:
-                                0.78, //!_newMessageNumIsSmall ? 0.40 : 0.90,
-                            axisDirection: AxisDirection.down,
-                            slivers: [
-                              _messagesList(
-                                _oldMessagesList,
-                                isLoadingData,
-                                oldMessageListKey,
-                              ),
-                              _messagesList(
-                                _newMessagesList,
-                                isLoadingData,
-                                newMessageListKey,
-                              ),
-                              _messagesList([], isLoadingData, bottomKey),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-
-            // 이니셜하게 로딩했을때 스크롤이 밑으로 내려가는걸 가려준다.
-            if (displayLoading)
-              const LoadingWidget(
-                color: Colors.white,
-                colorOpacity: 1,
-              ),
-
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: kPrimaryColor,
-                  border: Border(
-                    left: BorderSide(
-                      color: kPrimaryColor,
-                      width: 8,
-                    ),
-                    right: BorderSide(
-                      color: kPrimaryColor,
-                      width: 8,
-                    ),
-                    top: BorderSide(
-                      color: kPrimaryColor,
-                      width: 8,
-                    ),
-                    bottom: BorderSide(
-                      color: kPrimaryColor,
-                      width: 30,
-                    ),
-                  ),
-                ),
-
-                width: double.infinity,
-                //color: Colors.white,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: kPrimaryColor, width: 1),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(20))),
-                  padding: const EdgeInsets.only(
-                      left: 10, bottom: 5, top: 5, right: 10),
-                  constraints:
-                      const BoxConstraints(minHeight: 50, maxHeight: 200),
-                  child: Row(
-                    children: <Widget>[
+                return GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: Flex(
+                    direction: Axis.vertical,
+                    children: [
                       Expanded(
-                        child: TextField(
-                          controller: _messageTextController,
-                          minLines: 1,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            hintText: "Write message...",
-                            hintStyle: TextStyle(color: Colors.black54),
-                            border: InputBorder.none,
-                          ),
+                        child: Scrollable(
+                          controller: _scrollController,
+                          viewportBuilder:
+                              (BuildContext context, ViewportOffset position) {
+                            return Viewport(
+                              offset: position,
+
+                              center: _newMessagesList.isEmpty
+                                  ? newMessageListKey
+                                  : bottomKey,
+                              //center: bottomKey,
+
+                              anchor:
+                                  0.78, //!_newMessageNumIsSmall ? 0.40 : 0.90,
+                              axisDirection: AxisDirection.down,
+                              slivers: [
+                                _messagesList(
+                                  _oldMessagesList,
+                                  isLoadingData,
+                                  oldMessageListKey,
+                                ),
+                                _messagesList(
+                                  _newMessagesList,
+                                  isLoadingData,
+                                  newMessageListKey,
+                                ),
+                                _messagesList([], isLoadingData, bottomKey),
+                              ],
+                            );
+                          },
                         ),
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      FloatingActionButton(
-                        onPressed: sendMessage,
-                        child: const Icon(
-                          Icons.send,
-                          color: Colors.white,
-                          size: 22,
-                        ),
-                        backgroundColor: kPrimaryColor,
-                        elevation: 0,
                       ),
                     ],
                   ),
+                );
+              }),
+
+              // 이니셜하게 로딩했을때 스크롤이 밑으로 내려가는걸 가려준다.
+              if (displayLoading)
+                const LoadingWidget(
+                  color: Colors.white,
+                  colorOpacity: 1,
+                ),
+
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: kPrimaryColor,
+                    border: Border(
+                      left: BorderSide(
+                        color: kPrimaryColor,
+                        width: 8,
+                      ),
+                      right: BorderSide(
+                        color: kPrimaryColor,
+                        width: 8,
+                      ),
+                      top: BorderSide(
+                        color: kPrimaryColor,
+                        width: 8,
+                      ),
+                      bottom: BorderSide(
+                        color: kPrimaryColor,
+                        width: 30,
+                      ),
+                    ),
+                  ),
+
+                  width: double.infinity,
+                  //color: Colors.white,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: kPrimaryColor, width: 1),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
+                    padding: const EdgeInsets.only(
+                        left: 10, bottom: 5, top: 5, right: 10),
+                    constraints:
+                        const BoxConstraints(minHeight: 50, maxHeight: 200),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: _messageTextController,
+                            minLines: 1,
+                            maxLines: 3,
+                            decoration: const InputDecoration(
+                              hintText: "Write message...",
+                              hintStyle: TextStyle(color: Colors.black54),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        FloatingActionButton(
+                          onPressed: sendMessage,
+                          child: const Icon(
+                            Icons.send,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                          backgroundColor: kPrimaryColor,
+                          elevation: 0,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -360,6 +363,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Get.back(),
       ),
       backgroundColor: kPrimaryColor,
     );

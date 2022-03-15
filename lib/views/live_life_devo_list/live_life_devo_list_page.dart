@@ -51,90 +51,95 @@ class _LiveLifeDevoListPageState extends State<LiveLifeDevoListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _customAppBar(),
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenPaddingHorizontal,
-          ),
-          child: Obx(
-            () {
-              return SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: screenPaddingVertical,
-                    ),
-                    ..._liveLifeDevoController.liveLifeDevoListMerged
-                        .map((LiveLifeDevoModel el) {
-                      return GestureDetector(
-                        onTap: () =>
-                            _liveLifeDevoController.gotoContentDetail(el),
-                        child: Card(
-                          elevation: 3,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 10),
-                            height: contentListCardHeight,
-                            width: double.maxFinite,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      el.title,
-                                      style: TextStyle(
-                                          fontSize: contentListCardTitle,
-                                          fontWeight: FontWeight.w600),
-                                    )),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  alignment: Alignment.bottomRight,
-                                  child: Text(
-                                    DateFormat.yMMMEd().format(
-                                      DateTime.fromMillisecondsSinceEpoch(el
-                                          .selectedDate.millisecondsSinceEpoch),
-                                    ),
-                                    style: TextStyle(
-                                        fontSize: contentListCardDate),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: _customAppBar(),
+        body: SafeArea(
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenPaddingHorizontal,
+            ),
+            child: Obx(
+              () {
+                return SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: screenPaddingVertical,
+                      ),
+                      ..._liveLifeDevoController.liveLifeDevoListMerged
+                          .map((LiveLifeDevoModel el) {
+                        return GestureDetector(
+                          onTap: () =>
+                              _liveLifeDevoController.gotoContentDetail(el),
+                          child: Card(
+                            elevation: 3,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 10),
+                              height: contentListCardHeight,
+                              width: double.maxFinite,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        el.title,
+                                        style: TextStyle(
+                                            fontSize: contentListCardTitle,
+                                            fontWeight: FontWeight.w600),
+                                      )),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    alignment: Alignment.bottomRight,
+                                    child: Text(
+                                      DateFormat.yMMMEd().format(
+                                        DateTime.fromMillisecondsSinceEpoch(el
+                                            .selectedDate
+                                            .millisecondsSinceEpoch),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: contentListCardDate),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      }).toList(),
 
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    // Loading
-                    if (_liveLifeDevoController.isLoadingList.value)
-                      Container(
-                        alignment: Alignment.center,
+                      const SizedBox(
                         height: 30,
-                        width: double.infinity,
-                        child: const LoadingWidget(
-                          shape: "CIRCLE",
-                          loaderSize: 26,
-                        ),
                       ),
+                      // Loading
+                      if (_liveLifeDevoController.isLoadingList.value)
+                        Container(
+                          alignment: Alignment.center,
+                          height: 30,
+                          width: double.infinity,
+                          child: const LoadingWidget(
+                            shape: "CIRCLE",
+                            loaderSize: 26,
+                          ),
+                        ),
 
-                    const SizedBox(
-                      height: 50,
-                    )
-                  ],
-                ),
-              );
-            },
+                      const SizedBox(
+                        height: 50,
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -155,6 +160,10 @@ class _LiveLifeDevoListPageState extends State<LiveLifeDevoListPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Get.back(),
       ),
       backgroundColor: kPrimaryColor,
     );

@@ -62,78 +62,81 @@ class _SermonDetailPageState extends State<SermonDetailPage> {
         ],
       ),
       builder: (context, player) {
-        return Scaffold(
-          backgroundColor: navBG,
-          appBar: _customAppBar(),
-          body: Container(
-            color: navBG,
-            child: SafeArea(
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    //controller: _scrollController,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        player,
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenPaddingHorizontal,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: screenPaddingVertical,
-                              ),
-                              Text(
-                                DateFormat.yMMMMEEEEd().format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        _curSermon.selectedDate
-                                            .millisecondsSinceEpoch)),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: adminContentDetailDesc),
-                              ),
-                              // Title
-                              Text(
-                                _curSermon.title,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: adminContentDetailTitle),
-                              ),
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Scaffold(
+            backgroundColor: navBG,
+            appBar: _customAppBar(),
+            body: Container(
+              color: navBG,
+              child: SafeArea(
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      //controller: _scrollController,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          player,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenPaddingHorizontal,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: screenPaddingVertical,
+                                ),
+                                Text(
+                                  DateFormat.yMMMMEEEEd().format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          _curSermon.selectedDate
+                                              .millisecondsSinceEpoch)),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: adminContentDetailDesc),
+                                ),
+                                // Title
+                                Text(
+                                  _curSermon.title,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: adminContentDetailTitle),
+                                ),
 
-                              // 타이틀 다음이라 조금 더 공간을 둔다
-                              SizedBox(
-                                height: adminContentDetailSpace * 2,
-                              ),
+                                // 타이틀 다음이라 조금 더 공간을 둔다
+                                SizedBox(
+                                  height: adminContentDetailSpace * 2,
+                                ),
 
-                              // Youtube player
-                              SizedBox(
-                                height: adminContentDetailSpace,
-                              ),
-                              // Contents
-                              Text(
-                                _curSermon.contentText,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: adminContentDetailDesc),
-                              ),
-                              SizedBox(
-                                height: adminContentDetailSpace,
-                              ),
-                              const Divider(
-                                color: kPrimaryColor,
-                              ),
-                            ],
+                                // Youtube player
+                                SizedBox(
+                                  height: adminContentDetailSpace,
+                                ),
+                                // Contents
+                                Text(
+                                  _curSermon.contentText,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: adminContentDetailDesc),
+                                ),
+                                SizedBox(
+                                  height: adminContentDetailSpace,
+                                ),
+                                const Divider(
+                                  color: kPrimaryColor,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -156,6 +159,10 @@ class _SermonDetailPageState extends State<SermonDetailPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Get.back(),
       ),
       backgroundColor: kPrimaryColor,
     );
