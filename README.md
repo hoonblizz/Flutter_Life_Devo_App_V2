@@ -44,10 +44,11 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 - [X] Messenger 의 최신 메세지가 챗 리스트에 나오게  
 - [ ] App Foreground, background 핸들링 -> 메신저 부분만  
 - [X] App Icon, splash page 등록  
-- [ ] 안드로이드 버전 확인  
+- [X] 안드로이드 버전 확인  
 - [X] Life devo (Save / Share / Post)  
 - [ ] Share to friends  
-- [ ] Disable back button  
+- [X] Disable back button  
+- [ ] Disable Dark mode effects  
 
 # 2022.03.03 ~ 2022.03.04    
 - [X] Live life devo, Discipline topic, Discipline, Sermon Model 만들기  

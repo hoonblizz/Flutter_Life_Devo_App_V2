@@ -17,8 +17,9 @@ void main() {
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
     initialRoute: Routes.INITIAL,
-    theme: lightTheme,
-    darkTheme: darkTheme,
+    // theme: lightTheme,
+    // darkTheme: darkTheme,
+    themeMode: ThemeMode.light,
     defaultTransition: Transition.fade,
     getPages: AppPages.pages,
     locale: const Locale('pt', 'BR'),
