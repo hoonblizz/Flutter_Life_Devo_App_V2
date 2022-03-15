@@ -1,9 +1,11 @@
 import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/models/life_devo_model.dart';
+import 'package:flutter_life_devo_app_v2/models/life_devo_session_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_life_devo_app_v2/controllers/global_controller.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/auth_repository.dart';
 import 'package:flutter_life_devo_app_v2/routes/app_pages.dart';
+import 'package:share_plus/share_plus.dart';
 
 const currentFileName = "life_devo_detail_controller";
 
@@ -154,5 +156,15 @@ class LifeDevoDetailController extends GetxController {
       gc.consoleLog('Error searching users', curFileName: currentFileName);
     }
     return {};
+  }
+
+  // ignore: slash_for_doc_comments
+  /******************************************************************
+   * Share feature
+  ******************************************************************/
+  onClickShare(String question, String answer, String meditation) {
+    Share.share(
+        'Question:\n${question}\n\nMy Answer:\n${answer}\n\nMy Meditation:\n${meditation}',
+        subject: 'Life Devo');
   }
 }

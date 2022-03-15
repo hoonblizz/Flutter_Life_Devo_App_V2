@@ -41,11 +41,12 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 무조건 최신 -> 올드 로 부른다는 조건이 있기 때문에, pagination key 는 무조건 올드쪽으로 가는 키다.
 새로운 메세지를 부르면 pagination key 를 부르기보다 message until key 를 쓰도록 한다.  
 이건 최근 메세지의 가장 나중 (Sliver 를 쓰면 인덱스 0 이 되겠다) 메세지의 sk 가 된다.  
-- [ ] Messenger 의 최신 메세지가 챗 리스트에 나오게  
+- [X] Messenger 의 최신 메세지가 챗 리스트에 나오게  
 - [ ] App Foreground, background 핸들링 -> 메신저 부분만  
 - [ ] App Icon, splash page 등록  
 - [ ] 안드로이드 버전 확인  
 - [ ] Life devo (Save / Share / Post)  
+- [ ] Share to friends  
 
 # 2022.03.03 ~ 2022.03.04    
 - [X] Live life devo, Discipline topic, Discipline, Sermon Model 만들기  

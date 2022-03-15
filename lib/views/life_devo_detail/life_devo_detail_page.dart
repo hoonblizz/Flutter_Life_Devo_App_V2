@@ -218,7 +218,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
   }
 
   // 기존에 _curLifeDevo 의 존재유무에 따라 create 인지, update 인지 나뉜다.
-  onTapSaveLifeDevo() async {
+  _onTapSaveLifeDevo() async {
     debugPrint('Save!');
 
     // 텍스트 컨트롤러에 있던 정보 옮기기
@@ -234,6 +234,40 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
     _curLifeDevoSession.answer2 = _controllerAnswer2.text;
     _curLifeDevoSession.answer3 = _controllerAnswer3.text;
     _curLifeDevoSession.meditation = _controllerMeditation.text;
+  }
+
+  _onTapShareButton() {
+    if (_curLifeDevoSession.answer.isNotEmpty ||
+        _curLifeDevoSession.meditation.isNotEmpty) {
+      _lifeDevoDetailController.onClickShare(_curLifeDevoSession.question,
+          _curLifeDevoSession.answer, _curLifeDevoSession.meditation);
+    }
+  }
+
+  _onTapShareWithComment() async {
+    if (_curLifeDevoSession.answer.isNotEmpty ||
+        _curLifeDevoSession.meditation.isNotEmpty) {
+      setState(() {
+        isCommentLoading = true;
+      });
+
+      // 코멘트 템플릿
+      String shareTemplate =
+          'My Answer:\n${_curLifeDevoSession.answer}\n\nMy Meditation:\n${_curLifeDevoSession.meditation}';
+      await _lifeDevoDetailController.createComments(_curLifeDevoSession.id,
+          _globalController.currentUser.userId, shareTemplate);
+
+      // 최신이 가장 위에 있으므로, 리셋 시켜주고 다시 불러오자
+      setState(() {
+        _controllerComment.text = "";
+        commentList =
+            []; // 실질적으로 쓰이는건 commentList 가 아니라 commnetListMerged 라서 괜찮다.
+        lastEvaluatedKeyList = [];
+        isCommentLoading = false;
+      });
+
+      await getComments();
+    }
   }
 
   @override
@@ -373,7 +407,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                                         primary: Colors.white,
                                         backgroundColor: kPrimaryColor,
                                       ),
-                                      onPressed: () => onTapSaveLifeDevo(),
+                                      onPressed: _onTapSaveLifeDevo,
                                       child: Text(
                                         'Save',
                                         style: TextStyle(
@@ -385,7 +419,7 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 20),
+                                const SizedBox(width: 10),
                                 Expanded(
                                   child: SizedBox(
                                     //width: double.infinity,
@@ -398,9 +432,34 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                                         primary: Colors.white,
                                         backgroundColor: kPrimaryColor,
                                       ),
-                                      onPressed: () => {},
+                                      onPressed: _onTapShareButton,
                                       child: Text(
                                         'Share',
+                                        style: TextStyle(
+                                          fontSize: adminContentDetailDesc,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: SizedBox(
+                                    //width: double.infinity,
+                                    //height: 33,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        primary: Colors.white,
+                                        backgroundColor: kPrimaryColor,
+                                      ),
+                                      onPressed: _onTapShareWithComment,
+                                      child: Text(
+                                        'Comment',
                                         style: TextStyle(
                                           fontSize: adminContentDetailDesc,
                                           color: Colors.white,
@@ -426,6 +485,9 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                           _commentInputComponent(
                               _controllerComment, createComment),
 
+                          SizedBox(
+                            height: adminContentDetailSpace,
+                          ),
                           // 테스팅용 코멘트 부르기 버튼
                           // GestureDetector(
                           //   onTap: getComments,
@@ -646,18 +708,41 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
       physics: const NeverScrollableScrollPhysics(),
       children: comments.map((CommentModel comment) {
         return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 0),
           leading: CircleAvatar(
-            minRadius: 14,
-            maxRadius: 14,
+            minRadius: 18,
+            maxRadius: 18,
             child: Text(
               comment.userName.isNotEmpty ? comment.userName[0] : "?",
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 24),
             ),
           ),
-          horizontalTitleGap: 8,
+          horizontalTitleGap: 10,
           dense: true,
-          title: Text(comment.userName),
-          subtitle: Text(comment.content),
+          title: Text(comment.userName,
+              style: TextStyle(
+                  fontSize: adminContentDetailDesc,
+                  fontWeight: FontWeight.bold)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(comment.content,
+                  style: TextStyle(
+                      fontSize: adminContentDetailDesc, color: Colors.black)),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                  DateFormat.yMMMd().add_Hms().format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          comment.createdEpoch)),
+                  style: TextStyle(fontSize: adminContentDetailDesc * 0.8)),
+              const SizedBox(
+                height: 10,
+              ),
+              const Divider(thickness: 1),
+            ],
+          ),
         );
       }).toList(),
     );

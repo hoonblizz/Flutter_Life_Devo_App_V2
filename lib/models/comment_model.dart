@@ -2,6 +2,8 @@
   Life devo 에 종속되는 코멘트 모델
 */
 
+import 'dart:convert';
+
 class CommentModel {
   String pkCollection;
   String skCollection; // email
@@ -24,10 +26,14 @@ class CommentModel {
   });
 
   factory CommentModel.fromJSON(Map map) {
+    String newContent = map['content'] != null
+        ? const Utf8Decoder().convert(map['content'].toString().codeUnits)
+        : '';
+
     return CommentModel(
       pkCollection: map['pkCollection'],
       skCollection: map['skCollection'],
-      content: map['content'],
+      content: newContent,
       userId: map['userId'],
       lastModifiedEpoch: map['lastModifiedEpoch'],
       createdEpoch: map['createdEpoch'],
