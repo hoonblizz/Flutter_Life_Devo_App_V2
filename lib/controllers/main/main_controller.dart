@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/admin_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/data/repository/user_contents_repository.dart';
 import 'package:flutter_life_devo_app_v2/models/discipline_model.dart';
@@ -38,6 +39,8 @@ class MainController extends GetxController {
   Rx<DisciplineModel> latestDiscipline = DisciplineModel().obs;
   Rx<SermonModel> latestSermon = SermonModel().obs;
 
+  late AppLifecycleState _lastLifecyleState;
+
   // ignore: slash_for_doc_comments
   /******************************************************************
    * Functions
@@ -47,6 +50,7 @@ class MainController extends GetxController {
   void onInit() {
     gc.consoleLog('Init Main page controller', curFileName: currentFileName);
     loadHomeTabFeatures();
+    handleAppLifeCycle();
 
     super.onInit();
   }
@@ -199,5 +203,36 @@ class MainController extends GetxController {
 
   gotoAuthPage() {
     Get.toNamed(Routes.AUTH);
+  }
+
+  // ignore: slash_for_doc_comments
+  /******************************************************************
+   * App status (BG, FG)
+   * 백드라운드로 들어가면 순서가 inactive --(~1s)---> paused
+   * Foreground 순서는 inactive -- (~1s) ---->  resumed
+   * 웹소켓은 Done 상태가 되는데, 이때 자동으로 다시 연결해주므로, 굳이 여기서 해결 안해도 될듯?
+  ******************************************************************/
+  handleAppLifeCycle() {
+    SystemChannels.lifecycle.setMessageHandler((message) async {
+      debugPrint('System channel: $message');
+
+      switch (message) {
+        case "AppLifecycleState.paused":
+          _lastLifecyleState = AppLifecycleState.paused;
+          break;
+        case "AppLifecycleState.inactive":
+          _lastLifecyleState = AppLifecycleState.inactive;
+          break;
+        case "AppLifecycleState.resumed":
+          _lastLifecyleState = AppLifecycleState.resumed;
+          break;
+        case "AppLifecycleState.detached":
+          _lastLifecyleState = AppLifecycleState.detached;
+          break;
+        default:
+      }
+
+      return;
+    });
   }
 }

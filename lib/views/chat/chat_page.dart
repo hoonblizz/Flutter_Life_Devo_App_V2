@@ -196,16 +196,19 @@ class ChatPage extends StatelessWidget {
                                         color: kSecondaryColor.withOpacity(0.9),
                                       ),
                                       constraints: const BoxConstraints(
-                                        minWidth: 32,
-                                        minHeight: 32,
+                                        minWidth: 28,
+                                        maxWidth: 32,
+                                        minHeight: 28,
+                                        maxHeight: 32,
                                       ),
+                                      alignment: Alignment.center,
                                       child: Text(
                                         el.newMessagesCount.toString(),
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 18,
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ),
