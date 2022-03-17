@@ -41,14 +41,19 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 무조건 최신 -> 올드 로 부른다는 조건이 있기 때문에, pagination key 는 무조건 올드쪽으로 가는 키다.
 새로운 메세지를 부르면 pagination key 를 부르기보다 message until key 를 쓰도록 한다.  
 이건 최근 메세지의 가장 나중 (Sliver 를 쓰면 인덱스 0 이 되겠다) 메세지의 sk 가 된다.  
+
 - [X] Messenger 의 최신 메세지가 챗 리스트에 나오게  
-- [ ] App Foreground, background 핸들링 -> 메신저 부분만  
+- [X] App Foreground, background 핸들링 -> 메신저 부분만  
 - [X] App Icon, splash page 등록  
 - [X] 안드로이드 버전 확인  
 - [X] Life devo (Save / Share / Post)  
 - [ ] Share to friends  
 - [X] Disable back button  
-- [ ] Disable Dark mode effects  
+- [X] Disable Dark mode effects  
+- [X] App name change  
+- [X] Change 'invite friend' 를 채팅방에 초대하는걸로 바꾸자  
+- [X] 새 메세지 뱃지에 숫자를 없애자  
+- [X] WillScope 를 메인에 적용  
 
 # 2022.03.03 ~ 2022.03.04    
 - [X] Live life devo, Discipline topic, Discipline, Sermon Model 만들기  
@@ -60,8 +65,7 @@ https://stackoverflow.com/questions/63724025/flutter-create-dropdown-month-year-
 - [X] Sermon, Live life devo 버튼을 누르면 리스트가 죽 나오게하기 (가능하면 pagination?)  
 - [X] Discipline 은 전체 리스트전에 Topic 리스트 먼저 (pagination 없이)  
 - [X] 각 토픽을 누르면 그제서야 해당 토픽의 전체 리스트 불러오기 (pagination 없이)  
-- [ ] Svelte dashboard project 에 Pagination 구현 (https://svelte.dev/repl/4863a658f3584b81bbe3d9f54eb67899?version=3.32.3)   
-      쉽게 하려면 그냥 화살표 페이지가 가장 낫다.
+- [X] Svelte dashboard project 에 Pagination 구현  
 
 # 2022.02.19  
 - Friend search, request 구현까지만 (Back & Front)  

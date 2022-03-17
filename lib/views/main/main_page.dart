@@ -39,72 +39,75 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: navBG,
-      body: Container(
-        color: navBG,
-        // 각 탭에서 로딩을 핸들링 하기로 바꿔서, 이것도 각 탭으로 옮겨준다.
-        // padding: EdgeInsets.symmetric(
-        //   horizontal: screenPaddingHorizontal,
-        // ),
-        child: SafeArea(
-          child: _pages.elementAt(_currentBottomTabIndex),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: navBG,
+        body: Container(
+          color: navBG,
+          // 각 탭에서 로딩을 핸들링 하기로 바꿔서, 이것도 각 탭으로 옮겨준다.
+          // padding: EdgeInsets.symmetric(
+          //   horizontal: screenPaddingHorizontal,
+          // ),
+          child: SafeArea(
+            child: _pages.elementAt(_currentBottomTabIndex),
+          ),
         ),
-      ),
-      bottomNavigationBar: Container(
-        margin: EdgeInsets.symmetric(horizontal: screenPaddingHorizontal),
-        decoration: const BoxDecoration(
-          border: Border(
-              top: BorderSide(
-            color: kPrimaryColor,
-            width: 1,
-          )),
-        ),
-        child: BottomNavigationBar(
-          elevation: 0,
-          backgroundColor: navBG,
-          selectedItemColor: navSelected,
-          unselectedItemColor: navUnselected,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: navIcon,
+        bottomNavigationBar: Container(
+          margin: EdgeInsets.symmetric(horizontal: screenPaddingHorizontal),
+          decoration: const BoxDecoration(
+            border: Border(
+                top: BorderSide(
+              color: kPrimaryColor,
+              width: 1,
+            )),
+          ),
+          child: BottomNavigationBar(
+            elevation: 0,
+            backgroundColor: navBG,
+            selectedItemColor: navSelected,
+            unselectedItemColor: navUnselected,
+            type: BottomNavigationBarType.fixed,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                  size: navIcon,
+                ),
+                label: "Home",
               ),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.video_library,
-                size: navIcon,
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.video_library,
+                  size: navIcon,
+                ),
+                label: "Contents",
               ),
-              label: "Contents",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.auto_stories,
-                size: navIcon,
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.auto_stories,
+                  size: navIcon,
+                ),
+                label: "Life Devo",
               ),
-              label: "Life Devo",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.people,
-                size: navIcon,
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.people,
+                  size: navIcon,
+                ),
+                label: "People",
               ),
-              label: "People",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_circle,
-                size: navIcon,
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.account_circle,
+                  size: navIcon,
+                ),
+                label: "Profile",
               ),
-              label: "Profile",
-            ),
-          ],
-          currentIndex: _currentBottomTabIndex,
-          onTap: _onSelectBottomTab,
+            ],
+            currentIndex: _currentBottomTabIndex,
+            onTap: _onSelectBottomTab,
+          ),
         ),
       ),
     );

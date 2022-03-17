@@ -202,10 +202,13 @@ class ChatPage extends StatelessWidget {
                                         maxHeight: 32,
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text(
-                                        el.newMessagesCount.toString(),
+                                      child: const Text(
+                                        // Update: 2022.03.16 - Badge 가
+                                        // 보통 유저들이 생각하는 뱃지가 아니다.
+                                        // 헷갈리니까 숫자 없이 그냥 표시만 해준다.
+                                        "", //el.newMessagesCount.toString(),
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16,

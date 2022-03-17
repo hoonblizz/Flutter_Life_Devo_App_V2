@@ -106,7 +106,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                     onPressed: onPressInviteFriend,
                     child: Text(
-                      'Invite a friend',
+                      'Invite to chat',
                       style: TextStyle(
                           fontSize: mainPageContentsDesc,
                           color: Colors.white,

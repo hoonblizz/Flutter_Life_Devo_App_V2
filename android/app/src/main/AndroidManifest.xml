@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.taehoon.lifeDevoApp">
    <application
-        android:label="flutter_life_devo_app_v2"
+        android:label="Life Devo"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
@@ -49,4 +49,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <!-- video player, 각종 API 땜에 필요 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
