@@ -11,6 +11,9 @@ flutter clean
 flutter pub get
 cd ios
 pod install  
+
+flutter build ios
+flutter build appbundle
 ```
 
 ## Sample UI from Rachel  
