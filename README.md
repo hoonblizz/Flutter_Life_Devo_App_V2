@@ -6,6 +6,8 @@ com.taehoon.lifeDevoApp
 ## 유용한 커맨드들  
 ```
 flutter pub upgrade
+Or
+flutter pub upgrade --major-versions
 
 flutter clean
 flutter pub get

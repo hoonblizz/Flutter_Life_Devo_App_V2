@@ -403,10 +403,10 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                                       //height: 33,
                                       child: TextButton(
                                         style: TextButton.styleFrom(
+                                          foregroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8)),
-                                          primary: Colors.white,
                                           backgroundColor: kPrimaryColor,
                                         ),
                                         onPressed: _onTapSaveLifeDevo,
@@ -428,10 +428,10 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                                       //height: 33,
                                       child: TextButton(
                                         style: TextButton.styleFrom(
+                                          foregroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8)),
-                                          primary: Colors.white,
                                           backgroundColor: kPrimaryColor,
                                         ),
                                         onPressed: _onTapShareButton,
@@ -453,10 +453,10 @@ class _LifeDevoDetailPageState extends State<LifeDevoDetailPage> {
                                       //height: 33,
                                       child: TextButton(
                                         style: TextButton.styleFrom(
+                                          foregroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8)),
-                                          primary: Colors.white,
                                           backgroundColor: kPrimaryColor,
                                         ),
                                         onPressed: _onTapShareWithComment,

@@ -172,9 +172,9 @@ class ProfilePage extends StatelessWidget {
                         trailing: isFromMe
                             ? TextButton(
                                 style: TextButton.styleFrom(
+                                  foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20)),
-                                  primary: Colors.white,
                                   backgroundColor: kSecondaryColor,
                                 ),
                                 onPressed: () {
@@ -193,10 +193,10 @@ class ProfilePage extends StatelessWidget {
                                 // IconButton(onPressed: () => {}, icon: Icon(Icons.))
                                 TextButton(
                                   style: TextButton.styleFrom(
+                                    foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    primary: Colors.white,
                                     backgroundColor: kPrimaryColor,
                                   ),
                                   onPressed: () {
@@ -218,10 +218,10 @@ class ProfilePage extends StatelessWidget {
                                 ),
                                 TextButton(
                                   style: TextButton.styleFrom(
+                                    foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    primary: Colors.white,
                                     backgroundColor: kSecondaryColor,
                                   ),
                                   onPressed: () {
